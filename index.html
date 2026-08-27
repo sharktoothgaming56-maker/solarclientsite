@@ -739,7 +739,7 @@
           <span>&middot;</span>
           <span id="dlSize">Size: 93.3 MB</span>
           <span>&middot;</span>
-          <span>Installer (.exe)</span>
+          <span>Portable (.zip)</span>
         </div>
       </div>
 
@@ -973,7 +973,7 @@
             <div class="step-num">1</div>
             <div>
               <div class="step-heading">Verify the hash (optional but recommended)</div>
-              <div class="step-info">Open PowerShell, run <code>Get-FileHash .\SolarClientSetup*.exe</code>, and compare the output to the SHA-256 displayed above. If they match, the file is exactly what was published on GitHub.</div>
+              <div class="step-info">Open PowerShell, run <code>Get-FileHash .\SolarClient*.zip</code>, and compare the output to the SHA-256 displayed above. If they match, the file is exactly what was published on GitHub.</div>
             </div>
           </div>
           <div class="step-unit">
@@ -1338,7 +1338,7 @@
           if (mockVer) mockVer.textContent = version;
         }
 
-        const exe = (data.assets || []).find(a => /\.exe$/i.test(a.name));
+        const exe = (data.assets || []).find(a => /\.zip$/i.test(a.name));
         if (!exe) return;
 
         const btn = document.getElementById('primaryDownloadBtn');
