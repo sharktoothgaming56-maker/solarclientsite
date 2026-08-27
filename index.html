@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SolarClient | High FPS Minecraft Launcher</title>
+  <meta name="description" content="SolarClient is a free, high-performance Minecraft launcher with built-in FPS optimization, one-click mod installation, automatic Java setup, and zero bloat. Download for Windows.">
+  <meta name="keywords" content="Minecraft launcher, FPS boost, Minecraft mods, Minecraft performance, Sodium, Lithium, free Minecraft launcher">
+  <link rel="canonical" href="https://sharktoothgaming56-maker.github.io/solarclientsite/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7931973085541540" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg-main: #090611;
+      --bg-surface: #120d22;
+      --bg-surface-elevated: #1a1332;
+      --border-subtle: rgba(168, 85, 247, 0.15);
+      --border-focus: rgba(192, 132, 252, 0.5);
+      --text-primary: #faf5ff;
+      --text-secondary: #c4b5fd;
+      --text-muted: #8b7ca8;
+      --accent-purple: #a855f7;
+      --accent-violet: #8b5cf6;
+      --accent-glow: #c084fc;
+      --accent-green: #10b981;
+      --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #skyCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .ambient-glow-purple {
+      position: fixed;
+      top: -120px; left: 50%;
+      transform: translateX(-50%);
+      width: 850px; height: 500px;
+      background: radial-gradient(circle, rgba(168,85,247,0.22) 0%, rgba(139,92,246,0.12) 45%, transparent 70%);
+      filter: blur(90px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .ambient-glow-bottom {
+      position: fixed;
+      bottom: -150px; right: 10%;
+      width: 700px; height: 450px;
+      background: radial-gradient(circle, rgba(147,51,234,0.15) 0%, transparent 70%);
+      filter: blur(90px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── Navbar ── */
+    .header-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 800;
+      font-size: 1.35rem;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-logo {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 20px rgba(168,85,247,0.5);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: color 0.15s ease;
+    }
+    .nav-link:hover { color: var(--accent-glow); }
+
+    /* ── Hero ── */
+    .hero-section {
+      padding: 75px 0 50px;
+      text-align: center;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .version-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      background: rgba(168,85,247,0.12);
+      border: 1px solid rgba(168,85,247,0.3);
+      font-size: 0.85rem;
+      color: var(--accent-glow);
+      font-weight: 700;
+      margin-bottom: 22px;
+    }
+
+    .hero-title {
+      font-size: 3.6rem;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 18px;
+    }
+
+    .hero-title .highlight {
+      background: linear-gradient(135deg, #ffffff 20%, #c084fc 60%, #a855f7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      font-size: 1.18rem;
+      color: var(--text-secondary);
+      margin-bottom: 38px;
+      line-height: 1.7;
+    }
+
+    /* ── Download CTA ── */
+    .download-zone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-main {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 40px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+      color: #ffffff;
+      font-size: 1.15rem;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 10px 30px rgba(168,85,247,0.45);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-main:hover {
+      filter: brightness(1.15);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 38px rgba(168,85,247,0.65);
+    }
+    .btn-main svg { width: 22px; height: 22px; }
+
+    .meta-details {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* ── Trust Strip ── */
+    .trust-strip {
+      margin-top: 38px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      text-align: left;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+
+    .trust-left { display: flex; align-items: center; gap: 14px; }
+
+    .trust-icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: rgba(16,185,129,0.15);
+      color: var(--accent-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .trust-icon svg { width: 22px; height: 22px; }
+
+    .trust-text-title { font-weight: 700; font-size: 0.98rem; color: var(--text-primary); }
+    .trust-text-sub { font-size: 0.84rem; color: var(--text-secondary); }
+
+    .btn-scan {
+      color: var(--accent-glow);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .btn-scan:hover { text-decoration: underline; }
+
+    /* ── Hash Bar ── */
+    .hash-bar {
+      margin-top: 14px;
+      background: rgba(18,13,34,0.7);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.82rem;
+    }
+
+    .hash-code {
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+      word-break: break-all;
+    }
+
+    .btn-hash-copy {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-hash-copy:hover { background: #281d4a; border-color: var(--accent-purple); }
+
+    /* ── Section Layout ── */
+    .section { margin-top: 85px; }
+
+    .section-title {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      max-width: 640px;
+      margin: 0 auto 38px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* ── Feature Grid ── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 26px;
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--border-focus);
+      box-shadow: 0 10px 30px rgba(168,85,247,0.15);
+    }
+
+    .card-icon {
+      width: 46px; height: 46px;
+      border-radius: 12px;
+      background: rgba(168,85,247,0.15);
+      color: var(--accent-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .card-icon svg { width: 24px; height: 24px; }
+
+    .card-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+    .card-desc { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.55; }
+
+    /* ── System Requirements ── */
+    .req-table-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .req-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .req-table th,
+    .req-table td {
+      text-align: left;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 0.92rem;
+    }
+
+    .req-table th {
+      background: var(--bg-surface-elevated);
+      color: var(--accent-glow);
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .req-table td:first-child {
+      font-weight: 700;
+      color: var(--text-primary);
+      width: 30%;
+    }
+
+    .req-table td:nth-child(2),
+    .req-table td:nth-child(3) {
+      color: var(--text-secondary);
+    }
+
+    .req-table tr:last-child td { border-bottom: none; }
+
+    /* ── How It Works ── */
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .how-step {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 30px 26px;
+      text-align: center;
+      position: relative;
+    }
+
+    .how-step-num {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #a855f7, #7c3aed);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.2rem;
+      margin: 0 auto 18px;
+    }
+
+    .how-step h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 10px; }
+    .how-step p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.55; }
+
+    /* ── Versions Grid ── */
+    .versions-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .ver-chip {
+      padding: 8px 18px;
+      border-radius: 20px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .ver-chip.latest {
+      background: rgba(168,85,247,0.18);
+      border-color: rgba(168,85,247,0.4);
+      color: var(--accent-glow);
+    }
+
+    /* ── SmartScreen Install ── */
+    .install-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .screen-mock {
+      background: #005a9e;
+      border-radius: 10px;
+      padding: 22px;
+      color: #fff;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+    }
+    .mock-header { font-size: 1.25rem; font-weight: 300; margin-bottom: 10px; }
+    .mock-body { font-size: 0.84rem; opacity: 0.92; line-height: 1.4; margin-bottom: 16px; }
+    .mock-actions { display: flex; gap: 10px; }
+    .btn-mock-info { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.75); padding: 6px 12px; font-size: 0.8rem; border-radius: 4px; text-decoration: underline; }
+    .btn-mock-run { background: #fff; color: #005a9e; border: none; padding: 6px 16px; font-size: 0.8rem; font-weight: 700; border-radius: 4px; }
+
+    .step-list { display: flex; flex-direction: column; gap: 18px; }
+
+    .step-unit { display: flex; align-items: flex-start; gap: 14px; }
+
+    .step-num {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: rgba(168,85,247,0.2);
+      color: var(--accent-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .step-heading { font-weight: 700; font-size: 1rem; margin-bottom: 2px; }
+    .step-info { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; }
+
+    /* ── About ── */
+    .about-text {
+      max-width: 760px;
+      margin: 0 auto;
+      color: var(--text-secondary);
+      font-size: 1.02rem;
+      line-height: 1.75;
+    }
+    .about-text p { margin-bottom: 18px; }
+    .about-text p:last-child { margin-bottom: 0; }
+    .about-text strong { color: var(--text-primary); }
+
+    /* ── FAQ ── */
+    .faq-wrapper {
+      max-width: 780px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .faq-block {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .faq-trigger {
+      padding: 18px 22px;
+      font-weight: 700;
+      font-size: 1.02rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+
+    .faq-arrow { transition: transform 0.2s ease; color: var(--accent-glow); }
+    .faq-block.open .faq-arrow { transform: rotate(180deg); }
+
+    .faq-body {
+      padding: 0 22px 18px;
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      display: none;
+      line-height: 1.6;
+    }
+    .faq-block.open .faq-body { display: block; }
+
+    /* ── Changelog ── */
+    .changelog-list {
+      max-width: 780px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .changelog-entry {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 22px 26px;
+    }
+
+    .changelog-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .changelog-version {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--accent-glow);
+    }
+
+    .changelog-date {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .changelog-entry ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .changelog-entry li {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      padding-left: 18px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .changelog-entry li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--accent-purple);
+      font-weight: 700;
+    }
+
+    /* ── Contact ── */
+    .contact-wrap { max-width: 480px; margin: 0 auto; text-align: center; }
+    .contact-wrap > p { color: var(--text-secondary); margin-bottom: 28px; }
+    .contact-links { display: flex; flex-direction: column; gap: 14px; }
+
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--text-primary);
+      text-decoration: none;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px 28px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: border-color 0.15s ease, transform 0.12s ease;
+    }
+    .contact-link:hover { border-color: var(--accent-purple); transform: translateY(-2px); }
+
+    /* ── Ad Slot ── */
+    .ad-slot {
+      margin-top: 85px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .ad-slot-label {
+      font-size: 0.7rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      opacity: 0.6;
+    }
+
+    /* ── Toast ── */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      background: var(--accent-purple);
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.25s ease;
+      z-index: 999;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .toast-msg.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: 85px;
+      padding: 32px 0;
+      border-top: 1px solid var(--border-subtle);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    footer a { color: var(--accent-glow); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 12px; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2.5rem; }
+      .install-box { grid-template-columns: 1fr; }
+      .trust-strip { flex-direction: column; align-items: flex-start; }
+      .nav-actions { gap: 16px; }
+      .req-table th:nth-child(3),
+      .req-table td:nth-child(3) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="skyCanvas" aria-hidden="true"></canvas>
+  <div class="ambient-glow-purple" aria-hidden="true"></div>
+  <div class="ambient-glow-bottom" aria-hidden="true"></div>
+
+  <div class="container">
+
+    <!-- ════════ Navbar ════════ -->
+    <header class="header-nav">
+      <a href="#" class="brand">
+        <img src="logo.png" alt="SolarClient logo" class="brand-logo" onerror="this.style.display='none'">
+        <span>SolarClient</span>
+      </a>
+      <nav class="nav-actions" aria-label="Main navigation">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#requirements" class="nav-link">Requirements</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="#install" class="nav-link">Install Guide</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+        <a href="#contact" class="nav-link">Contact</a>
+        <a href="privacy.html" class="nav-link">Privacy</a>
+        <a href="terms.html" class="nav-link">Terms</a>
+      </nav>
+    </header>
+
+    <!-- ════════ Hero ════════ -->
+    <section class="hero-section">
+      <div class="version-tag" id="versionTag">Version 0.0.0-test</div>
+
+      <h1 class="hero-title">
+        The Minecraft Launcher Built for <span class="highlight">Pure FPS</span>
+      </h1>
+
+      <p class="hero-desc">
+        SolarClient is a free, lightweight Minecraft launcher designed from the ground up for performance. It bundles the best optimization mods, handles Java automatically, and lets you install shaders and resource packs in one click&mdash;so you spend less time configuring and more time playing.
+      </p>
+
+      <div class="download-zone">
+        <a href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases/latest" class="btn-main" id="primaryDownloadBtn" onclick="showDownloadToast()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download for Windows
+        </a>
+        <div class="meta-details">
+          <span>Windows 10 / 11 64-bit</span>
+          <span>&middot;</span>
+          <span id="dlSize">Size: 93.3 MB</span>
+          <span>&middot;</span>
+          <span>Installer (.exe)</span>
+        </div>
+      </div>
+
+      <!-- Trust Bar -->
+      <div class="trust-strip">
+        <div class="trust-left">
+          <div class="trust-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <polyline points="9 12 11 14 15 10"/>
+            </svg>
+          </div>
+          <div>
+            <div class="trust-text-title">Verify before you run</div>
+            <div class="trust-text-sub">The SHA-256 below is pulled from the GitHub release so it always matches the current download. Check it against your file and look it up on VirusTotal.</div>
+          </div>
+        </div>
+        <a href="https://www.virustotal.com/gui/file/90f70410f48893b88dc70057d0c856d29e0c404f5ad05d09ea9a74e400fef3dc?nocache=1" target="_blank" rel="noopener" class="btn-scan vt-link">
+          Look up on VirusTotal &rarr;
+        </a>
+      </div>
+
+      <!-- Hash -->
+      <div class="hash-bar">
+        <span class="hash-code" id="hashCode">90f70410f48893b88dc70057d0c856d29e0c404f5ad05d09ea9a74e400fef3dc</span>
+        <button class="btn-hash-copy" onclick="copyHash()">Copy SHA-256</button>
+      </div>
+    </section>
+
+    <!-- ════════ Features ════════ -->
+    <section class="section" id="features">
+      <h2 class="section-title">Built for Performance and Gameplay</h2>
+      <p class="section-subtitle">Every component of SolarClient is tuned to give you the smoothest Minecraft experience possible, whether you play on a budget laptop or a high-end desktop.</p>
+
+      <div class="feature-grid">
+        <article class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <h3 class="card-title">2x&ndash;4x FPS Multiplier</h3>
+          <p class="card-desc">Pre-tuned with Sodium, Lithium, FerriteCore, Entity Culling, ImmediatelyFast, and ModernFix to squeeze maximum frames out of your hardware. Most players see their FPS double on the first launch without changing any settings.</p>
+        </article>
+
+        <article class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <h3 class="card-title">Zero-Stutter G1GC Tuning</h3>
+          <p class="card-desc">Custom JVM memory flags prevent garbage-collection lag spikes during PvP, render-distance loading, and heavy modpack sessions. The launcher automatically applies the right flags for your allocated RAM so you never have to touch a JVM argument.</p>
+        </article>
+
+        <article class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <h3 class="card-title">One-Click Mod &amp; Shader Browser</h3>
+          <p class="card-desc">Search and install mods, shaders, and resource packs from Modrinth and CurseForge without leaving the launcher. Everything auto-matches your game version, loader, and existing mods to prevent conflicts.</p>
+        </article>
+
+        <article class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+          </div>
+          <h3 class="card-title">Automatic Java Setup</h3>
+          <p class="card-desc">Never install or configure Java manually again. SolarClient downloads the exact Adoptium runtime each Minecraft version needs, manages multiple Java installations side by side, and cleans up old ones automatically.</p>
+        </article>
+
+        <article class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 class="card-title">Official Microsoft Auth</h3>
+          <p class="card-desc">Log in safely using official Microsoft and Xbox OAuth&mdash;the same authentication flow Mojang&rsquo;s own launcher uses. Your password and credentials never touch our servers or the launcher&rsquo;s local storage.</p>
+        </article>
+
+        <article class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <h3 class="card-title">24 Parallel Downloads</h3>
+          <p class="card-desc">Game assets, sound files, and libraries download over 24 simultaneous connections, turning a 10-minute first-time install into under 60 seconds on most broadband connections.</p>
+        </article>
+
+        <article class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          </div>
+          <h3 class="card-title">Built-in HUD Editor</h3>
+          <p class="card-desc">Drag and drop HUD elements&mdash;FPS counter, coordinates, keystrokes, CPS, armor status, and more&mdash;anywhere on your screen. Save multiple layouts and switch between them for different game modes.</p>
+        </article>
+
+        <article class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </div>
+          <h3 class="card-title">Waypoint System</h3>
+          <p class="card-desc">Set, share, and navigate to waypoints across dimensions. Coordinates display in-game with distance markers, and your waypoints persist across sessions so you never lose a base or landmark again.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ════════ Ad Slot 1 ════════ -->
+    <div class="ad-slot" aria-label="Advertisement">
+      <div class="ad-slot-label">Advertisement</div>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-7931973085541540"
+           data-ad-slot="5583456558"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <!-- ════════ System Requirements ════════ -->
+    <section class="section" id="requirements">
+      <h2 class="section-title">System Requirements</h2>
+      <p class="section-subtitle">SolarClient is designed to run well on modest hardware. The optimization mods it bundles often make Minecraft run better through SolarClient than through the vanilla launcher, even on the same machine.</p>
+
+      <div class="req-table-wrap">
+        <table class="req-table">
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Minimum</th>
+              <th>Recommended</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Operating System</td>
+              <td>Windows 10 64-bit</td>
+              <td>Windows 11 64-bit</td>
+            </tr>
+            <tr>
+              <td>Processor</td>
+              <td>Dual-core 2.0 GHz (Intel/AMD)</td>
+              <td>Quad-core 3.0 GHz or better</td>
+            </tr>
+            <tr>
+              <td>Memory (RAM)</td>
+              <td>4 GB (2 GB allocated to MC)</td>
+              <td>8 GB+ (4 GB allocated to MC)</td>
+            </tr>
+            <tr>
+              <td>Graphics</td>
+              <td>OpenGL 4.5 compatible (Intel HD 4000+)</td>
+              <td>Dedicated GPU with 2 GB+ VRAM</td>
+            </tr>
+            <tr>
+              <td>Storage</td>
+              <td>500 MB free + Minecraft install</td>
+              <td>2 GB+ SSD for faster load times</td>
+            </tr>
+            <tr>
+              <td>Internet</td>
+              <td>Required for login &amp; mod downloads</td>
+              <td>Broadband for fast asset downloads</td>
+            </tr>
+            <tr>
+              <td>Java</td>
+              <td colspan="2">Handled automatically&mdash;no manual install needed</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ════════ How It Works ════════ -->
+    <section class="section" id="how-it-works">
+      <h2 class="section-title">How SolarClient Works</h2>
+      <p class="section-subtitle">From download to gameplay in three steps. No terminal commands, no manual file management, no Java headaches.</p>
+
+      <div class="how-grid">
+        <div class="how-step">
+          <div class="how-step-num">1</div>
+          <h3>Download &amp; Install</h3>
+          <p>Grab the installer from this page and run it. SolarClient installs into its own directory, downloads the correct Java runtime for your chosen Minecraft version, and pre-configures all optimization mods automatically. The entire process takes under two minutes on a typical connection.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-step-num">2</div>
+          <h3>Log In with Microsoft</h3>
+          <p>Authenticate through Microsoft&rsquo;s official OAuth flow&mdash;the same one the vanilla launcher uses. SolarClient never sees or stores your password. Your session token is kept locally and refreshed securely whenever it expires.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-step-num">3</div>
+          <h3>Pick a Version &amp; Play</h3>
+          <p>Select your Minecraft version from the launcher dropdown. SolarClient applies optimized JVM flags, loads performance mods, and launches the game. Browse and install additional mods, shaders, or resource packs any time from the built-in mod browser without restarting.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ Supported Versions ════════ -->
+    <section class="section" id="versions">
+      <h2 class="section-title">Supported Minecraft Versions</h2>
+      <p class="section-subtitle">SolarClient supports a wide range of Minecraft releases. Performance mods and JVM tuning are matched to each version automatically, so you always get the best experience regardless of which version you play.</p>
+
+      <div class="versions-grid">
+        <span class="ver-chip">1.7.10</span>
+        <span class="ver-chip">1.8.9</span>
+        <span class="ver-chip">1.12.2</span>
+        <span class="ver-chip">1.16.5</span>
+        <span class="ver-chip">1.17.1</span>
+        <span class="ver-chip">1.18.2</span>
+        <span class="ver-chip">1.19.4</span>
+        <span class="ver-chip">1.20.1</span>
+        <span class="ver-chip">1.20.4</span>
+        <span class="ver-chip">1.20.6</span>
+        <span class="ver-chip">1.21</span>
+        <span class="ver-chip latest">1.21.1 (Latest)</span>
+      </div>
+    </section>
+
+    <!-- ════════ Ad Slot 2 ════════ -->
+    <div class="ad-slot" aria-label="Advertisement">
+      <div class="ad-slot-label">Advertisement</div>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-7931973085541540"
+           data-ad-slot="4916563529"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <!-- ════════ Install Guide ════════ -->
+    <section class="section" id="install">
+      <h2 class="section-title">First-Time Setup on Windows</h2>
+      <p class="section-subtitle">
+        Since this build is not code-signed yet, Windows SmartScreen will flag it the first time you run it.
+        This is standard behavior for any indie application that has not purchased a signing certificate and does not indicate a problem with the file.
+        You can verify the SHA-256 hash above before continuing.
+      </p>
+
+      <div class="install-box">
+        <div class="screen-mock" aria-label="Simulated Windows SmartScreen dialog">
+          <div class="mock-header">Windows protected your PC</div>
+          <div class="mock-body">
+            Microsoft Defender SmartScreen prevented an unrecognized app from starting.
+            <br><br>
+            <strong>App:</strong> SolarClientSetup<span id="mockVersion">3.20.37</span>.exe
+          </div>
+          <div class="mock-actions">
+            <div class="btn-mock-info">1. Click &ldquo;More info&rdquo;</div>
+            <div class="btn-mock-run">2. Click &ldquo;Run anyway&rdquo;</div>
+          </div>
+        </div>
+
+        <div class="step-list">
+          <div class="step-unit">
+            <div class="step-num">1</div>
+            <div>
+              <div class="step-heading">Verify the hash (optional but recommended)</div>
+              <div class="step-info">Open PowerShell, run <code>Get-FileHash .\SolarClientSetup*.exe</code>, and compare the output to the SHA-256 displayed above. If they match, the file is exactly what was published on GitHub.</div>
+            </div>
+          </div>
+          <div class="step-unit">
+            <div class="step-num">2</div>
+            <div>
+              <div class="step-heading">Click &ldquo;More info,&rdquo; then &ldquo;Run anyway&rdquo;</div>
+              <div class="step-info">SmartScreen shows this prompt for every unsigned application. Once you click through, Windows remembers your choice and will not ask again for this file.</div>
+            </div>
+          </div>
+          <div class="step-unit">
+            <div class="step-num">3</div>
+            <div>
+              <div class="step-heading">Follow the installer</div>
+              <div class="step-info">Choose your install directory (or keep the default), let the installer finish, and launch SolarClient from the desktop shortcut or Start menu.</div>
+            </div>
+          </div>
+          <div class="step-unit">
+            <div class="step-num">4</div>
+            <div>
+              <div class="step-heading">Log in and play</div>
+              <div class="step-info">Sign in with your Microsoft account, pick a Minecraft version, and hit Play. The launcher handles Java, mods, and JVM flags automatically on your first launch.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ About ════════ -->
+    <section class="section" id="about">
+      <h2 class="section-title">What Is SolarClient?</h2>
+      <div class="about-text">
+        <p>SolarClient is a custom Minecraft launcher created as an alternative to Lunar Client, Feather, and similar performance clients. The goal is simple: give players the performance tools and quality-of-life features they want, without the bloat, telemetry, or locked-down ecosystems that come with bigger clients.</p>
+
+        <p>Everything is built in-house&mdash;the launcher shell, the in-game mod integration, the HUD editor, and the waypoint system. Rather than wrapping someone else&rsquo;s work in a new UI, SolarClient assembles a curated stack of <strong>open-source performance mods</strong> (Sodium, Lithium, FerriteCore, and others) and combines them with custom JVM tuning, a parallel asset downloader, and a streamlined mod browser that pulls from Modrinth and CurseForge.</p>
+
+        <p>The project is <strong>actively developed and updated regularly</strong>. New releases are published through GitHub Releases, and the download button, SHA-256 hash, and VirusTotal link on this page update themselves automatically whenever a new build is pushed. This means you always get the latest version without this site ever going stale.</p>
+
+        <p><strong>Why free?</strong> SolarClient is a passion project by a small team of Minecraft players who wanted a better launcher for themselves and decided to share it. The site runs ads through Google AdSense to cover hosting and development costs, but the launcher itself contains no ads and never will.</p>
+
+        <p>Found a bug, have a feature request, or just want to chat? The Discord link below is the fastest way to reach the team. We read every message.</p>
+      </div>
+    </section>
+
+    <!-- ════════ FAQ ════════ -->
+    <section class="section" id="faq">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <p class="section-subtitle">Answers to the most common questions we get from players. If yours isn&rsquo;t listed here, ask in our Discord.</p>
+
+      <div class="faq-wrapper">
+
+        <div class="faq-block">
+          <div class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Is SolarClient safe to use?</span>
+            <span class="faq-arrow">&#9660;</span>
+          </div>
+          <div class="faq-body">
+            Every release is published on GitHub with its SHA-256 hash, so you can verify the file you downloaded matches what was uploaded. A direct VirusTotal link is provided above for each build. Because the installer is not code-signed, Windows SmartScreen will show a one-time warning&mdash;this is standard for unsigned indie software and does not indicate a security issue. We encourage you to verify the hash before running the installer.
+          </div>
+        </div>
+
+        <div class="faq-block">
+          <div class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Do I need to install Java separately?</span>
+            <span class="faq-arrow">&#9660;</span>
+          </div>
+          <div class="faq-body">
+            No. SolarClient automatically downloads and manages the correct Adoptium Java runtime for each Minecraft version. If you switch from 1.8.9 to 1.20.4, the launcher will fetch the right Java version in the background without any input from you. You can also point the launcher at a custom Java installation in Settings if you prefer.
+          </div>
+        </div>
+
+        <div class="faq-block">
+          <div class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Do I need a Minecraft account?</span>
+            <span class="faq-arrow">&#9660;</span>
+          </div>
+          <div class="faq-body">
+            Yes. You need a legitimate Microsoft account that owns Minecraft: Java Edition. SolarClient authenticates through Microsoft&rsquo;s official OAuth flow, the same method the vanilla launcher uses. We do not support cracked or offline accounts.
+          </div>
+        </div>
+
+        <div class="faq-block">
+          <div class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Which Minecraft versions are supported?</span>
+            <span class="faq-arrow">&#9660;</span>
+          </div>
+          <div class="faq-body">
+            SolarClient currently supports versions from 1.7.10 through 1.21.1. Performance mods and JVM flags are matched to each version automatically. New Minecraft releases are usually supported within a few days of their official launch. Check the Supported Versions section above for the full list.
+          </div>
+        </div>
+
+        <div class="faq-block">
+          <div class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Can I use my own mods alongside SolarClient&rsquo;s built-in ones?</span>
+            <span class="faq-arrow">&#9660;</span>
+          </div>
+          <div class="faq-body">
+            Yes. SolarClient&rsquo;s built-in mods are standard Fabric/Forge mods. You can add your own mods through the built-in mod browser (which searches Modrinth and CurseForge) or by dropping <code>.jar</code> files into the mods folder. The launcher checks for version and loader compatibility to help prevent conflicts.
+          </div>
+        </div>
+
+        <div class="faq-block">
+          <div class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Does SolarClient work with OptiFine?</span>
+            <span class="faq-arrow">&#9660;</span>
+          </div>
+          <div class="faq-body">
+            SolarClient uses Sodium instead of OptiFine for rendering optimization, as Sodium generally delivers higher frame rates and is compatible with a wider range of mods. OptiFine and Sodium cannot run simultaneously because they both replace the rendering engine. If you specifically need OptiFine for a shader pack that only supports it, you can create a separate profile in the launcher without the built-in performance mods.
+          </div>
+        </div>
+
+        <div class="faq-block">
+          <div class="faq-trigger" onclick="toggleFaq(this)">
+            <span>How do I uninstall SolarClient?</span>
+            <span class="faq-arrow">&#9660;</span>
+          </div>
+          <div class="faq-body">
+            Open Windows Settings &rarr; Apps &rarr; Installed Apps, find &ldquo;SolarClient,&rdquo; and click Uninstall. This removes the launcher, its managed Java runtimes, and cached assets. Your Minecraft worlds and saves are stored in the standard <code>.minecraft</code> folder and are not affected by uninstalling SolarClient.
+          </div>
+        </div>
+
+        <div class="faq-block">
+          <div class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Is SolarClient open source?</span>
+            <span class="faq-arrow">&#9660;</span>
+          </div>
+          <div class="faq-body">
+            The launcher itself is not open source at this time, but it is built on top of open-source performance mods (Sodium, Lithium, FerriteCore, and others) whose licenses are fully respected. Release binaries are published on GitHub with SHA-256 hashes for verification. We are considering open-sourcing parts of the project in the future.
+          </div>
+        </div>
+
+        <div class="faq-block">
+          <div class="faq-trigger" onclick="toggleFaq(this)">
+            <span>Does SolarClient work on Mac or Linux?</span>
+            <span class="faq-arrow">&#9660;</span>
+          </div>
+          <div class="faq-body">
+            Currently, SolarClient is Windows-only (Windows 10 and 11, 64-bit). Mac and Linux support are on the roadmap but do not have a release date yet. If cross-platform support is important to you, let us know in Discord so we can prioritize accordingly.
+          </div>
+        </div>
+
+        <div class="faq-block">
+          <div class="faq-trigger" onclick="toggleFaq(this)">
+            <span>How is SolarClient different from Lunar Client or Feather?</span>
+            <span class="faq-arrow">&#9660;</span>
+          </div>
+          <div class="faq-body">
+            SolarClient focuses on being lightweight and transparent. Unlike Lunar Client, which uses a proprietary mod system, SolarClient uses standard Fabric/Forge mods that you can inspect, replace, or supplement. There is no mandatory telemetry, no cosmetics store, and no premium tier. The launcher is completely free, and ads only appear on this website&mdash;never inside the launcher itself.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ════════ Ad Slot 3 ════════ -->
+    <div class="ad-slot" aria-label="Advertisement">
+      <div class="ad-slot-label">Advertisement</div>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-7931973085541540"
+           data-ad-slot="5583456558"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <!-- ════════ Changelog ════════ -->
+    <section class="section" id="changelog">
+      <h2 class="section-title">Recent Updates</h2>
+      <p class="section-subtitle">A summary of the latest changes shipped in recent releases. Full release notes are available on the <a href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases" target="_blank" rel="noopener" style="color:var(--accent-glow)">GitHub Releases page</a>.</p>
+
+      <div class="changelog-list">
+        <div class="changelog-entry">
+          <div class="changelog-header">
+            <span class="changelog-version" id="cl-v1">Latest Release</span>
+            <span class="changelog-date">Check GitHub for date</span>
+          </div>
+          <ul>
+            <li>Performance mods updated to their latest stable versions</li>
+            <li>Improved first-launch download speed with better CDN routing</li>
+            <li>Fixed a bug where the mod browser would not refresh after changing Minecraft versions</li>
+            <li>HUD editor now remembers layout per profile</li>
+          </ul>
+        </div>
+
+        <div class="changelog-entry">
+          <div class="changelog-header">
+            <span class="changelog-version">Previous Highlights</span>
+          </div>
+          <ul>
+            <li>Added support for Minecraft 1.21 and 1.21.1</li>
+            <li>New waypoint system with cross-dimension support</li>
+            <li>Introduced 24-connection parallel asset downloader</li>
+            <li>Automatic Adoptium Java management for all supported versions</li>
+            <li>Rebuilt mod browser with Modrinth and CurseForge integration</li>
+            <li>Custom G1GC JVM flags now auto-scale based on allocated RAM</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ Contact ════════ -->
+    <section class="section" id="contact">
+      <h2 class="section-title">Get in Touch</h2>
+      <div class="contact-wrap">
+        <p>Have a question, found a bug, or want to suggest a feature? The Discord server is the best place to reach us&mdash;we read every message and typically respond within a few hours.</p>
+        <div class="contact-links">
+          <a class="contact-link" href="https://discord.gg/DyeJ8tAvZY" target="_blank" rel="noopener">&#128172; Join Our Discord Server</a>
+          <a class="contact-link" href="https://github.com/sharktoothgaming56-maker/solarclientsite" target="_blank" rel="noopener">&#128187; View on GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ Footer ════════ -->
+    <footer class="site-footer">
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases" target="_blank" rel="noopener">Releases</a>
+      </div>
+      <p style="margin-top:8px;">&copy; 2024&ndash;2026 SolarClient. Not affiliated with Mojang Studios or Microsoft Corporation.</p>
+      <p style="margin-top:6px; font-size:0.8rem;">Minecraft is a registered trademark of Mojang Studios. All other trademarks are the property of their respective owners.</p>
+    </footer>
+
+  </div><!-- /.container -->
+
+  <!-- Toast -->
+  <div id="toast" class="toast-msg">Copied to clipboard</div>
+
+  <!-- ════════ Scripts ════════ -->
+  <script>
+    /* ── Starfield Canvas ── */
+    const canvas = document.getElementById('skyCanvas');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+    let shootingStars = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initStars();
+    }
+
+    function initStars() {
+      stars = [];
+      const count = Math.floor((canvas.width * canvas.height) / 7000);
+      for (let i = 0; i < count; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 1.5 + 0.3,
+          alpha: Math.random() * 0.7 + 0.3,
+          speed: Math.random() * 0.15 + 0.05
+        });
+      }
+    }
+
+    function spawnShootingStar() {
+      if (shootingStars.length < 3 && Math.random() < 0.02) {
+        shootingStars.push({
+          x: Math.random() * canvas.width * 0.8,
+          y: Math.random() * (canvas.height * 0.4),
+          len: Math.random() * 90 + 80,
+          speed: Math.random() * 8 + 7,
+          angle: (Math.PI / 4) + (Math.random() * 0.2 - 0.1),
+          alpha: 1,
+          decay: Math.random() * 0.015 + 0.015
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#ffffff';
+      stars.forEach(s => {
+        ctx.globalAlpha = s.alpha;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+        s.y -= s.speed;
+        if (s.y < 0) { s.y = canvas.height; s.x = Math.random() * canvas.width; }
+      });
+
+      spawnShootingStar();
+      for (let i = shootingStars.length - 1; i >= 0; i--) {
+        const ss = shootingStars[i];
+        const tailX = ss.x - Math.cos(ss.angle) * ss.len;
+        const tailY = ss.y - Math.sin(ss.angle) * ss.len;
+        const grad = ctx.createLinearGradient(tailX, tailY, ss.x, ss.y);
+        grad.addColorStop(0, 'rgba(168, 85, 247, 0)');
+        grad.addColorStop(0.6, 'rgba(192, 132, 252, 0.5)');
+        grad.addColorStop(1, `rgba(255, 255, 255, ${ss.alpha})`);
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(tailX, tailY);
+        ctx.lineTo(ss.x, ss.y);
+        ctx.stroke();
+        ss.x += Math.cos(ss.angle) * ss.speed;
+        ss.y += Math.sin(ss.angle) * ss.speed;
+        ss.alpha -= ss.decay;
+        if (ss.alpha <= 0 || ss.x > canvas.width || ss.y > canvas.height) {
+          shootingStars.splice(i, 1);
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    draw();
+
+    /* ── Copy Hash ── */
+    function copyHash() {
+      const code = document.getElementById('hashCode').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const toast = document.getElementById('toast');
+        toast.innerText = 'Copied SHA-256 to clipboard';
+        toast.classList.add('visible');
+        setTimeout(() => toast.classList.remove('visible'), 2500);
+      });
+    }
+
+    /* ── Download Toast ── */
+    function showDownloadToast() {
+      const toast = document.getElementById('toast');
+      toast.innerText = 'Starting download\u2026';
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 3500);
+    }
+
+    /* ── Toggle FAQ ── */
+    function toggleFaq(btn) {
+      btn.parentElement.classList.toggle('open');
+    }
+
+    /* ── Live Release Data from GitHub ── */
+    const RELEASES_REPO = 'sharktoothgaming56-maker/solarclientsite';
+
+    async function loadLatestRelease() {
+      try {
+        const res = await fetch(`https://api.github.com/repos/${RELEASES_REPO}/releases/latest`, {
+          headers: { 'Accept': 'application/vnd.github+json' }
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+
+        const version = (data.tag_name || '').replace(/^v/i, '');
+        if (version) {
+          const tag = document.getElementById('versionTag');
+          if (tag) tag.textContent = `Version ${version} Released`;
+          const mockVer = document.getElementById('mockVersion');
+          if (mockVer) mockVer.textContent = version;
+        }
+
+        const exe = (data.assets || []).find(a => /\.exe$/i.test(a.name));
+        if (!exe) return;
+
+        const btn = document.getElementById('primaryDownloadBtn');
+        if (btn) btn.href = exe.browser_download_url;
+
+        const sizeEl = document.getElementById('dlSize');
+        if (sizeEl && exe.size) sizeEl.textContent = `Size: ${(exe.size / 1048576).toFixed(1)} MB`;
+
+        const digest = (exe.digest || '').replace(/^sha256:/i, '');
+        if (digest) {
+          const hashEl = document.getElementById('hashCode');
+          if (hashEl) hashEl.textContent = digest;
+          const vtUrl = `https://www.virustotal.com/gui/file/${digest}?nocache=1`;
+          document.querySelectorAll('.vt-link').forEach(a => { a.href = vtUrl; });
+        }
+      } catch (_) {
+        /* Offline or rate-limited - fallbacks in the HTML stay as-is. */
+      }
+    }
+    loadLatestRelease();
+  </script>
+</body>
+</html>
