@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SolarClient News</title>
+  <style>
+    :root {
+      --bg-main: #090611;
+      --bg-surface: #120d22;
+      --border-subtle: rgba(168, 85, 247, 0.15);
+      --text-primary: #faf5ff;
+      --text-secondary: #c4b5fd;
+      --text-muted: #8b7ca8;
+      --accent-glow: #c084fc;
+      --accent-purple: #a855f7;
+      --accent-green: #10b981;
+      --font-main: system-ui, -apple-system, sans-serif;
+      --font-mono: 'Consolas', 'Courier New', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      background: var(--bg-main);
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      line-height: 1.5;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 16px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ── Content Cards ── */
+    .content-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+
+    .content-card h2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+
+    .content-card p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    .content-card p:last-child { margin-bottom: 0; }
+
+    .content-card a {
+      color: var(--accent-glow);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .content-card a:hover { text-decoration: underline; }
+
+    /* ── Tips List ── */
+    .tips-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .tips-list li {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      padding-left: 16px;
+      position: relative;
+      line-height: 1.45;
+    }
+
+    .tips-list li::before {
+      content: '✦';
+      position: absolute;
+      left: 0;
+      color: var(--accent-purple);
+      font-size: 0.7rem;
+      top: 2px;
+    }
+
+    /* ── Version Badge ── */
+    .version-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: rgba(16, 185, 129, 0.14);
+      color: var(--accent-green);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    /* ── Links Row ── */
+    .links-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .links-row a {
+      font-size: 0.82rem;
+      color: var(--accent-glow);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .links-row a:hover { text-decoration: underline; }
+
+    /* ── Ad Slot ── */
+    .ad-section {
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .ad-label {
+      font-size: 0.65rem;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ── News / Patch Notes ── -->
+  <div class="content-card">
+    <div class="version-badge" id="versionBadge">Latest Build</div>
+    <h2>What&rsquo;s New in SolarClient</h2>
+    <p>Performance mods updated to their latest stable versions. Improved first-launch download speed and fixed a bug where the mod browser wouldn&rsquo;t refresh after switching Minecraft versions.</p>
+    <div class="links-row">
+      <a href="index.html" target="_blank" rel="noopener">Download Page</a>
+      <a href="https://sharktoothgaming56-maker.github.io/solarclientsite/" target="_blank" rel="noopener">Website</a>
+    </div>
+  </div>
+
+  <!-- ── Ad Slot 1 ── -->
+  <div class="ad-section" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7931973085541540" crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-7931973085541540"
+         data-ad-slot="5583456558"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <!-- ── Quick Tips ── -->
+  <div class="content-card">
+    <h2>Performance Tips</h2>
+    <ul class="tips-list">
+      <li>Allocate 3&ndash;4 GB of RAM for the best balance of performance and stability. More isn&rsquo;t always better&mdash;too much RAM can increase garbage collection pauses.</li>
+      <li>SolarClient&rsquo;s built-in Sodium renderer replaces OptiFine. They can&rsquo;t run together, but Sodium typically delivers higher FPS.</li>
+      <li>Use the built-in mod browser to find shader packs compatible with Iris, the Sodium-friendly shader loader.</li>
+      <li>Lower your render distance to 8&ndash;12 chunks in PvP modes for smoother gameplay during intense fights.</li>
+      <li>The launcher auto-applies optimized JVM flags. You don&rsquo;t need to paste custom arguments unless you know what you&rsquo;re doing.</li>
+    </ul>
+  </div>
+
+  <!-- ── Ad Slot 2 ── -->
+  <div class="ad-section" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7931973085541540" crossorigin="anonymous"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-7931973085541540"
+         data-ad-slot="4916563529"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
+  <!-- ── Community / Links ── -->
+  <div class="content-card">
+    <h2>Join the Community</h2>
+    <p>Got questions, found a bug, or want to suggest a feature? The Discord server is the fastest way to reach the team.</p>
+    <div class="links-row">
+      <a href="https://discord.gg/DyeJ8tAvZY" target="_blank" rel="noopener">&#128172; Discord</a>
+      
+      <a href="https://sharktoothgaming56-maker.github.io/solarclientsite/privacy.html" target="_blank" rel="noopener">Privacy</a>
+      <a href="https://sharktoothgaming56-maker.github.io/solarclientsite/terms.html" target="_blank" rel="noopener">Terms</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Pull latest version from GitHub ── -->
+<script>
+  (async () => {
+    try {
+      const res = await fetch('https://api.github.com/repos/sharktoothgaming56-maker/solarclientsite/releases/latest', {
+        headers: { 'Accept': 'application/vnd.github+json' }
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      const version = (data.tag_name || '').replace(/^v/i, '');
+      if (version) {
+        const badge = document.getElementById('versionBadge');
+        if (badge) badge.textContent = 'v' + version;
+      }
+    } catch (_) {}
+  })();
+</script>
+</body>
+</html>
