@@ -1324,7 +1324,7 @@
 
     async function loadLatestRelease() {
       try {
-        const res = await fetch(`https://api.github.com/repos/${RELEASES_REPO}/releases/latest`, {
+        const res = await fetch(`https://api.github.com/repos/${RELEASES_REPO}/releases/latest?t=${Date.now()}`, {
           headers: { 'Accept': 'application/vnd.github+json' }
         });
         if (!res.ok) return;
