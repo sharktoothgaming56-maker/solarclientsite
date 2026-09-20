@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SolarClient Ad</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; width: 100%; height: 100%;
+      background: transparent; overflow: hidden;
+    }
+    #wrap {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrap"></div>
+  <script>
+    (async () => {
+      const slotIdx = Math.max(0, (Number(new URLSearchParams(location.search).get('slot')) || 1) - 1);
+      const sources = [
+        'http://130.12.156.98:8090/ads/config',
+        './ads-config.json',
+      ];
+      let slot = null;
+      for (const url of sources) {
+        try {
+          const res = await fetch(url, { cache: 'no-store' });
+          if (!res.ok) continue;
+          const data = await res.json();
+          if (data?.slots?.[slotIdx]?.key) { slot = data.slots[slotIdx]; break; }
+        } catch (_) {}
+      }
+      if (!slot?.key) return;
+      const width = Number(slot.width) || 160;
+      const height = Number(slot.height) || 300;
+      const invoke = slot.invoke || ('https://www.highperformanceformat.com/' + slot.key + '/invoke.js');
+      const s1 = document.createElement('script');
+      s1.textContent = 'atOptions = ' + JSON.stringify({
+        key: slot.key, format: 'iframe', width, height, params: {}
+      }) + ';';
+      document.body.appendChild(s1);
+      const s2 = document.createElement('script');
+      s2.src = invoke;
+      document.body.appendChild(s2);
+    })();
+  </script>
+</body>
+</html>
