@@ -1,0 +1,12 @@
+﻿{
+  "provider": "adsterra",
+  "updatedAt": "2026-09-20T00:00:00.000Z",
+  "slots": [
+    { "id": "slot-1", "provider": "adsterra", "format": "iframe", "width": 160, "height": 300, "key": "", "invoke": "", "ready": false },
+    { "id": "slot-2", "provider": "adsterra", "format": "iframe", "width": 160, "height": 300, "key": "", "invoke": "", "ready": false }
+  ],
+  "pageUrls": [
+    "https://figgysmp.shop/ad-slot.html?slot=1",
+    "https://figgysmp.shop/ad-slot.html?slot=2"
+  ]
+}
