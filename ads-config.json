@@ -1,12 +1,1 @@
-﻿{
-  "provider": "adsterra",
-  "updatedAt": "2026-09-20T00:00:00.000Z",
-  "slots": [
-    { "id": "slot-1", "provider": "adsterra", "format": "iframe", "width": 160, "height": 300, "key": "", "invoke": "", "ready": false },
-    { "id": "slot-2", "provider": "adsterra", "format": "iframe", "width": 160, "height": 300, "key": "", "invoke": "", "ready": false }
-  ],
-  "pageUrls": [
-    "https://figgysmp.shop/ad-slot.html?slot=1",
-    "https://figgysmp.shop/ad-slot.html?slot=2"
-  ]
-}
+{"slots":[{"id":"slot-1","width":160,"provider":"adsterra","format":"iframe","ready":true,"height":300,"invoke":"https://www.highrevenueformat.com/5c44bc7a903949c21f685b8010991430/invoke.js","key":"5c44bc7a903949c21f685b8010991430"},{"id":"slot-2","width":160,"provider":"adsterra","format":"iframe","ready":true,"height":300,"invoke":"https://www.highrevenueformat.com/5c44bc7a903949c21f685b8010991430/invoke.js","key":"5c44bc7a903949c21f685b8010991430"}],"provider":"adsterra"}
