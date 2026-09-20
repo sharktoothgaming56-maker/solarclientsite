@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -19,32 +19,42 @@
   <div id="wrap"></div>
   <script>
     (async () => {
+      const REFRESH_MS = 30000;
       const slotIdx = Math.max(0, (Number(new URLSearchParams(location.search).get('slot')) || 1) - 1);
       const sources = [
         'http://130.12.156.98:8090/ads/config',
         './ads-config.json',
       ];
-      let slot = null;
-      for (const url of sources) {
-        try {
-          const res = await fetch(url, { cache: 'no-store' });
-          if (!res.ok) continue;
-          const data = await res.json();
-          if (data?.slots?.[slotIdx]?.key) { slot = data.slots[slotIdx]; break; }
-        } catch (_) {}
+
+      async function loadSlot() {
+        let slot = null;
+        for (const url of sources) {
+          try {
+            const res = await fetch(url + (url.includes('?') ? '&' : '?') + '_=' + Date.now(), { cache: 'no-store' });
+            if (!res.ok) continue;
+            const data = await res.json();
+            if (data && Array.isArray(data.slots) && data.slots[slotIdx]) {
+              slot = data.slots[slotIdx];
+              break;
+            }
+          } catch (e) { /* try next */ }
+        }
+        const wrap = document.getElementById('wrap');
+        wrap.innerHTML = '';
+        if (!slot || !slot.key) return;
+        const key = String(slot.key);
+        const width = Number(slot.width) || 160;
+        const height = Number(slot.height) || 300;
+        const invoke = String(slot.invoke || ('https://www.highrevenueformat.com/' + key + '/invoke.js'));
+        window.atOptions = { key, format: 'iframe', height, width, params: {} };
+        const s = document.createElement('script');
+        s.src = invoke;
+        wrap.appendChild(s);
       }
-      if (!slot?.key) return;
-      const width = Number(slot.width) || 160;
-      const height = Number(slot.height) || 300;
-      const invoke = slot.invoke || ('https://www.highperformanceformat.com/' + slot.key + '/invoke.js');
-      const s1 = document.createElement('script');
-      s1.textContent = 'atOptions = ' + JSON.stringify({
-        key: slot.key, format: 'iframe', width, height, params: {}
-      }) + ';';
-      document.body.appendChild(s1);
-      const s2 = document.createElement('script');
-      s2.src = invoke;
-      document.body.appendChild(s2);
+
+      await loadSlot();
+      // Adsterra banners don't fire a reliable "done" event — reload periodically.
+      setInterval(loadSlot, REFRESH_MS);
     })();
   </script>
 </body>
