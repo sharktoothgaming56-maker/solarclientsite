@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sodium vs OptiFine: Which Should You Use? — SolarClient</title>
+  <meta name="description" content="An honest comparison of Sodium and OptiFine for Minecraft: Java Edition — performance, features, mod compatibility, and the cases where OptiFine is still the right answer.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <meta name="theme-color" content="#090611">
+  <link rel="canonical" href="https://figgysmp.shop/guides/sodium-vs-optifine.html">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="SolarClient">
+  <meta property="og:title" content="Sodium vs OptiFine: Which Should You Use? — SolarClient">
+  <meta property="og:description" content="An honest comparison of Sodium and OptiFine for Minecraft: Java Edition — performance, features, mod compatibility, and the cases where OptiFine is still the right answer.">
+  <meta property="og:url" content="https://figgysmp.shop/guides/sodium-vs-optifine.html">
+  <meta property="og:image" content="https://figgysmp.shop/assets/img/logo.svg">
+  <meta property="og:locale" content="en_US">
+  <meta property="article:published_time" content="2026-09-20">
+  <meta property="article:modified_time" content="2026-09-20">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Sodium vs OptiFine: Which Should You Use? — SolarClient">
+  <meta name="twitter:description" content="An honest comparison of Sodium and OptiFine for Minecraft: Java Edition — performance, features, mod compatibility, and the cases where OptiFine is still the right answer.">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7931973085541540" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Sodium vs OptiFine: Which Should You Use?",
+  "description": "An honest comparison of Sodium and OptiFine for Minecraft: Java Edition — performance, features, mod compatibility, and the cases where OptiFine is still the right answer.",
+  "articleSection": "Comparison",
+  "url": "https://figgysmp.shop/guides/sodium-vs-optifine.html",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://figgysmp.shop/guides/sodium-vs-optifine.html"
+  },
+  "datePublished": "2026-09-20",
+  "dateModified": "2026-09-20",
+  "inLanguage": "en",
+  "author": {
+    "@id": "https://figgysmp.shop/#organization"
+  },
+  "publisher": {
+    "@id": "https://figgysmp.shop/#organization"
+  },
+  "image": "https://figgysmp.shop/assets/img/logo.svg"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://figgysmp.shop/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://figgysmp.shop/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Sodium vs OptiFine"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <canvas id="skyCanvas" aria-hidden="true"></canvas>
+  <div class="ambient-glow-purple" aria-hidden="true"></div>
+  <div class="ambient-glow-bottom" aria-hidden="true"></div>
+
+  <div class="container">
+    <header class="header-nav">
+      <a href="/" class="brand">
+        <img src="/assets/img/logo.svg" alt="" class="brand-logo" width="42" height="42">
+        <span>SolarClient</span>
+      </a>
+      <nav class="nav-actions" aria-label="Main">
+        <a href="/#download" class="nav-link">Download</a>
+        <a href="/#features" class="nav-link">Features</a>
+        <a href="/guides/" class="nav-link" aria-current="page">Guides</a>
+        <a href="/faq.html" class="nav-link">FAQ</a>
+        <a href="/changelog.html" class="nav-link">Changelog</a>
+        <a href="/about.html" class="nav-link">About</a>
+        <a href="/support.html" class="nav-link">Support</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><a href="/guides/">Guides</a></li>
+          <li><span aria-current="page">Sodium vs OptiFine</span></li>
+        </ol>
+      </nav>
+
+      <article class="article">
+        <header class="article-header">
+          <p class="article-eyebrow">Comparison</p>
+          <h1 class="article-title">Sodium vs OptiFine: Which Should You Use?</h1>
+          <p class="article-standfirst">OptiFine was the default answer for a decade. It no longer is &mdash; but it still does several things Sodium does not, and the right choice depends on what you actually need. Here is an honest comparison.</p>
+          <div class="article-meta">
+            <span>Published <time datetime="2026-09-20">September 20, 2026</time></span>
+            <span aria-hidden="true">&middot;</span>
+            <span>Applies to Minecraft: Java Edition 1.16&ndash;1.21</span>
+            <span aria-hidden="true">&middot;</span>
+            <span>~10 min read</span>
+          </div>
+        </header>
+
+        <div class="prose">
+
+          <section class="key-takeaways">
+            <h2>The short version</h2>
+            <ul>
+              <li><strong>For frame rate, Sodium wins clearly</strong>, and usually by a wide margin.</li>
+              <li><strong>They cannot run together.</strong> Both replace the rendering engine.</li>
+              <li><strong>Sodium plus Iris covers shaders</strong> and most of what people actually used OptiFine for.</li>
+              <li><strong>OptiFine still wins</strong> on custom entity models, some legacy resource pack features, and 1.12-era modpack support.</li>
+              <li><strong>Sodium is compatible with other mods</strong>; OptiFine is notoriously not.</li>
+            </ul>
+          </section>
+
+          <h2 id="different-goals">They were built to do different things</h2>
+
+          <p>The comparison makes more sense once you know that these two projects had different goals from the start.</p>
+
+          <p><strong>OptiFine</strong> began in 2011 as a general-purpose enhancement mod. Performance was one goal among many; it also added dynamic lighting, connected textures, custom sky and entity models, configurable animations, zoom, and a long list of graphical options. The shader support that made it indispensable arrived by absorbing a separate shaders mod. It is closed source, distributed as a binary by a single author, and it patches a very large number of the game&rsquo;s classes to do all of this.</p>
+
+          <p><strong>Sodium</strong> began in 2020 with a narrow goal: replace Minecraft&rsquo;s chunk rendering pipeline with one written against modern OpenGL. It does not add features. It does not change how the game looks. It rewrites how geometry reaches your graphics card. It is open source, developed by CaffeineMC, and its companion projects &mdash; Iris for shaders, Indium for rendering API compatibility &mdash; handle the things Sodium deliberately leaves out.</p>
+
+          <p>That difference in scope explains nearly everything downstream, including the compatibility situation.</p>
+
+          <h2 id="performance">Performance</h2>
+
+          <p>Sodium is substantially faster, and the reason is architectural rather than a matter of tuning.</p>
+
+          <p>Vanilla Minecraft issues a very large number of small draw calls &mdash; individual commands telling the GPU to draw a piece of geometry. Each has fixed CPU overhead. With enough of them, your CPU spends its time issuing commands while the GPU waits. OptiFine reduces some of this and adds culling improvements, but it works within the vanilla architecture.</p>
+
+          <p>Sodium replaces the architecture. Chunk geometry is packed into large shared vertex buffers and submitted in batches. Chunk meshing moves to worker threads. Culling is more aggressive and more correct. The result is that the bottleneck moves from your CPU to your GPU, which is where it should have been.</p>
+
+          <p>How much you gain depends on where your bottleneck was. On a system with a strong GPU and a modest CPU &mdash; most laptops, and a great many prebuilt desktops &mdash; the gain is large, frequently a doubling or more. On a system already GPU-limited at high render distance with shaders, the gain is smaller because the GPU was the constraint all along.</p>
+
+          <div class="callout">
+            <span class="callout-title">On benchmark numbers</span>
+            <p>Treat specific multipliers you see quoted, including ours, with appropriate scepticism. Minecraft performance varies enormously with CPU, GPU, render distance, world content, and where you happen to be standing. The reliable claim is the direction and the mechanism; the exact multiplier is yours to measure on your own hardware, in a fixed spot, with the <code>Alt+F3</code> graph.</p>
+          </div>
+
+          <h2 id="features">Feature comparison</h2>
+
+          <div class="req-table-wrap">
+            <table class="req-table">
+              <caption>Sodium&rsquo;s column assumes the usual companions &mdash; Iris, Indium, and the small mods that restore specific OptiFine features.</caption>
+              <thead>
+                <tr><th scope="col">Feature</th><th scope="col">Sodium stack</th><th scope="col">OptiFine</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Chunk rendering performance</td><td>Substantially better</td><td>Modest improvement over vanilla</td></tr>
+                <tr><td>Shader packs</td><td>Yes, via Iris</td><td>Yes, built in</td></tr>
+                <tr><td>Connected textures</td><td>Yes, via Continuity</td><td>Built in</td></tr>
+                <tr><td>Dynamic lighting (held torches)</td><td>Yes, via LambDynamicLights</td><td>Built in</td></tr>
+                <tr><td>Zoom</td><td>Yes, via Zoomify or similar</td><td>Built in</td></tr>
+                <tr><td>Custom entity models</td><td>Limited</td><td>Built in, best in class</td></tr>
+                <tr><td>Custom item and armour textures</td><td>Partial, via CIT Resewn</td><td>Built in</td></tr>
+                <tr><td>Compatibility with other mods</td><td>Very good</td><td>Frequently problematic</td></tr>
+                <tr><td>Source available</td><td>Yes</td><td>No</td></tr>
+                <tr><td>Fabric support</td><td>Native</td><td>Via a compatibility layer</td></tr>
+                <tr><td>Forge / NeoForge support</td><td>NeoForge natively; Embeddium on older Forge</td><td>Native</td></tr>
+                <tr><td>Very old versions (1.12.2 and earlier)</td><td>No</td><td>Yes</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+      <aside class="ad-slot" aria-label="Advertisement">
+        <div class="ad-slot-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7931973085541540"
+             data-ad-slot="5583456558"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </aside>
+
+
+          <h2 id="compatibility">Mod compatibility is the real difference</h2>
+
+          <p>For anyone playing modded, this matters more than the frame rate gap.</p>
+
+          <p>OptiFine patches a great many of the game&rsquo;s rendering classes directly. Any other mod that touches the same code is in conflict. Because OptiFine is closed source, mod authors cannot inspect what it changed and have to work around symptoms rather than causes. The result is a long history of mysterious crashes, invisible blocks, broken lighting, and &ldquo;remove OptiFine and try again&rdquo; as the standard first response from support channels.</p>
+
+          <p>Sodium is open source and works through Fabric&rsquo;s and NeoForge&rsquo;s intended extension points. Other mods can see what it does and interoperate deliberately. <strong>Indium</strong> exists specifically to provide the Fabric Rendering API for mods that need it &mdash; though recent Sodium versions implement much of that natively, so Indium is required less often than it used to be.</p>
+
+          <p>In practice: if you run more than a handful of mods, the Sodium stack will give you far less trouble.</p>
+
+          <h2 id="shaders">Shaders</h2>
+
+          <p><strong>Iris</strong> loads OptiFine-format shader packs on top of Sodium. The packs are the same files &mdash; BSL, Complementary, Sildur&rsquo;s, Rethinking Voxels and the rest work without modification.</p>
+
+          <p>Because Iris sits on Sodium&rsquo;s faster base, shaders generally run better under Iris than under OptiFine at equivalent settings. Feature coverage has been close to complete for some time, though a small number of packs still use OptiFine-specific extensions that Iris has not implemented; a pack&rsquo;s own page is the place to check.</p>
+
+          <p>Iris also ships with Sodium bundled in its Fabric installer, so &ldquo;install Iris&rdquo; and &ldquo;install Sodium&rdquo; are usually the same action. See our <a href="/guides/minecraft-shaders-guide.html">shaders guide</a> for setup and for which settings actually cost you frames.</p>
+
+          <h2 id="when-optifine">When OptiFine is still the right answer</h2>
+
+          <p>It is not obsolete, and pretending otherwise does no one any favours. Choose OptiFine when:</p>
+
+          <ul>
+            <li><strong>You are playing 1.12.2 or older.</strong> Sodium does not target these versions. A great deal of classic modded content lives here.</li>
+            <li><strong>Your resource pack depends on custom entity models.</strong> OptiFine&rsquo;s CEM support is genuinely the most complete implementation available, and packs that rebuild mobs entirely will not look right without it.</li>
+            <li><strong>You rely on several older OptiFine-specific resource pack features at once.</strong> Individually most have Fabric equivalents; assembling six of them and keeping them version-matched is real work.</li>
+            <li><strong>A specific modpack requires it.</strong> Some packs are built and tested around OptiFine. Fighting the pack is rarely worth it.</li>
+          </ul>
+
+          <p>Outside those cases, the Sodium stack is the better default in 2026 &mdash; faster, more compatible, and actively developed in the open.</p>
+
+          <h2 id="migrating">Migrating from OptiFine</h2>
+
+          <p>If you are switching, the pieces map roughly like this:</p>
+
+          <ol>
+            <li><strong>Remove OptiFine entirely.</strong> They cannot coexist &mdash; both replace the rendering engine, and running both produces an immediate crash.</li>
+            <li><strong>Install Iris</strong>, which brings Sodium with it. That covers rendering and shaders together.</li>
+            <li><strong>Add Lithium and FerriteCore</strong> for tick performance and memory, which OptiFine did not address at all.</li>
+            <li><strong>Replace the specific features you used.</strong> Continuity for connected textures, LambDynamicLights for held-torch lighting, Zoomify for zoom, CIT Resewn for custom item textures.</li>
+            <li><strong>Re-check your video settings.</strong> Sodium reorganises the options screen and exposes settings OptiFine did not. Defaults are sensible; the ones worth reviewing are render distance and biome blend.</li>
+          </ol>
+
+          <p>SolarClient ships the Sodium stack pre-assembled and version-matched, which mainly saves the tedium of keeping six mods in step across game updates. Nothing here requires a launcher &mdash; every mod named is freely available and installable by hand.</p>
+
+          <h2 id="verdict">Verdict</h2>
+
+          <p>For most players on 1.16 and newer, install Iris, get Sodium with it, add Lithium and FerriteCore, and stop thinking about it. You will have better frame rates than OptiFine gave you, shader support that is at least as good, and far fewer compatibility problems.</p>
+
+          <p>Keep OptiFine for old versions and for resource packs that genuinely depend on its entity model support. Both of those are real reasons; neither is a reason to use it everywhere.</p>
+
+      <aside class="ad-slot" aria-label="Advertisement">
+        <div class="ad-slot-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7931973085541540"
+             data-ad-slot="4916563529"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </aside>
+
+
+        </div>
+
+        <nav class="next-read" aria-label="Related guides">
+          <h2>Related guides</h2>
+          <ul>
+            <li><a href="/guides/minecraft-performance-mods.html">Every Minecraft performance mod, explained</a></li>
+            <li><a href="/guides/minecraft-shaders-guide.html">Minecraft shaders with Iris: setup and tuning</a></li>
+            <li><a href="/guides/minecraft-fps-boost.html">How to increase Minecraft FPS</a></li>
+          </ul>
+        </nav>
+      </article>
+    </main>
+
+    <footer>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h2>SolarClient</h2>
+          <ul>
+            <li><a href="/#download">Download for Windows</a></li>
+            <li><a href="/#features">Features</a></li>
+            <li><a href="/#requirements">System requirements</a></li>
+            <li><a href="/#install">Install guide</a></li>
+            <li><a href="/changelog.html">Changelog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Guides</h2>
+          <ul>
+            <li><a href="/guides/">All guides</a></li>
+            <li><a href="/guides/minecraft-fps-boost.html">Increase Minecraft FPS</a></li>
+            <li><a href="/guides/allocate-ram-minecraft.html">How much RAM to allocate</a></li>
+            <li><a href="/guides/minecraft-java-version-guide.html">Java version chart</a></li>
+            <li><a href="/guides/fix-minecraft-lag-spikes.html">Fix lag spikes</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Help</h2>
+          <ul>
+            <li><a href="/faq.html">FAQ</a></li>
+            <li><a href="/support.html">Support &amp; troubleshooting</a></li>
+            <li><a href="https://discord.gg/DyeJ8tAvZY" rel="noopener" target="_blank">Discord server</a></li>
+            <li><a href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases" rel="noopener" target="_blank">GitHub releases</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Legal</h2>
+          <ul>
+            <li><a href="/privacy.html">Privacy policy</a></li>
+            <li><a href="/terms.html">Terms of service</a></li>
+            <li><a href="/cookies.html">Cookie policy</a></li>
+            <li><a href="/about.html">About us</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <p class="footer-cookie-note">This website is funded by advertising. Google AdSense and its partners set cookies to measure and personalise the ads you see here. Read our <a href="/cookies.html">cookie policy</a> and <a href="/privacy.html">privacy policy</a>, or manage your choices at <a href="https://myadcenter.google.com/" rel="noopener nofollow" target="_blank">Google My Ad Center</a>.</p>
+        <p>&copy; 2024&ndash;2026 SolarClient. SolarClient is an independent project and is <strong>not</strong> affiliated with, endorsed by, or sponsored by Mojang Studios or Microsoft Corporation.</p>
+        <p>Minecraft is a registered trademark of Mojang Studios. Sodium, Lithium, FerriteCore, Iris and other bundled mods are the property of their respective authors and are distributed under their own licences. All other trademarks are the property of their respective owners.</p>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast-msg" id="toast" role="status" aria-live="polite"></div>
+  <script src="/assets/js/site.js" defer></script>
+</body>
+</html>

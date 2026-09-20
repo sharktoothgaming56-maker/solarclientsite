@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SolarClient Support — Installation, Login and Crash Troubleshooting</title>
+  <meta name="description" content="Fixes for common SolarClient problems: SmartScreen warnings, antivirus false positives, Microsoft login failures, exit code 1 crashes, out-of-memory errors and mod conflicts.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <meta name="theme-color" content="#090611">
+  <link rel="canonical" href="https://figgysmp.shop/support.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="SolarClient">
+  <meta property="og:title" content="SolarClient Support — Installation, Login and Crash Troubleshooting">
+  <meta property="og:description" content="Fixes for common SolarClient problems: SmartScreen warnings, antivirus false positives, Microsoft login failures, exit code 1 crashes, out-of-memory errors and mod conflicts.">
+  <meta property="og:url" content="https://figgysmp.shop/support.html">
+  <meta property="og:image" content="https://figgysmp.shop/assets/img/logo.svg">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="SolarClient Support — Installation, Login and Crash Troubleshooting">
+  <meta name="twitter:description" content="Fixes for common SolarClient problems: SmartScreen warnings, antivirus false positives, Microsoft login failures, exit code 1 crashes, out-of-memory errors and mod conflicts.">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7931973085541540" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://figgysmp.shop/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Support"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <canvas id="skyCanvas" aria-hidden="true"></canvas>
+  <div class="ambient-glow-purple" aria-hidden="true"></div>
+  <div class="ambient-glow-bottom" aria-hidden="true"></div>
+
+  <div class="container">
+    <header class="header-nav">
+      <a href="/" class="brand">
+        <img src="/assets/img/logo.svg" alt="" class="brand-logo" width="42" height="42">
+        <span>SolarClient</span>
+      </a>
+      <nav class="nav-actions" aria-label="Main">
+        <a href="/#download" class="nav-link">Download</a>
+        <a href="/#features" class="nav-link">Features</a>
+        <a href="/guides/" class="nav-link">Guides</a>
+        <a href="/faq.html" class="nav-link">FAQ</a>
+        <a href="/changelog.html" class="nav-link">Changelog</a>
+        <a href="/about.html" class="nav-link">About</a>
+        <a href="/support.html" class="nav-link" aria-current="page">Support</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><span aria-current="page">Support</span></li>
+        </ol>
+      </nav>
+
+      <section class="hero-section">
+        <h1 class="hero-title">Support &amp; <span class="highlight">Troubleshooting</span></h1>
+        <p class="hero-desc">Common launcher problems with their actual causes, what to include when you report a bug, and how to reach us.</p>
+      </section>
+
+      <section class="section" style="margin-top:20px">
+        <h2 class="section-title">Contact</h2>
+        <p class="section-subtitle">Discord is the fastest route. The people who write the code read the messages, and most questions get an answer within a few hours.</p>
+        <div class="contact-wrap">
+          <div class="contact-links">
+            <a class="contact-link" href="https://discord.gg/DyeJ8tAvZY" rel="noopener" target="_blank">Join our Discord server</a>
+            <a class="contact-link" href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases" rel="noopener" target="_blank">GitHub releases &amp; issues</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Installation problems</h2>
+        <div class="faq-wrapper">
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Windows blocked the installer (SmartScreen)<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>Expected. The installer is not code-signed, so Windows warns about an unrecognised publisher. Click <strong>More info</strong>, then <strong>Run anyway</strong>. Windows remembers your choice for that file.</p>
+              <p>If you want to verify first, open PowerShell in your Downloads folder and run <code>Get-FileHash .\SolarClient-Setup-*.exe</code>, then compare the result with the SHA-256 shown on the <a href="/">home page</a>. The page pulls that value from the GitHub release, so it always matches the current build.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Antivirus deleted or quarantined the installer<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>Unsigned installers that write files and launch other processes fit the heuristic profile some antivirus engines flag, and false positives on indie launchers are common. Check the VirusTotal link on the home page &mdash; it shows results for the exact build, across every engine.</p>
+              <p>If you are satisfied it is a false positive, restore the file and add an exclusion for the SolarClient install directory. If something looks genuinely wrong in the VirusTotal results, tell us in Discord before running anything, and include a link to the report.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">The installer finishes but nothing launches<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>Usually a permissions problem with the install location. Try installing to a directory under your user folder rather than <code>Program Files</code>, which requires elevation for every write.</p>
+              <p>If it still fails, check whether a previous installation left a partial directory behind and remove it before reinstalling.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Login problems</h2>
+        <div class="faq-wrapper">
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Microsoft login window opens then closes immediately<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>Almost always a stale cached session. Sign out in the launcher, then sign in again. If it persists, clear the launcher&rsquo;s stored session from Settings &rarr; Account and start fresh.</p>
+              <p>Corporate or school networks sometimes block parts of Microsoft&rsquo;s OAuth flow. If you are on one, try a different network to confirm.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">&ldquo;You do not own Minecraft: Java Edition&rdquo;<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>The account you signed in with does not have a Java Edition entitlement. The usual causes: signing in with a different Microsoft account than the one that owns the game, owning Bedrock Edition rather than Java, or a recent purchase that has not finished propagating.</p>
+              <p>Confirm by signing in at minecraft.net with the same account and checking your profile. If the official launcher will not start Java Edition either, the problem is with the account rather than with us &mdash; Mojang support is the right place for that.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">I was asked for my Microsoft password inside the launcher<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>That should never happen, and if it did, you are not running our software. SolarClient sends you to Microsoft&rsquo;s own login page and never handles your password.</p>
+              <p>If you typed a password into something claiming to be SolarClient, change your Microsoft password immediately and check your account&rsquo;s recent sign-in activity. Then tell us in Discord &mdash; we want to know where the fake came from.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <aside class="ad-slot" aria-label="Advertisement">
+        <div class="ad-slot-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7931973085541540"
+             data-ad-slot="5583456558"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </aside>
+
+
+      <section class="section">
+        <h2 class="section-title">Game launch problems</h2>
+        <div class="faq-wrapper">
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Game exits immediately with code 1<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>The real error is in the log, printed before the process ended. Open the log from the launcher and read from the bottom up.</p>
+              <p>The two most common causes are a Java version mismatch and a mod incompatibility. <code>UnsupportedClassVersionError</code> means the Java version is too old for the game; <code>InaccessibleObjectException</code> means it is too new for the mod loader. Our <a href="/guides/minecraft-java-version-guide.html">Java version guide</a> explains both and how to decode the numbers.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Out of memory crash<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>Counterintuitively, raising your allocation is not always the fix. If memory climbs steadily across a session and never returns to a baseline, something is leaking and a bigger heap only delays the crash.</p>
+              <p>Check the <code>F3</code> memory readout. If the low points of the sawtooth keep rising over time, look for a leaking mod and add MemoryLeakFix. If the low points are stable but close to your ceiling, you genuinely need more &mdash; see the <a href="/guides/allocate-ram-minecraft.html">RAM guide</a> for how much.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Crash mentioning OpenGL, GLFW, or the display driver<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>Graphics driver issue. Update to the current driver from NVIDIA, AMD or Intel directly rather than through Windows Update, which often lags well behind.</p>
+              <p>If the crash mentions a missing OpenGL version, your GPU or its driver does not support what the game requires. Minecraft needs OpenGL 4.5 for modern versions; very old integrated graphics cannot provide it.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">A mod I installed broke everything<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>Remove the most recently added mod and try again. If that is unclear, disable half the mods, test, and repeat on whichever half still fails &mdash; a binary search narrows it down in a handful of attempts even with a hundred mods.</p>
+              <p>The most common cause by far is a version mismatch. Performance mods in particular touch game internals and are strict: a build for 1.20.1 will usually not load on 1.20.4.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Performance problems</h2>
+        <div class="about-text">
+          <p>Performance questions have their own guides, because the answers are longer than a support entry:</p>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:10px;margin-top:6px">
+            <li><a href="/guides/minecraft-fps-boost.html">Low frame rate</a> &mdash; start with which GPU is actually running the game</li>
+            <li><a href="/guides/fix-minecraft-lag-spikes.html">Stutter and lag spikes</a> &mdash; identify the cause from the frame time graph first</li>
+            <li><a href="/guides/allocate-ram-minecraft.html">Memory and garbage collection</a> &mdash; why more RAM often makes it worse</li>
+            <li><a href="/guides/minecraft-shaders-guide.html">Shader performance</a> &mdash; shadow settings dominate the cost</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Reporting a bug well</h2>
+        <div class="about-text">
+          <p>A report with these five things usually gets fixed. A report that says &ldquo;it crashes&rdquo; usually gets a series of questions instead.</p>
+          <p><strong>1. The SolarClient version.</strong> Shown in the launcher&rsquo;s title bar and under Settings &rarr; About.</p>
+          <p><strong>2. The Minecraft version and mod loader</strong> you were launching &mdash; for example 1.21.1 Fabric.</p>
+          <p><strong>3. The full log or crash report</strong>, not a screenshot of part of it. Paste it to a text-sharing service and link it; the useful line is frequently not the one that looks important.</p>
+          <p><strong>4. What you were doing</strong> when it happened, and whether it reproduces. &ldquo;Every time I open the mod browser&rdquo; is far more actionable than &ldquo;sometimes&rdquo;.</p>
+          <p><strong>5. What you have already tried.</strong> Saves both of us repeating it.</p>
+          <p>If it is a performance problem rather than a crash, a <a href="https://spark.lucko.me/" rel="noopener nofollow" target="_blank">spark</a> profiler report is worth more than any description. Run <code>/spark profiler start</code>, play for a minute while the problem occurs, then <code>/spark profiler stop</code> and share the link it gives you.</p>
+        </div>
+      </section>
+
+      <aside class="ad-slot" aria-label="Advertisement">
+        <div class="ad-slot-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7931973085541540"
+             data-ad-slot="4916563529"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </aside>
+
+    </main>
+
+    <footer>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h2>SolarClient</h2>
+          <ul>
+            <li><a href="/#download">Download for Windows</a></li>
+            <li><a href="/#features">Features</a></li>
+            <li><a href="/#requirements">System requirements</a></li>
+            <li><a href="/#install">Install guide</a></li>
+            <li><a href="/changelog.html">Changelog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Guides</h2>
+          <ul>
+            <li><a href="/guides/">All guides</a></li>
+            <li><a href="/guides/minecraft-fps-boost.html">Increase Minecraft FPS</a></li>
+            <li><a href="/guides/allocate-ram-minecraft.html">How much RAM to allocate</a></li>
+            <li><a href="/guides/minecraft-java-version-guide.html">Java version chart</a></li>
+            <li><a href="/guides/fix-minecraft-lag-spikes.html">Fix lag spikes</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Help</h2>
+          <ul>
+            <li><a href="/faq.html">FAQ</a></li>
+            <li><a href="/support.html">Support &amp; troubleshooting</a></li>
+            <li><a href="https://discord.gg/DyeJ8tAvZY" rel="noopener" target="_blank">Discord server</a></li>
+            <li><a href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases" rel="noopener" target="_blank">GitHub releases</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Legal</h2>
+          <ul>
+            <li><a href="/privacy.html">Privacy policy</a></li>
+            <li><a href="/terms.html">Terms of service</a></li>
+            <li><a href="/cookies.html">Cookie policy</a></li>
+            <li><a href="/about.html">About us</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <p class="footer-cookie-note">This website is funded by advertising. Google AdSense and its partners set cookies to measure and personalise the ads you see here. Read our <a href="/cookies.html">cookie policy</a> and <a href="/privacy.html">privacy policy</a>, or manage your choices at <a href="https://myadcenter.google.com/" rel="noopener nofollow" target="_blank">Google My Ad Center</a>.</p>
+        <p>&copy; 2024&ndash;2026 SolarClient. SolarClient is an independent project and is <strong>not</strong> affiliated with, endorsed by, or sponsored by Mojang Studios or Microsoft Corporation.</p>
+        <p>Minecraft is a registered trademark of Mojang Studios. Sodium, Lithium, FerriteCore, Iris and other bundled mods are the property of their respective authors and are distributed under their own licences. All other trademarks are the property of their respective owners.</p>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast-msg" id="toast" role="status" aria-live="polite"></div>
+  <script src="/assets/js/site.js" defer></script>
+</body>
+</html>

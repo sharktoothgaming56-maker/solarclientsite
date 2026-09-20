@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SolarClient FAQ — Safety, Accounts, Mods and Platforms</title>
+  <meta name="description" content="Answers to the questions we get asked most about SolarClient: is it safe, do you need Java, which mods are bundled, will servers ban it, and how it compares to Lunar Client and Feather.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <meta name="theme-color" content="#090611">
+  <link rel="canonical" href="https://figgysmp.shop/faq.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="SolarClient">
+  <meta property="og:title" content="SolarClient FAQ — Safety, Accounts, Mods and Platforms">
+  <meta property="og:description" content="Answers to the questions we get asked most about SolarClient: is it safe, do you need Java, which mods are bundled, will servers ban it, and how it compares to Lunar Client and Feather.">
+  <meta property="og:url" content="https://figgysmp.shop/faq.html">
+  <meta property="og:image" content="https://figgysmp.shop/assets/img/logo.svg">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="SolarClient FAQ — Safety, Accounts, Mods and Platforms">
+  <meta name="twitter:description" content="Answers to the questions we get asked most about SolarClient: is it safe, do you need Java, which mods are bundled, will servers ban it, and how it compares to Lunar Client and Feather.">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7931973085541540" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://figgysmp.shop/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "FAQ"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "url": "https://figgysmp.shop/faq.html",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is SolarClient safe to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Every release is published on GitHub with its SHA-256 hash, so you can verify that the file you downloaded is byte-for-byte what was uploaded. A VirusTotal link for the current build is on the home page and updates automatically with each release. Because the installer is not code-signed, Windows SmartScreen shows a one-time warning. That is standard for unsigned independent software and does not indicate a problem with the file — code signing certificates cost several hundred dollars a year, which a free project funded by website ads does not currently cover. We would rather be upfront about that than pretend the warning does not happen. We encourage you to verify the hash before running any installer you download, from us or anyone else. The home page shows you exactly how."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does Windows say the publisher is unknown?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Windows shows that for any application without a code signing certificate. It is a statement about whether we have paid a certificate authority, not about whether the file is safe. Click “More info”, then “Run anyway”. Windows remembers the choice for that file. If you would rather verify first, run Get-FileHash against the downloaded installer in PowerShell and compare the result to the SHA-256 shown on our home page."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does SolarClient collect any data about me?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The launcher does not send telemetry. Your settings, session token, waypoints and HUD layout are stored locally on your machine. We do not operate servers that store user information, and we do not track your usage of the application. This website is a different matter and we are explicit about it: it displays Google AdSense ads, and Google sets cookies to measure and personalise them. That is how hosting and development are paid for. Full detail is in our privacy policy and cookie policy , including how to opt out of personalised advertising."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my Microsoft password safe?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, because we never see it. SolarClient uses Microsoft’s official OAuth flow — the same one the vanilla launcher uses. You log in on a Microsoft page, and Microsoft hands back an access token. Your password never passes through the launcher or through us. Be extremely wary of any Minecraft launcher, client or website that asks you to type your Microsoft password into its own form. That is not how Minecraft authentication works, and it is how accounts get stolen."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to own Minecraft?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. You need a Microsoft account that owns Minecraft: Java Edition, purchased through minecraft.net or the Microsoft Store. SolarClient is a launcher for a game you already own — it does not include the game and it does not provide a way to play without it. We do not support cracked or offline accounts, and we will not be adding that."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to install Java separately?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. SolarClient downloads and manages the correct Eclipse Temurin runtime for each Minecraft version. Switching from 1.8.9 to 1.21 fetches the right Java in the background with no input from you, and runtimes that are no longer referenced get cleaned up. If you already have a Java installation you would rather use, you can point the launcher at it in Settings. Our Java version guide explains which version each Minecraft release needs and why it matters."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does SolarClient work on Mac or Linux?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not yet. SolarClient is currently Windows-only, supporting Windows 10 and 11 on 64-bit. Mac and Linux support are on the roadmap but do not have a release date, and we would rather not announce one we are not confident about. If cross-platform matters to you, say so in Discord — it genuinely affects what we prioritise."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will it run on my laptop?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Probably, and often better than the vanilla launcher does on the same machine, because the bundled performance mods do more for weak hardware than for strong hardware. The full table is in the system requirements section. One thing worth checking on any laptop: whether Minecraft is running on your integrated GPU instead of your dedicated one. It is an extremely common cause of poor performance and takes a minute to fix — the FPS guide has the steps."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use my own mods alongside the built-in ones?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. SolarClient’s bundled mods are ordinary Fabric and Forge mods, not a proprietary system. You can add your own through the built-in browser, which searches Modrinth and CurseForge, or by dropping .jar files into the mods folder directly. The launcher checks version and loader compatibility to catch the obvious conflicts before they crash you."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which performance mods are included?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The core stack is Sodium, Lithium, FerriteCore, ImmediatelyFast, EntityCulling and ModernFix, version-matched to whichever Minecraft release you select. What exactly ships depends on the version, since not every mod supports every release. All of them are open source and freely available from Modrinth. Nothing here is exclusive to SolarClient — the launcher's job is keeping them consistent across versions, which is tedious rather than difficult. Our performance mod reference explains what each one does."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does SolarClient work with OptiFine?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not simultaneously with the default profile. SolarClient uses Sodium, and Sodium and OptiFine both replace the rendering engine, so they cannot run together. For most purposes Sodium plus Iris is the better option — higher frame rates and far better mod compatibility. If you specifically need OptiFine, create a separate profile without the built-in performance mods. Our comparison guide covers when OptiFine is still genuinely the right choice."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are there cheats, hacks, or a bypass client in this?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. SolarClient is a performance launcher with quality-of-life features — a HUD editor, waypoints, a mod browser. It contains no combat automation, no X-ray, no movement exploits, and no anti-cheat evasion, and we are not going to add any. Everything it bundles is allowed on the large majority of servers, but server rules differ and they are the authority. If a server disallows a client-side mod, do not use it there."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will I get banned from servers for using it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The bundled mods are standard, widely used performance and HUD mods that the overwhelming majority of servers permit. We are not aware of any general prohibition on them. That said, individual servers set their own rules, and some competitive servers restrict things like minimaps or waypoint systems. Check the rules of the server you play on. You can disable individual features in Settings if a server you care about asks you to."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is SolarClient free? What is the catch?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is free, with no premium tier, no cosmetics store, and no paid features. The catch, such as it is, is that this website carries advertising, and that is what pays for hosting and development time. The launcher itself does not display ads from this website's ad network, and the application is not funded by selling anything about you — it sends no telemetry at all."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is SolarClient open source?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The launcher itself is not, currently. It is built on top of open-source performance mods whose licences we respect and comply with, and release binaries are published on GitHub with SHA-256 hashes so you can verify what you are running. We are considering opening parts of the project. We would rather say “considering” honestly than promise a date we might not meet."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is this different from Lunar Client or Feather?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Mainly in being smaller and more transparent. SolarClient uses standard Fabric and Forge mods that you can inspect, replace, or add to, rather than a proprietary bundled mod system. There is no mandatory telemetry, no cosmetics store, and no premium tier. The larger clients have real advantages too — bigger teams, longer track records, broader platform support, and code-signed installers. We are not going to pretend otherwise. If those matter more to you than the things above, they are a reasonable choice."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I uninstall it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Windows Settings → Apps → Installed apps, find SolarClient, click Uninstall. That removes the launcher, its managed Java runtimes, and cached assets. Your Minecraft worlds and saves live in the standard .minecraft folder and are not touched by uninstalling. Nothing you built goes anywhere."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How often is it updated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Releases are published through GitHub Releases as they are ready, which in practice means when a Minecraft version ships, when the bundled mods update, or when a bug worth fixing gets reported. The changelog pulls the real release history directly from GitHub, so it reflects what actually shipped rather than what we remembered to write down."
+      }
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <canvas id="skyCanvas" aria-hidden="true"></canvas>
+  <div class="ambient-glow-purple" aria-hidden="true"></div>
+  <div class="ambient-glow-bottom" aria-hidden="true"></div>
+
+  <div class="container">
+    <header class="header-nav">
+      <a href="/" class="brand">
+        <img src="/assets/img/logo.svg" alt="" class="brand-logo" width="42" height="42">
+        <span>SolarClient</span>
+      </a>
+      <nav class="nav-actions" aria-label="Main">
+        <a href="/#download" class="nav-link">Download</a>
+        <a href="/#features" class="nav-link">Features</a>
+        <a href="/guides/" class="nav-link">Guides</a>
+        <a href="/faq.html" class="nav-link" aria-current="page">FAQ</a>
+        <a href="/changelog.html" class="nav-link">Changelog</a>
+        <a href="/about.html" class="nav-link">About</a>
+        <a href="/support.html" class="nav-link">Support</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><span aria-current="page">FAQ</span></li>
+        </ol>
+      </nav>
+
+      <section class="hero-section">
+        <h1 class="hero-title">Frequently Asked <span class="highlight">Questions</span></h1>
+        <p class="hero-desc">Everything we get asked regularly about SolarClient &mdash; safety, accounts, mods, platforms, and how it compares to other launchers. If your question is not here, <a href="/support.html">ask us directly</a>.</p>
+      </section>
+
+      <section class="section" style="margin-top:20px">
+        <h2 class="section-title">Safety and trust</h2>
+        <div class="faq-wrapper">
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Is SolarClient safe to use?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>Every release is published on GitHub with its SHA-256 hash, so you can verify that the file you downloaded is byte-for-byte what was uploaded. A VirusTotal link for the current build is on the home page and updates automatically with each release.</p>
+              <p>Because the installer is not code-signed, Windows SmartScreen shows a one-time warning. That is standard for unsigned independent software and does not indicate a problem with the file &mdash; code signing certificates cost several hundred dollars a year, which a free project funded by website ads does not currently cover. We would rather be upfront about that than pretend the warning does not happen.</p>
+              <p>We encourage you to verify the hash before running any installer you download, from us or anyone else. The home page shows you exactly how.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Why does Windows say the publisher is unknown?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>Windows shows that for any application without a code signing certificate. It is a statement about whether we have paid a certificate authority, not about whether the file is safe. Click &ldquo;More info&rdquo;, then &ldquo;Run anyway&rdquo;. Windows remembers the choice for that file.</p>
+              <p>If you would rather verify first, run <code>Get-FileHash</code> against the downloaded installer in PowerShell and compare the result to the SHA-256 shown on our home page.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Does SolarClient collect any data about me?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>The launcher does not send telemetry. Your settings, session token, waypoints and HUD layout are stored locally on your machine. We do not operate servers that store user information, and we do not track your usage of the application.</p>
+              <p>This website is a different matter and we are explicit about it: it displays Google AdSense ads, and Google sets cookies to measure and personalise them. That is how hosting and development are paid for. Full detail is in our <a href="/privacy.html">privacy policy</a> and <a href="/cookies.html">cookie policy</a>, including how to opt out of personalised advertising.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Is my Microsoft password safe?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>Yes, because we never see it. SolarClient uses Microsoft&rsquo;s official OAuth flow &mdash; the same one the vanilla launcher uses. You log in on a Microsoft page, and Microsoft hands back an access token. Your password never passes through the launcher or through us.</p>
+              <p>Be extremely wary of any Minecraft launcher, client or website that asks you to type your Microsoft password into its own form. That is not how Minecraft authentication works, and it is how accounts get stolen.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Accounts and requirements</h2>
+        <div class="faq-wrapper">
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Do I need to own Minecraft?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>Yes. You need a Microsoft account that owns Minecraft: Java Edition, purchased through minecraft.net or the Microsoft Store. SolarClient is a launcher for a game you already own &mdash; it does not include the game and it does not provide a way to play without it.</p>
+              <p>We do not support cracked or offline accounts, and we will not be adding that.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Do I need to install Java separately?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>No. SolarClient downloads and manages the correct Eclipse Temurin runtime for each Minecraft version. Switching from 1.8.9 to 1.21 fetches the right Java in the background with no input from you, and runtimes that are no longer referenced get cleaned up.</p>
+              <p>If you already have a Java installation you would rather use, you can point the launcher at it in Settings. Our <a href="/guides/minecraft-java-version-guide.html">Java version guide</a> explains which version each Minecraft release needs and why it matters.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Does SolarClient work on Mac or Linux?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>Not yet. SolarClient is currently Windows-only, supporting Windows 10 and 11 on 64-bit. Mac and Linux support are on the roadmap but do not have a release date, and we would rather not announce one we are not confident about.</p>
+              <p>If cross-platform matters to you, say so in Discord &mdash; it genuinely affects what we prioritise.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Will it run on my laptop?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>Probably, and often better than the vanilla launcher does on the same machine, because the bundled performance mods do more for weak hardware than for strong hardware. The full table is in the <a href="/#requirements">system requirements</a> section.</p>
+              <p>One thing worth checking on any laptop: whether Minecraft is running on your integrated GPU instead of your dedicated one. It is an extremely common cause of poor performance and takes a minute to fix &mdash; the <a href="/guides/minecraft-fps-boost.html#wrong-gpu">FPS guide</a> has the steps.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <aside class="ad-slot" aria-label="Advertisement">
+        <div class="ad-slot-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7931973085541540"
+             data-ad-slot="5583456558"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </aside>
+
+
+      <section class="section">
+        <h2 class="section-title">Mods and features</h2>
+        <div class="faq-wrapper">
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Can I use my own mods alongside the built-in ones?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>Yes. SolarClient&rsquo;s bundled mods are ordinary Fabric and Forge mods, not a proprietary system. You can add your own through the built-in browser, which searches Modrinth and CurseForge, or by dropping <code>.jar</code> files into the mods folder directly. The launcher checks version and loader compatibility to catch the obvious conflicts before they crash you.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Which performance mods are included?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>The core stack is Sodium, Lithium, FerriteCore, ImmediatelyFast, EntityCulling and ModernFix, version-matched to whichever Minecraft release you select. What exactly ships depends on the version, since not every mod supports every release.</p>
+              <p>All of them are open source and freely available from Modrinth. Nothing here is exclusive to SolarClient &mdash; the launcher's job is keeping them consistent across versions, which is tedious rather than difficult. Our <a href="/guides/minecraft-performance-mods.html">performance mod reference</a> explains what each one does.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Does SolarClient work with OptiFine?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>Not simultaneously with the default profile. SolarClient uses Sodium, and Sodium and OptiFine both replace the rendering engine, so they cannot run together.</p>
+              <p>For most purposes Sodium plus Iris is the better option &mdash; higher frame rates and far better mod compatibility. If you specifically need OptiFine, create a separate profile without the built-in performance mods. Our <a href="/guides/sodium-vs-optifine.html">comparison guide</a> covers when OptiFine is still genuinely the right choice.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Are there cheats, hacks, or a bypass client in this?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>No. SolarClient is a performance launcher with quality-of-life features &mdash; a HUD editor, waypoints, a mod browser. It contains no combat automation, no X-ray, no movement exploits, and no anti-cheat evasion, and we are not going to add any.</p>
+              <p>Everything it bundles is allowed on the large majority of servers, but server rules differ and they are the authority. If a server disallows a client-side mod, do not use it there.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Will I get banned from servers for using it?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>The bundled mods are standard, widely used performance and HUD mods that the overwhelming majority of servers permit. We are not aware of any general prohibition on them.</p>
+              <p>That said, individual servers set their own rules, and some competitive servers restrict things like minimaps or waypoint systems. Check the rules of the server you play on. You can disable individual features in Settings if a server you care about asks you to.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">The project</h2>
+        <div class="faq-wrapper">
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Is SolarClient free? What is the catch?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>It is free, with no premium tier, no cosmetics store, and no paid features. The catch, such as it is, is that this website carries advertising, and that is what pays for hosting and development time.</p>
+              <p>The launcher itself does not display ads from this website's ad network, and the application is not funded by selling anything about you &mdash; it sends no telemetry at all.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">Is SolarClient open source?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>The launcher itself is not, currently. It is built on top of open-source performance mods whose licences we respect and comply with, and release binaries are published on GitHub with SHA-256 hashes so you can verify what you are running.</p>
+              <p>We are considering opening parts of the project. We would rather say &ldquo;considering&rdquo; honestly than promise a date we might not meet.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">How is this different from Lunar Client or Feather?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>Mainly in being smaller and more transparent. SolarClient uses standard Fabric and Forge mods that you can inspect, replace, or add to, rather than a proprietary bundled mod system. There is no mandatory telemetry, no cosmetics store, and no premium tier.</p>
+              <p>The larger clients have real advantages too &mdash; bigger teams, longer track records, broader platform support, and code-signed installers. We are not going to pretend otherwise. If those matter more to you than the things above, they are a reasonable choice.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">How do I uninstall it?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>Windows Settings &rarr; Apps &rarr; Installed apps, find SolarClient, click Uninstall. That removes the launcher, its managed Java runtimes, and cached assets.</p>
+              <p>Your Minecraft worlds and saves live in the standard <code>.minecraft</code> folder and are not touched by uninstalling. Nothing you built goes anywhere.</p>
+            </div>
+          </div>
+
+          <div class="faq-block">
+            <button class="faq-trigger" type="button" aria-expanded="false">How often is it updated?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
+            <div class="faq-body">
+              <p>Releases are published through GitHub Releases as they are ready, which in practice means when a Minecraft version ships, when the bundled mods update, or when a bug worth fixing gets reported. The <a href="/changelog.html">changelog</a> pulls the real release history directly from GitHub, so it reflects what actually shipped rather than what we remembered to write down.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Still stuck?</h2>
+        <p class="section-subtitle">The Discord server is the fastest way to reach us, and the <a href="/support.html">support page</a> covers common launcher errors in more detail.</p>
+        <div class="contact-wrap">
+          <div class="contact-links">
+            <a class="contact-link" href="https://discord.gg/DyeJ8tAvZY" rel="noopener" target="_blank">Join our Discord server</a>
+            <a class="contact-link" href="/support.html">Support &amp; troubleshooting</a>
+          </div>
+        </div>
+      </section>
+
+      <aside class="ad-slot" aria-label="Advertisement">
+        <div class="ad-slot-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7931973085541540"
+             data-ad-slot="4916563529"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </aside>
+
+    </main>
+
+    <footer>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h2>SolarClient</h2>
+          <ul>
+            <li><a href="/#download">Download for Windows</a></li>
+            <li><a href="/#features">Features</a></li>
+            <li><a href="/#requirements">System requirements</a></li>
+            <li><a href="/#install">Install guide</a></li>
+            <li><a href="/changelog.html">Changelog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Guides</h2>
+          <ul>
+            <li><a href="/guides/">All guides</a></li>
+            <li><a href="/guides/minecraft-fps-boost.html">Increase Minecraft FPS</a></li>
+            <li><a href="/guides/allocate-ram-minecraft.html">How much RAM to allocate</a></li>
+            <li><a href="/guides/minecraft-java-version-guide.html">Java version chart</a></li>
+            <li><a href="/guides/fix-minecraft-lag-spikes.html">Fix lag spikes</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Help</h2>
+          <ul>
+            <li><a href="/faq.html">FAQ</a></li>
+            <li><a href="/support.html">Support &amp; troubleshooting</a></li>
+            <li><a href="https://discord.gg/DyeJ8tAvZY" rel="noopener" target="_blank">Discord server</a></li>
+            <li><a href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases" rel="noopener" target="_blank">GitHub releases</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Legal</h2>
+          <ul>
+            <li><a href="/privacy.html">Privacy policy</a></li>
+            <li><a href="/terms.html">Terms of service</a></li>
+            <li><a href="/cookies.html">Cookie policy</a></li>
+            <li><a href="/about.html">About us</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <p class="footer-cookie-note">This website is funded by advertising. Google AdSense and its partners set cookies to measure and personalise the ads you see here. Read our <a href="/cookies.html">cookie policy</a> and <a href="/privacy.html">privacy policy</a>, or manage your choices at <a href="https://myadcenter.google.com/" rel="noopener nofollow" target="_blank">Google My Ad Center</a>.</p>
+        <p>&copy; 2024&ndash;2026 SolarClient. SolarClient is an independent project and is <strong>not</strong> affiliated with, endorsed by, or sponsored by Mojang Studios or Microsoft Corporation.</p>
+        <p>Minecraft is a registered trademark of Mojang Studios. Sodium, Lithium, FerriteCore, Iris and other bundled mods are the property of their respective authors and are distributed under their own licences. All other trademarks are the property of their respective owners.</p>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast-msg" id="toast" role="status" aria-live="polite"></div>
+  <script src="/assets/js/site.js" defer></script>
+</body>
+</html>

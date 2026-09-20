@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="googlebot" content="noindex, nofollow">
+  <!-- This file is NOT part of the SolarClient website. It is an ad frame loaded
+       inside the desktop launcher only. It is excluded from the sitemap and
+       disallowed in robots.txt, and nothing on the website links to it. -->
   <title>SolarClient Ad</title>
   <style>
     html, body {
@@ -22,7 +27,6 @@
       const REFRESH_MS = 30000;
       const slotIdx = Math.max(0, (Number(new URLSearchParams(location.search).get('slot')) || 1) - 1);
       const sources = [
-        'http://130.12.156.98:8090/ads/config',
         './ads-config.json',
       ];
 

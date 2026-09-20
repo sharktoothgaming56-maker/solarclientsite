@@ -1,0 +1,12 @@
+# robots.txt for https://figgysmp.shop/
+User-agent: *
+Allow: /
+
+# In-launcher ad frames. These are not site content and should not be
+# indexed or counted as pages of the website.
+Disallow: /ad-slot.html
+Disallow: /ads.html
+Disallow: /ads-config.json
+Disallow: /backend.json
+
+Sitemap: https://figgysmp.shop/sitemap.xml

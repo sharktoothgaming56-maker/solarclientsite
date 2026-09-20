@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minecraft Shaders with Iris: Setup and Performance Tuning — SolarClient</title>
+  <meta name="description" content="How to install Minecraft shader packs with Iris and Sodium, why the shadow pass dominates the cost, and which settings recover most of your frame rate.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <meta name="theme-color" content="#090611">
+  <link rel="canonical" href="https://figgysmp.shop/guides/minecraft-shaders-guide.html">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="SolarClient">
+  <meta property="og:title" content="Minecraft Shaders with Iris: Setup and Performance Tuning — SolarClient">
+  <meta property="og:description" content="How to install Minecraft shader packs with Iris and Sodium, why the shadow pass dominates the cost, and which settings recover most of your frame rate.">
+  <meta property="og:url" content="https://figgysmp.shop/guides/minecraft-shaders-guide.html">
+  <meta property="og:image" content="https://figgysmp.shop/assets/img/logo.svg">
+  <meta property="og:locale" content="en_US">
+  <meta property="article:published_time" content="2026-09-20">
+  <meta property="article:modified_time" content="2026-09-20">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Minecraft Shaders with Iris: Setup and Performance Tuning — SolarClient">
+  <meta name="twitter:description" content="How to install Minecraft shader packs with Iris and Sodium, why the shadow pass dominates the cost, and which settings recover most of your frame rate.">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7931973085541540" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Minecraft Shaders with Iris: Setup and Performance Tuning",
+  "description": "How to install Minecraft shader packs with Iris and Sodium, why the shadow pass dominates the cost, and which settings recover most of your frame rate.",
+  "articleSection": "Visuals",
+  "url": "https://figgysmp.shop/guides/minecraft-shaders-guide.html",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://figgysmp.shop/guides/minecraft-shaders-guide.html"
+  },
+  "datePublished": "2026-09-20",
+  "dateModified": "2026-09-20",
+  "inLanguage": "en",
+  "author": {
+    "@id": "https://figgysmp.shop/#organization"
+  },
+  "publisher": {
+    "@id": "https://figgysmp.shop/#organization"
+  },
+  "image": "https://figgysmp.shop/assets/img/logo.svg"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://figgysmp.shop/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://figgysmp.shop/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Shaders with Iris"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <canvas id="skyCanvas" aria-hidden="true"></canvas>
+  <div class="ambient-glow-purple" aria-hidden="true"></div>
+  <div class="ambient-glow-bottom" aria-hidden="true"></div>
+
+  <div class="container">
+    <header class="header-nav">
+      <a href="/" class="brand">
+        <img src="/assets/img/logo.svg" alt="" class="brand-logo" width="42" height="42">
+        <span>SolarClient</span>
+      </a>
+      <nav class="nav-actions" aria-label="Main">
+        <a href="/#download" class="nav-link">Download</a>
+        <a href="/#features" class="nav-link">Features</a>
+        <a href="/guides/" class="nav-link" aria-current="page">Guides</a>
+        <a href="/faq.html" class="nav-link">FAQ</a>
+        <a href="/changelog.html" class="nav-link">Changelog</a>
+        <a href="/about.html" class="nav-link">About</a>
+        <a href="/support.html" class="nav-link">Support</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><a href="/guides/">Guides</a></li>
+          <li><span aria-current="page">Shaders with Iris</span></li>
+        </ol>
+      </nav>
+
+      <article class="article">
+        <header class="article-header">
+          <p class="article-eyebrow">Visuals</p>
+          <h1 class="article-title">Minecraft Shaders with Iris: Setup and Performance Tuning</h1>
+          <p class="article-standfirst">Shaders are the most expensive thing you can add to Minecraft, and most of that cost sits in two or three settings. Here is how to install them properly and how to get most of the look back at a fraction of the price.</p>
+          <div class="article-meta">
+            <span>Published <time datetime="2026-09-20">September 20, 2026</time></span>
+            <span aria-hidden="true">&middot;</span>
+            <span>Applies to Minecraft: Java Edition 1.16&ndash;1.21</span>
+            <span aria-hidden="true">&middot;</span>
+            <span>~10 min read</span>
+          </div>
+        </header>
+
+        <div class="prose">
+
+          <section class="key-takeaways">
+            <h2>The short version</h2>
+            <ul>
+              <li><strong>Iris is the shader loader to use.</strong> It runs OptiFine-format packs on top of Sodium.</li>
+              <li><strong>Shadow quality and shadow distance are the expensive settings</strong> &mdash; not resolution, not render distance.</li>
+              <li><strong>The shadow pass draws the scene a second time</strong>, so shader cost scales with scene complexity roughly twice over.</li>
+              <li>Expect to give up roughly half your frame rate even with a well-tuned pack.</li>
+              <li>Start with a lightweight pack before concluding your hardware cannot handle shaders.</li>
+            </ul>
+          </section>
+
+          <h2 id="install">Installing shaders</h2>
+
+          <p>The modern setup is Iris plus Sodium. Iris provides shader loading; Sodium provides the fast rendering base it sits on. The Iris installer for Fabric bundles Sodium, so in practice you install one thing.</p>
+
+          <ol>
+            <li><strong>Install Iris</strong> from <a href="https://irisshaders.dev/" rel="noopener nofollow" target="_blank">irisshaders.dev</a>, matching your Minecraft version. Its installer sets up Fabric and Sodium alongside it. If you already run Fabric, take the Iris mod jar and add Sodium yourself.</li>
+            <li><strong>Download a shader pack</strong> as a <code>.zip</code>. Do not extract it.</li>
+            <li><strong>Put the zip in the <code>shaderpacks</code> folder</strong> inside your instance directory. In game, Options &rarr; Video Settings &rarr; Shader Packs has an Open Folder button that takes you straight there.</li>
+            <li><strong>Select the pack</strong> from that screen. It applies immediately, though the first load takes a few seconds while shaders compile.</li>
+          </ol>
+
+          <p>SolarClient installs shader packs through its built-in browser, which drops the file in the right place and checks it against your Minecraft and Iris versions. The manual route above works identically.</p>
+
+          <div class="callout warn">
+            <span class="callout-title">Sodium and OptiFine cannot coexist</span>
+            <p>If you previously used OptiFine for shaders, remove it before installing Iris. Both replace the rendering engine and running both crashes on launch.</p>
+          </div>
+
+          <h2 id="cost">Why shaders cost so much</h2>
+
+          <p>Worth understanding, because it tells you which settings to reach for.</p>
+
+          <p>Vanilla Minecraft lights the world with a precomputed light level per block. It is cheap and it is why the game runs on almost anything. A shader pack throws that out and computes lighting per pixel, per frame &mdash; and adds shadows, reflections, volumetric light, and post-processing on top.</p>
+
+          <p>The expensive part is <strong>shadows</strong>. To know whether a pixel is in shadow, the renderer draws the entire scene again from the sun&rsquo;s point of view into a shadow map, then tests against it. That means:</p>
+
+          <ul>
+            <li>Every visible object is drawn at least twice per frame.</li>
+            <li>The cost scales with how much of the world the shadow map covers and how detailed it is.</li>
+            <li>Increasing render distance now costs roughly twice as much as it did without shaders.</li>
+          </ul>
+
+          <p>Everything else &mdash; water reflections, bloom, depth of field, motion blur &mdash; is comparatively cheap post-processing applied to a finished image. That is why turning off bloom to gain frames barely helps, and why lowering shadow distance helps enormously.</p>
+
+          <h2 id="settings">The settings that matter</h2>
+
+          <p>In rough order of impact. Shader packs organise their settings differently, but these concepts appear in nearly all of them.</p>
+
+          <h3>Shadow distance</h3>
+          <p><strong>Biggest single lever.</strong> How far from the camera shadows are computed. Most packs default to something generous. Halving it typically recovers a large share of your lost frame rate, and the visual difference is mostly in shadows cast by distant terrain you were not looking at.</p>
+
+          <h3>Shadow resolution</h3>
+          <p>The size of the shadow map, often defaulting to 2048 or higher. Dropping to 1024 is a substantial saving for a modest loss in shadow edge sharpness. Below that, shadows get visibly blocky.</p>
+
+          <h3>Volumetric lighting</h3>
+          <p>God rays and light shafts. Visually striking and genuinely expensive &mdash; it involves stepping through the scene sampling light at intervals. Many packs expose a sample count; halving it is close to halving the cost.</p>
+
+          <h3>Screen-space reflections</h3>
+          <p>Reflections on water and wet surfaces. Cost depends on quality and sample count. Reducing rather than disabling usually keeps the look at a real saving.</p>
+
+          <h3>Render distance</h3>
+          <p>Doubly expensive with shaders on, because of the shadow pass. If you normally play at 16, try 10&ndash;12 with shaders. The visual loss is smaller than you expect once atmospheric effects are in play.</p>
+
+          <h3>Ambient occlusion</h3>
+          <p>Contact shadowing in corners. Moderate cost, large contribution to depth. Usually worth keeping &mdash; lower its quality rather than disabling it.</p>
+
+          <div class="callout good">
+            <span class="callout-title">Tuning method</span>
+            <p>Stand somewhere fixed with a clear view and the <code>Alt+F3</code> graph open. Change one setting, wait for shaders to recompile, and watch for thirty seconds. Shader settings interact, so changing several at once genuinely does tell you nothing.</p>
+          </div>
+
+      <aside class="ad-slot" aria-label="Advertisement">
+        <div class="ad-slot-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7931973085541540"
+             data-ad-slot="5583456558"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </aside>
+
+
+          <h2 id="packs">Choosing a pack</h2>
+
+          <p>Packs vary by well over an order of magnitude in cost. Picking one suited to your hardware matters more than any individual setting.</p>
+
+          <div class="req-table-wrap">
+            <table class="req-table">
+              <caption>Relative cost is approximate and depends heavily on settings within each pack.</caption>
+              <thead>
+                <tr><th scope="col">Pack</th><th scope="col">Relative cost</th><th scope="col">Character</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Sildur&rsquo;s Enhanced Default</td><td>Very low</td><td>Vanilla look with better lighting. Runs on integrated graphics.</td></tr>
+                <tr><td>Sildur&rsquo;s Vibrant Shaders (Lite)</td><td>Low</td><td>The classic accessible pack. Several quality tiers.</td></tr>
+                <tr><td>Complementary Reimagined</td><td>Medium</td><td>Very widely used, extensively configurable, well optimised for what it does.</td></tr>
+                <tr><td>BSL Shaders</td><td>Medium</td><td>Clean and bright, a common default recommendation.</td></tr>
+                <tr><td>Photon</td><td>Medium&ndash;high</td><td>Physically grounded atmosphere and sky.</td></tr>
+                <tr><td>Rethinking Voxels</td><td>High</td><td>Voxel-based coloured lighting. Striking, demanding.</td></tr>
+                <tr><td>Path-traced packs (e.g. Bliss, Soft Voxels)</td><td>Very high</td><td>Modern dedicated GPU required. Spectacular.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>If shaders have previously seemed impossible on your machine, try Sildur&rsquo;s Enhanced Default before concluding that. It is dramatically cheaper than the popular packs and still a clear improvement over vanilla lighting.</p>
+
+          <h2 id="troubleshooting">Troubleshooting</h2>
+
+          <h3>The pack does not appear in the list</h3>
+          <p>It must be a <code>.zip</code>, unextracted, directly in <code>shaderpacks</code> &mdash; not in a subfolder. Some browsers extract archives automatically on download; check.</p>
+
+          <h3>Everything is black, pink, or broken</h3>
+          <p>Usually a version mismatch between the pack and your Minecraft or Iris version. Shader packs are version-specific. Check the pack&rsquo;s page for a build matching your setup.</p>
+
+          <h3>Crash on enabling the pack</h3>
+          <p>Often a GPU driver issue rather than the pack. Update graphics drivers first. Intel integrated graphics have historically had the weakest OpenGL shader compiler support &mdash; some packs simply will not compile there.</p>
+
+          <h3>Frame rate collapses to single digits</h3>
+          <p>The pack is beyond what your GPU can do at those settings. Lower shadow distance and resolution first; if that is not enough, move to a lighter pack rather than stripping a heavy one down to nothing.</p>
+
+          <h3>Shaders and Distant Horizons together</h3>
+          <p>Compatibility exists but is version-sensitive on both sides. Check the current compatibility notes for your Distant Horizons and Iris versions rather than assuming any pair works.</p>
+
+          <h3>Pack looks different from the screenshots</h3>
+          <p>Promotional screenshots are typically taken at maximum settings with a matching resource pack, often with colour grading applied afterwards. Most packs ship several presets &mdash; try the highest one your hardware can hold before concluding something is wrong.</p>
+
+          <h2 id="realistic">Setting expectations</h2>
+
+          <p>Shaders are a graphics upgrade with a graphics upgrade&rsquo;s cost. Even a well-tuned medium pack on good hardware will roughly halve your frame rate, and that is the deal working as intended rather than something misconfigured.</p>
+
+          <p>A reasonable approach: get the base game fast first with <a href="/guides/minecraft-performance-mods.html">the performance mod stack</a>, establish what frame rate you have to spend, then choose a pack and settings that leave you somewhere comfortable. Starting from 240&nbsp;FPS and landing at 110 is a good outcome. Starting from 60 and landing at 25 is not, and the fix for that is upstream of the shader pack.</p>
+
+      <aside class="ad-slot" aria-label="Advertisement">
+        <div class="ad-slot-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7931973085541540"
+             data-ad-slot="4916563529"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </aside>
+
+
+        </div>
+
+        <nav class="next-read" aria-label="Related guides">
+          <h2>Related guides</h2>
+          <ul>
+            <li><a href="/guides/sodium-vs-optifine.html">Sodium vs OptiFine</a></li>
+            <li><a href="/guides/minecraft-performance-mods.html">Every Minecraft performance mod, explained</a></li>
+            <li><a href="/guides/minecraft-fps-boost.html">How to increase Minecraft FPS</a></li>
+          </ul>
+        </nav>
+      </article>
+    </main>
+
+    <footer>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h2>SolarClient</h2>
+          <ul>
+            <li><a href="/#download">Download for Windows</a></li>
+            <li><a href="/#features">Features</a></li>
+            <li><a href="/#requirements">System requirements</a></li>
+            <li><a href="/#install">Install guide</a></li>
+            <li><a href="/changelog.html">Changelog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Guides</h2>
+          <ul>
+            <li><a href="/guides/">All guides</a></li>
+            <li><a href="/guides/minecraft-fps-boost.html">Increase Minecraft FPS</a></li>
+            <li><a href="/guides/allocate-ram-minecraft.html">How much RAM to allocate</a></li>
+            <li><a href="/guides/minecraft-java-version-guide.html">Java version chart</a></li>
+            <li><a href="/guides/fix-minecraft-lag-spikes.html">Fix lag spikes</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Help</h2>
+          <ul>
+            <li><a href="/faq.html">FAQ</a></li>
+            <li><a href="/support.html">Support &amp; troubleshooting</a></li>
+            <li><a href="https://discord.gg/DyeJ8tAvZY" rel="noopener" target="_blank">Discord server</a></li>
+            <li><a href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases" rel="noopener" target="_blank">GitHub releases</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Legal</h2>
+          <ul>
+            <li><a href="/privacy.html">Privacy policy</a></li>
+            <li><a href="/terms.html">Terms of service</a></li>
+            <li><a href="/cookies.html">Cookie policy</a></li>
+            <li><a href="/about.html">About us</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <p class="footer-cookie-note">This website is funded by advertising. Google AdSense and its partners set cookies to measure and personalise the ads you see here. Read our <a href="/cookies.html">cookie policy</a> and <a href="/privacy.html">privacy policy</a>, or manage your choices at <a href="https://myadcenter.google.com/" rel="noopener nofollow" target="_blank">Google My Ad Center</a>.</p>
+        <p>&copy; 2024&ndash;2026 SolarClient. SolarClient is an independent project and is <strong>not</strong> affiliated with, endorsed by, or sponsored by Mojang Studios or Microsoft Corporation.</p>
+        <p>Minecraft is a registered trademark of Mojang Studios. Sodium, Lithium, FerriteCore, Iris and other bundled mods are the property of their respective authors and are distributed under their own licences. All other trademarks are the property of their respective owners.</p>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast-msg" id="toast" role="status" aria-live="polite"></div>
+  <script src="/assets/js/site.js" defer></script>
+</body>
+</html>

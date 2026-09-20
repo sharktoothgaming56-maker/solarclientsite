@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Every Minecraft Performance Mod, Explained — SolarClient</title>
+  <meta name="description" content="What each Minecraft performance mod actually does — Sodium, Lithium, FerriteCore, ModernFix, EntityCulling and more — which bottleneck it targets, and which ones overlap.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <meta name="theme-color" content="#090611">
+  <link rel="canonical" href="https://figgysmp.shop/guides/minecraft-performance-mods.html">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="SolarClient">
+  <meta property="og:title" content="Every Minecraft Performance Mod, Explained — SolarClient">
+  <meta property="og:description" content="What each Minecraft performance mod actually does — Sodium, Lithium, FerriteCore, ModernFix, EntityCulling and more — which bottleneck it targets, and which ones overlap.">
+  <meta property="og:url" content="https://figgysmp.shop/guides/minecraft-performance-mods.html">
+  <meta property="og:image" content="https://figgysmp.shop/assets/img/logo.svg">
+  <meta property="og:locale" content="en_US">
+  <meta property="article:published_time" content="2026-09-20">
+  <meta property="article:modified_time" content="2026-09-20">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Every Minecraft Performance Mod, Explained — SolarClient">
+  <meta name="twitter:description" content="What each Minecraft performance mod actually does — Sodium, Lithium, FerriteCore, ModernFix, EntityCulling and more — which bottleneck it targets, and which ones overlap.">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7931973085541540" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Every Minecraft Performance Mod, Explained",
+  "description": "What each Minecraft performance mod actually does — Sodium, Lithium, FerriteCore, ModernFix, EntityCulling and more — which bottleneck it targets, and which ones overlap.",
+  "articleSection": "Reference",
+  "url": "https://figgysmp.shop/guides/minecraft-performance-mods.html",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://figgysmp.shop/guides/minecraft-performance-mods.html"
+  },
+  "datePublished": "2026-09-20",
+  "dateModified": "2026-09-20",
+  "inLanguage": "en",
+  "author": {
+    "@id": "https://figgysmp.shop/#organization"
+  },
+  "publisher": {
+    "@id": "https://figgysmp.shop/#organization"
+  },
+  "image": "https://figgysmp.shop/assets/img/logo.svg"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://figgysmp.shop/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://figgysmp.shop/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Performance mods explained"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <canvas id="skyCanvas" aria-hidden="true"></canvas>
+  <div class="ambient-glow-purple" aria-hidden="true"></div>
+  <div class="ambient-glow-bottom" aria-hidden="true"></div>
+
+  <div class="container">
+    <header class="header-nav">
+      <a href="/" class="brand">
+        <img src="/assets/img/logo.svg" alt="" class="brand-logo" width="42" height="42">
+        <span>SolarClient</span>
+      </a>
+      <nav class="nav-actions" aria-label="Main">
+        <a href="/#download" class="nav-link">Download</a>
+        <a href="/#features" class="nav-link">Features</a>
+        <a href="/guides/" class="nav-link" aria-current="page">Guides</a>
+        <a href="/faq.html" class="nav-link">FAQ</a>
+        <a href="/changelog.html" class="nav-link">Changelog</a>
+        <a href="/about.html" class="nav-link">About</a>
+        <a href="/support.html" class="nav-link">Support</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><a href="/guides/">Guides</a></li>
+          <li><span aria-current="page">Performance mods explained</span></li>
+        </ol>
+      </nav>
+
+      <article class="article">
+        <header class="article-header">
+          <p class="article-eyebrow">Reference</p>
+          <h1 class="article-title">Every Minecraft Performance Mod, Explained</h1>
+          <p class="article-standfirst">Performance mod lists are everywhere. What is usually missing is <em>what each one actually does</em>, so you can tell which ones address your problem and which are doing nothing for you. This is that reference.</p>
+          <div class="article-meta">
+            <span>Published <time datetime="2026-09-20">September 20, 2026</time></span>
+            <span aria-hidden="true">&middot;</span>
+            <span>Applies to Minecraft: Java Edition 1.16&ndash;1.21</span>
+            <span aria-hidden="true">&middot;</span>
+            <span>~13 min read</span>
+          </div>
+        </header>
+
+        <div class="prose">
+
+          <section class="key-takeaways">
+            <h2>The short version</h2>
+            <ul>
+              <li><strong>Start with four:</strong> Sodium, Lithium, FerriteCore, ImmediatelyFast. They cover rendering, ticks, memory, and GUI drawing.</li>
+              <li><strong>Frame rate and tick rate are separate problems.</strong> Sodium does nothing for TPS; Lithium does nothing for FPS.</li>
+              <li><strong>More mods is not better.</strong> Several popular ones overlap, and a few conflict.</li>
+              <li>Match the mod to the symptom &mdash; the categories below are organised for exactly that.</li>
+            </ul>
+          </section>
+
+          <h2 id="categories">Four things a performance mod can fix</h2>
+
+          <p>Almost every mod in this space targets one of four bottlenecks. Knowing which is yours narrows the list immediately.</p>
+
+          <ol>
+            <li><strong>Rendering (FPS).</strong> How efficiently geometry reaches your GPU. Symptom: low frame rate, worse at high render distance.</li>
+            <li><strong>Game logic (TPS).</strong> How efficiently the world simulates. Symptom: delayed block breaking, rubber-banding mobs &mdash; while FPS stays fine.</li>
+            <li><strong>Memory.</strong> How much the game holds and how much garbage it makes. Symptom: rhythmic stutter, or out-of-memory crashes.</li>
+            <li><strong>Loading.</strong> Startup time, chunk generation, world load. Symptom: long waits, hitching while exploring.</li>
+          </ol>
+
+          <h2 id="rendering">Rendering mods</h2>
+
+          <h3>Sodium</h3>
+          <p><strong>Fixes:</strong> FPS. <strong>Priority:</strong> install this first.</p>
+          <p>Replaces the chunk rendering pipeline with one written against modern OpenGL. Vanilla issues a great many small draw calls; Sodium packs geometry into large shared vertex buffers and submits it in batches, culls more aggressively, and moves chunk meshing to worker threads. It adds no features and changes nothing visually.</p>
+          <p>This is the single largest improvement available to most players, and everything else on this page is a refinement by comparison. Fabric-native, with official NeoForge support in recent versions.</p>
+
+          <h3>Iris</h3>
+          <p><strong>Fixes:</strong> adds shader support on top of Sodium.</p>
+          <p>Loads OptiFine-format shader packs. Not a performance mod in itself &mdash; shaders cost frames &mdash; but because it runs on Sodium&rsquo;s faster base, shaders generally perform better under Iris than under OptiFine. Its Fabric installer bundles Sodium, so installing Iris usually installs both.</p>
+
+          <h3>ImmediatelyFast</h3>
+          <p><strong>Fixes:</strong> FPS, particularly in GUI-heavy situations.</p>
+          <p>Minecraft still uses immediate-mode rendering for text, items, GUI elements, and particles &mdash; submitting geometry one piece at a time. ImmediatelyFast batches it. The effect is largest exactly where people notice drops: open inventories, full chests, busy HUDs, screens with many item icons. Complements Sodium rather than overlapping with it.</p>
+
+          <h3>EntityCulling</h3>
+          <p><strong>Fixes:</strong> FPS in entity-dense areas.</p>
+          <p>Vanilla renders entities based on a coarse frustum check, so mobs behind walls are still drawn. EntityCulling runs asynchronous occlusion tests and skips entities and block entities that genuinely cannot be seen. Large gains in mob farms, villages, and busy servers; near zero in an empty field.</p>
+
+          <h3>More Culling</h3>
+          <p><strong>Fixes:</strong> FPS, overlapping partly with EntityCulling.</p>
+          <p>Extends culling to block entities, item frames, armour stands, and leaf blocks. Useful, but check for overlap &mdash; running it alongside EntityCulling is usually fine, but running three culling mods is not three times better.</p>
+
+          <h3>Nvidium</h3>
+          <p><strong>Fixes:</strong> FPS at very high render distance &mdash; on specific hardware only.</p>
+          <p>A Sodium extension using NVIDIA mesh shaders. Requires a Turing-generation card or newer (RTX 20-series and up). Where it applies, it allows dramatically higher render distances than otherwise practical. Not compatible with shaders, and useless on AMD, Intel, and older NVIDIA cards.</p>
+
+          <h3>Distant Horizons</h3>
+          <p><strong>Fixes:</strong> view distance without the usual cost.</p>
+          <p>Renders far terrain as simplified level-of-detail geometry, so you can see for hundreds of blocks at a fraction of what an equivalent render distance would cost. Technically it spends performance to buy distance, but the exchange rate is far better than raising render distance. Shader compatibility has improved considerably but still needs matching versions.</p>
+
+      <aside class="ad-slot" aria-label="Advertisement">
+        <div class="ad-slot-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7931973085541540"
+             data-ad-slot="5583456558"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </aside>
+
+
+          <h2 id="logic">Game logic mods</h2>
+
+          <h3>Lithium</h3>
+          <p><strong>Fixes:</strong> TPS. <strong>Priority:</strong> install alongside Sodium.</p>
+          <p>Optimises the tick loop &mdash; pathfinding, block ticking, collision detection, entity management, chunk handling. Makes no changes to game behaviour, which means it is safe on servers and will not break farms or redstone. If your world feels delayed rather than choppy, this is the mod for that.</p>
+          <p>Note the division of labour: Sodium addresses frames, Lithium addresses ticks. They solve different problems and most players want both.</p>
+
+          <h3>Krypton</h3>
+          <p><strong>Fixes:</strong> network performance on multiplayer.</p>
+          <p>Optimises Minecraft&rsquo;s networking stack. Modest but real on busy servers and on higher-latency connections. Irrelevant in singleplayer.</p>
+
+          <h3>Starlight</h3>
+          <p><strong>Fixes:</strong> lighting engine performance.</p>
+          <p>A rewrite of the light engine, which in vanilla is a notable source of chunk loading cost. Historically this was one of the biggest wins available. On modern versions it has been folded into <strong>Moonrise</strong>, which combines it with chunk system improvements &mdash; check which is current for your version rather than assuming.</p>
+
+          <h3>Moonrise</h3>
+          <p><strong>Fixes:</strong> chunk system and lighting, on modern versions.</p>
+          <p>The successor to Starlight, bringing chunk loading and light engine rewrites derived from server-side work. Noticeable during exploration and world loading.</p>
+
+          <h2 id="memory">Memory mods</h2>
+
+          <h3>FerriteCore</h3>
+          <p><strong>Fixes:</strong> memory usage. <strong>Priority:</strong> install it &mdash; it is essentially free.</p>
+          <p>Reduces the memory footprint of block states, models, and multipart predicates. The savings are large in modded setups, where thousands of block variants exist. Less memory in use means less garbage collection pressure, which means fewer stutter spikes. It has no downside worth mentioning.</p>
+
+          <h3>ModernFix</h3>
+          <p><strong>Fixes:</strong> memory and startup time, especially in large modpacks.</p>
+          <p>A collection of patches rather than a single change: dynamic resource loading so not everything is held at once, faster startup, and assorted memory reductions. Its effect scales with pack size &mdash; substantial on a 300-mod pack, marginal on vanilla plus five mods.</p>
+
+          <h3>MemoryLeakFix</h3>
+          <p><strong>Fixes:</strong> genuine memory leaks.</p>
+          <p>Patches known leaks in vanilla and in commonly used libraries. If your memory usage climbs steadily across a session and never returns to baseline after collection, this is the category of fix you need. It cannot fix leaks in arbitrary third-party mods.</p>
+
+          <h2 id="loading">Loading and generation mods</h2>
+
+          <h3>C2ME</h3>
+          <p><strong>Fixes:</strong> chunk generation and I/O speed.</p>
+          <p>Parallelises chunk generation and loading across cores. Large improvement when exploring new terrain; little effect when revisiting already-generated areas. Because it touches the chunk system deeply, check compatibility with other chunk-related mods before adding it to an established pack.</p>
+
+          <h3>Noisium</h3>
+          <p><strong>Fixes:</strong> worldgen speed, more conservatively.</p>
+          <p>Optimises the noise generation stage of terrain generation. A lighter-touch alternative to C2ME with less risk of interaction problems.</p>
+
+          <h3>Fastload / Dashloader</h3>
+          <p><strong>Fixes:</strong> startup and world load times.</p>
+          <p>Reduce the wait when launching the game or opening a world. They do nothing for in-game performance &mdash; worth it if you restart often, irrelevant if you play long sessions.</p>
+
+          <h3>Exordium</h3>
+          <p><strong>Fixes:</strong> GUI rendering cost.</p>
+          <p>Renders HUD and GUI elements at a lower frequency than the game frame rate, on the reasoning that a hotbar does not need updating 200 times a second. Effective, but be aware it is a trade &mdash; some HUD elements will visibly update less smoothly.</p>
+
+          <h2 id="stack">What to actually install</h2>
+
+          <p>For most people, in this order:</p>
+
+          <div class="req-table-wrap">
+            <table class="req-table">
+              <thead>
+                <tr><th scope="col">Priority</th><th scope="col">Mods</th><th scope="col">Why</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Essential</td><td>Sodium, Lithium, FerriteCore, ImmediatelyFast</td><td>Covers rendering, ticks, memory, and GUI. Little downside, broad benefit.</td></tr>
+                <tr><td>Strongly recommended</td><td>EntityCulling, ModernFix, MemoryLeakFix</td><td>Large gains in specific common situations.</td></tr>
+                <tr><td>Situational</td><td>C2ME, Krypton, Moonrise, Exordium</td><td>Worth adding when their specific symptom is yours.</td></tr>
+                <tr><td>Hardware-specific</td><td>Nvidium</td><td>Only on NVIDIA Turing or newer, and not with shaders.</td></tr>
+                <tr><td>Add if you want the feature</td><td>Iris, Distant Horizons</td><td>These spend performance to buy visual quality.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>SolarClient ships the essential tier and most of the recommended tier pre-configured and version-matched. That is convenience, not exclusivity &mdash; every mod here is open source and freely available from <a href="https://modrinth.com/mods" rel="noopener nofollow" target="_blank">Modrinth</a>, and installing them by hand works exactly as well.</p>
+
+          <h2 id="mistakes">Common mistakes</h2>
+
+          <ul>
+            <li><strong>Installing every mod on a list.</strong> Several overlap. Running three culling mods together adds conflict risk without adding much benefit.</li>
+            <li><strong>Mixing Sodium and OptiFine.</strong> Both replace the rendering engine. This crashes immediately.</li>
+            <li><strong>Mismatched versions.</strong> Performance mods touch internals and are strict about game version. A mod built for 1.20.1 will generally not load on 1.20.4.</li>
+            <li><strong>Using deprecated mods.</strong> Phosphor was superseded by Starlight, which on current versions is superseded by Moonrise. Old guides still recommend Phosphor.</li>
+            <li><strong>Expecting FPS mods to fix TPS problems.</strong> If blocks break late, Sodium will not help. That is Lithium&rsquo;s department, or your simulation distance.</li>
+            <li><strong>Forgetting Indium when a mod needs it.</strong> Some mods need the Fabric Rendering API, which Sodium historically did not implement. Recent Sodium versions cover much of it natively, so check before adding it reflexively.</li>
+          </ul>
+
+          <h2 id="measuring">Measuring the result</h2>
+
+          <p>Install in stages and measure between them, in the same location, with the <code>Alt+F3</code> frame time graph open. Installing eight mods at once and seeing an improvement tells you nothing about which of the eight you actually needed &mdash; and leaves you carrying seven you might not.</p>
+
+          <p>For diagnosis beyond the built-in graph, the <strong>spark</strong> profiler names the specific code consuming your frame or tick time, which is the difference between fixing a problem and guessing at it.</p>
+
+      <aside class="ad-slot" aria-label="Advertisement">
+        <div class="ad-slot-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7931973085541540"
+             data-ad-slot="4916563529"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </aside>
+
+
+        </div>
+
+        <nav class="next-read" aria-label="Related guides">
+          <h2>Related guides</h2>
+          <ul>
+            <li><a href="/guides/minecraft-fps-boost.html">How to increase Minecraft FPS</a></li>
+            <li><a href="/guides/sodium-vs-optifine.html">Sodium vs OptiFine</a></li>
+            <li><a href="/guides/fix-minecraft-lag-spikes.html">How to fix Minecraft stutter and lag spikes</a></li>
+            <li><a href="/guides/minecraft-shaders-guide.html">Minecraft shaders with Iris</a></li>
+          </ul>
+        </nav>
+      </article>
+    </main>
+
+    <footer>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h2>SolarClient</h2>
+          <ul>
+            <li><a href="/#download">Download for Windows</a></li>
+            <li><a href="/#features">Features</a></li>
+            <li><a href="/#requirements">System requirements</a></li>
+            <li><a href="/#install">Install guide</a></li>
+            <li><a href="/changelog.html">Changelog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Guides</h2>
+          <ul>
+            <li><a href="/guides/">All guides</a></li>
+            <li><a href="/guides/minecraft-fps-boost.html">Increase Minecraft FPS</a></li>
+            <li><a href="/guides/allocate-ram-minecraft.html">How much RAM to allocate</a></li>
+            <li><a href="/guides/minecraft-java-version-guide.html">Java version chart</a></li>
+            <li><a href="/guides/fix-minecraft-lag-spikes.html">Fix lag spikes</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Help</h2>
+          <ul>
+            <li><a href="/faq.html">FAQ</a></li>
+            <li><a href="/support.html">Support &amp; troubleshooting</a></li>
+            <li><a href="https://discord.gg/DyeJ8tAvZY" rel="noopener" target="_blank">Discord server</a></li>
+            <li><a href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases" rel="noopener" target="_blank">GitHub releases</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Legal</h2>
+          <ul>
+            <li><a href="/privacy.html">Privacy policy</a></li>
+            <li><a href="/terms.html">Terms of service</a></li>
+            <li><a href="/cookies.html">Cookie policy</a></li>
+            <li><a href="/about.html">About us</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <p class="footer-cookie-note">This website is funded by advertising. Google AdSense and its partners set cookies to measure and personalise the ads you see here. Read our <a href="/cookies.html">cookie policy</a> and <a href="/privacy.html">privacy policy</a>, or manage your choices at <a href="https://myadcenter.google.com/" rel="noopener nofollow" target="_blank">Google My Ad Center</a>.</p>
+        <p>&copy; 2024&ndash;2026 SolarClient. SolarClient is an independent project and is <strong>not</strong> affiliated with, endorsed by, or sponsored by Mojang Studios or Microsoft Corporation.</p>
+        <p>Minecraft is a registered trademark of Mojang Studios. Sodium, Lithium, FerriteCore, Iris and other bundled mods are the property of their respective authors and are distributed under their own licences. All other trademarks are the property of their respective owners.</p>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast-msg" id="toast" role="status" aria-live="polite"></div>
+  <script src="/assets/js/site.js" defer></script>
+</body>
+</html>

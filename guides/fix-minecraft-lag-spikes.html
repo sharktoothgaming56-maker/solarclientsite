@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Fix Minecraft Stutter and Lag Spikes — SolarClient</title>
+  <meta name="description" content="Every cause of Minecraft stutter leaves a distinct signature on the frame time graph. Learn to read it, then fix garbage collection, chunk loading, disk or TPS problems specifically.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <meta name="theme-color" content="#090611">
+  <link rel="canonical" href="https://figgysmp.shop/guides/fix-minecraft-lag-spikes.html">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="SolarClient">
+  <meta property="og:title" content="How to Fix Minecraft Stutter and Lag Spikes — SolarClient">
+  <meta property="og:description" content="Every cause of Minecraft stutter leaves a distinct signature on the frame time graph. Learn to read it, then fix garbage collection, chunk loading, disk or TPS problems specifically.">
+  <meta property="og:url" content="https://figgysmp.shop/guides/fix-minecraft-lag-spikes.html">
+  <meta property="og:image" content="https://figgysmp.shop/assets/img/logo.svg">
+  <meta property="og:locale" content="en_US">
+  <meta property="article:published_time" content="2026-09-20">
+  <meta property="article:modified_time" content="2026-09-20">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="How to Fix Minecraft Stutter and Lag Spikes — SolarClient">
+  <meta name="twitter:description" content="Every cause of Minecraft stutter leaves a distinct signature on the frame time graph. Learn to read it, then fix garbage collection, chunk loading, disk or TPS problems specifically.">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7931973085541540" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "How to Fix Minecraft Stutter and Lag Spikes",
+  "description": "Every cause of Minecraft stutter leaves a distinct signature on the frame time graph. Learn to read it, then fix garbage collection, chunk loading, disk or TPS problems specifically.",
+  "articleSection": "Troubleshooting",
+  "url": "https://figgysmp.shop/guides/fix-minecraft-lag-spikes.html",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://figgysmp.shop/guides/fix-minecraft-lag-spikes.html"
+  },
+  "datePublished": "2026-09-20",
+  "dateModified": "2026-09-20",
+  "inLanguage": "en",
+  "author": {
+    "@id": "https://figgysmp.shop/#organization"
+  },
+  "publisher": {
+    "@id": "https://figgysmp.shop/#organization"
+  },
+  "image": "https://figgysmp.shop/assets/img/logo.svg"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://figgysmp.shop/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://figgysmp.shop/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Fix stutter and lag spikes"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <canvas id="skyCanvas" aria-hidden="true"></canvas>
+  <div class="ambient-glow-purple" aria-hidden="true"></div>
+  <div class="ambient-glow-bottom" aria-hidden="true"></div>
+
+  <div class="container">
+    <header class="header-nav">
+      <a href="/" class="brand">
+        <img src="/assets/img/logo.svg" alt="" class="brand-logo" width="42" height="42">
+        <span>SolarClient</span>
+      </a>
+      <nav class="nav-actions" aria-label="Main">
+        <a href="/#download" class="nav-link">Download</a>
+        <a href="/#features" class="nav-link">Features</a>
+        <a href="/guides/" class="nav-link" aria-current="page">Guides</a>
+        <a href="/faq.html" class="nav-link">FAQ</a>
+        <a href="/changelog.html" class="nav-link">Changelog</a>
+        <a href="/about.html" class="nav-link">About</a>
+        <a href="/support.html" class="nav-link">Support</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><a href="/guides/">Guides</a></li>
+          <li><span aria-current="page">Fix stutter and lag spikes</span></li>
+        </ol>
+      </nav>
+
+      <article class="article">
+        <header class="article-header">
+          <p class="article-eyebrow">Troubleshooting</p>
+          <h1 class="article-title">How to Fix Minecraft Stutter and Lag Spikes</h1>
+          <p class="article-standfirst">Stutter is a different problem from low frame rate, and it has a small number of distinct causes that each leave a recognisable signature. This guide is about identifying which one you have before you change anything.</p>
+          <div class="article-meta">
+            <span>Published <time datetime="2026-09-20">September 20, 2026</time></span>
+            <span aria-hidden="true">&middot;</span>
+            <span>Applies to Minecraft: Java Edition 1.16&ndash;1.21</span>
+            <span aria-hidden="true">&middot;</span>
+            <span>~11 min read</span>
+          </div>
+        </header>
+
+        <div class="prose">
+
+          <section class="key-takeaways">
+            <h2>The short version</h2>
+            <ul>
+              <li><strong>Regular, rhythmic spikes</strong> &mdash; every few seconds, evenly spaced &mdash; are garbage collection. Reduce heap size, fix GC flags.</li>
+              <li><strong>Spikes only while moving</strong> into new terrain are chunk loading. Lower render distance, use Sodium.</li>
+              <li><strong>Everything delayed, including block breaking</strong> is TPS, not FPS. Nothing graphical will help.</li>
+              <li><strong>Random spikes while standing still</strong> are usually external: antivirus, overlays, or Windows itself.</li>
+              <li>Diagnose with the <code>Alt+F3</code> frame time graph before changing a single setting.</li>
+            </ul>
+          </section>
+
+          <h2 id="diagnose">Diagnose first</h2>
+
+          <p>Stutter is frustrating enough that the instinct is to start changing things. That instinct is why people end up with twenty settings turned down and the stutter still there &mdash; they never established what was causing it.</p>
+
+          <p>The tool to use is the frame time graph. Press <code>Alt+F3</code> (on some versions, hold <code>F3</code> and press <code>Alt</code>). You get a live chart of how long each frame took. A smooth game is a flat line. Every spike is a frame that took too long, and <strong>the pattern of the spikes tells you what caused them.</strong></p>
+
+          <p>Play for a minute or two in a spot where the stutter reliably occurs and watch the shape:</p>
+
+          <div class="req-table-wrap">
+            <table class="req-table">
+              <thead>
+                <tr><th scope="col">Pattern</th><th scope="col">Most likely cause</th><th scope="col">Go to</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Evenly spaced spikes, similar height, every 5&ndash;30 seconds</td><td>Garbage collection</td><td><a href="#gc">Section 1</a></td></tr>
+                <tr><td>Spikes only when moving into new chunks</td><td>Chunk loading and meshing</td><td><a href="#chunks">Section 2</a></td></tr>
+                <tr><td>Clustered spikes, then a long calm period</td><td>Disk activity &mdash; world save or antivirus</td><td><a href="#disk">Section 3</a></td></tr>
+                <tr><td>Irregular spikes at random, including while idle</td><td>Background software</td><td><a href="#background">Section 4</a></td></tr>
+                <tr><td>Graph is flat but the game still feels delayed</td><td>TPS, not FPS</td><td><a href="#tps">Section 5</a></td></tr>
+                <tr><td>Graph is consistently high with no spikes</td><td>Not stutter &mdash; you are GPU or CPU bound</td><td><a href="/guides/minecraft-fps-boost.html">FPS guide</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 id="gc">1. Garbage collection pauses</h2>
+
+          <p><strong>Signature:</strong> spikes at fairly regular intervals, roughly the same height each time, that continue even when you stand still in a fully loaded area.</p>
+
+          <p>Confirm it by watching the memory readout in the top-right of the <code>F3</code> screen alongside the graph. Used memory climbs steadily, then drops sharply. If the drops line up with your spikes, that is the garbage collector, and you have your answer.</p>
+
+          <p>Three fixes, in order of impact:</p>
+
+          <h3>Reduce your heap size</h3>
+
+          <p>This is the one that surprises people. If you have allocated 12 or 16&nbsp;GB, that is very likely the cause rather than the cure. A larger heap accumulates more garbage between collections, and collecting more takes longer.</p>
+
+          <p>Look at the low points of the memory sawtooth &mdash; that is what the game genuinely needs. Set your allocation to roughly two or three times that. For most setups it lands between 4 and 8&nbsp;GB. The <a href="/guides/allocate-ram-minecraft.html">RAM allocation guide</a> covers the reasoning properly.</p>
+
+          <h3>Use proper collector flags</h3>
+
+          <p>Default JVM settings optimise for throughput, which is the wrong goal for a game. Tuned G1GC flags &mdash; the widely used set is Aikar&rsquo;s &mdash; lower the pause target and enlarge the young generation so short-lived objects are collected cheaply instead of being promoted. Java 21 and later also offer generational ZGC, which targets sub-millisecond pauses and suits large modded heaps.</p>
+
+          <p>SolarClient generates these automatically and scales the region and nursery sizing to your chosen allocation, because the correct values differ above and below roughly 12&nbsp;GB.</p>
+
+          <h3>Reduce allocation pressure</h3>
+
+          <p>Less garbage created means less to collect. <strong>FerriteCore</strong> cuts the memory footprint of block states and models substantially. <strong>Lithium</strong> removes allocation in hot tick paths. <strong>MemoryLeakFix</strong> patches known retention bugs that otherwise force the collector to work against a heap that never properly empties.</p>
+
+          <h2 id="chunks">2. Chunk loading and meshing</h2>
+
+          <p><strong>Signature:</strong> the graph is flat while you stand still and spikes as soon as you move, particularly when flying, using elytra, or travelling by boat or minecart. Worst in newly generated terrain.</p>
+
+          <p>Two separate pieces of work are involved. <em>Generation</em> creates terrain that has never existed before &mdash; expensive, but only once per chunk. <em>Meshing</em> converts block data into renderable geometry, and happens whenever a chunk enters view or its contents change.</p>
+
+          <p>In vanilla, a significant part of this lands on the main thread, so a frame that includes chunk work takes as long as that work takes.</p>
+
+          <p>What helps:</p>
+
+          <ul>
+            <li><strong>Sodium</strong> moves chunk meshing onto worker threads and rebuilds far less aggressively. This is the largest single improvement available.</li>
+            <li><strong>Lower render distance.</strong> Loaded chunks scale with the square of the radius, so 16 is roughly four times the work of 8. Moving fast at high render distance is the single hardest thing you can ask the game to do.</li>
+            <li><strong>C2ME</strong> parallelises chunk generation and I/O. It targets generation specifically, so it helps most when exploring new terrain rather than revisiting old.</li>
+            <li><strong>Pre-generate your world</strong> if you run a server or a long-lived singleplayer world. Chunky generates terrain ahead of time so play never pays the generation cost.</li>
+            <li><strong>Slow down.</strong> Not a fix so much as an acknowledgement &mdash; elytra flight at render distance 24 will hitch on any hardware, because the game cannot generate terrain faster than you cross it.</li>
+          </ul>
+
+      <aside class="ad-slot" aria-label="Advertisement">
+        <div class="ad-slot-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7931973085541540"
+             data-ad-slot="5583456558"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </aside>
+
+
+          <h2 id="disk">3. Disk activity</h2>
+
+          <p><strong>Signature:</strong> a cluster of spikes, then a long quiet stretch, repeating on a several-minute cycle. Often noticeably worse on a mechanical hard drive.</p>
+
+          <p>Minecraft autosaves periodically, writing modified chunks to disk. It also reads constantly while loading terrain. Anything that makes file access slow turns into stutter.</p>
+
+          <ul>
+            <li><strong>Antivirus real-time scanning</strong> is the most common cause. Every chunk file read and written gets scanned. Add exclusions for your launcher directory and your <code>.minecraft</code> or instance directories &mdash; specific folders, not the whole drive.</li>
+            <li><strong>Cloud sync</strong> &mdash; OneDrive, Dropbox, Google Drive &mdash; will attempt to upload world files as they change. If your Minecraft directory sits inside a synced folder, move it out. OneDrive redirecting Documents by default catches a lot of people.</li>
+            <li><strong>Mechanical drives.</strong> Minecraft&rsquo;s access pattern is many small reads and writes, which is the worst case for a spinning disk. Moving the instance to an SSD is a large improvement if one is available.</li>
+            <li><strong>A full drive.</strong> Below roughly 10% free space, both SSDs and Windows behave noticeably worse.</li>
+          </ul>
+
+          <h2 id="background">4. Background software</h2>
+
+          <p><strong>Signature:</strong> irregular spikes with no apparent relationship to what you are doing, including while completely idle.</p>
+
+          <p>Common culprits, roughly in order of how often they turn out to be responsible:</p>
+
+          <ul>
+            <li><strong>Discord&rsquo;s in-game overlay.</strong> A long-standing source of hitching in Java applications specifically. Turn it off for Minecraft and test &mdash; this alone resolves a surprising share of reports.</li>
+            <li><strong>Browser tabs.</strong> Modern browsers will happily consume several gigabytes and keep background tabs running timers. If you are short on RAM, this is also what pushes the system into paging.</li>
+            <li><strong>Xbox Game Bar and background recording.</strong> Windows ships with background capture available, and it costs real performance when enabled.</li>
+            <li><strong>RGB and peripheral software.</strong> iCUE, Synapse, Armoury Crate and similar poll hardware constantly and have a poor reputation for stability.</li>
+            <li><strong>Windows Update.</strong> Downloads and installs in the background with no visible indication. If stutter appeared suddenly for no reason, check Update history.</li>
+            <li><strong>Thermal throttling.</strong> Not software, but it presents identically. If stutter arrives only after twenty minutes of play, check temperatures &mdash; clean the fans before changing settings.</li>
+          </ul>
+
+          <p>The reliable way to test this class of cause is to close everything, reboot, and launch only Minecraft. If the stutter disappears, add programs back one at a time.</p>
+
+          <h2 id="tps">5. When it is TPS, not FPS</h2>
+
+          <p><strong>Signature:</strong> the frame time graph is flat and the FPS counter is healthy, but the game still feels wrong. Blocks take a moment to break. Mobs stutter or teleport. Items you drop hang in the air. Doors open late.</p>
+
+          <p>That is the world simulation falling behind, not the renderer. Minecraft targets 20 ticks per second; below about 18 it becomes perceptible. No graphics setting affects it.</p>
+
+          <p>On a multiplayer server, this is the server&rsquo;s problem. If everyone online is experiencing it, nothing you do locally will change anything &mdash; report it to the administrators.</p>
+
+          <p>In singleplayer, your machine is running the server too, so it is yours to fix:</p>
+
+          <ul>
+            <li><strong>Lower simulation distance.</strong> Separate from render distance since 1.18 and frequently left high by accident. It controls how far the world keeps ticking. Most players notice nothing at 8.</li>
+            <li><strong>Look at your farms.</strong> Large mob farms, item elevators, and hopper chains are the usual cause. Hoppers in particular are expensive &mdash; a few hundred of them will measurably reduce TPS.</li>
+            <li><strong>Check redstone.</strong> Clocks left running, observer loops, and update-suppression contraptions can consume the entire tick budget on their own.</li>
+            <li><strong>Install Lithium.</strong> It optimises exactly this: pathfinding, block ticking, collision, entity management. It changes no behaviour.</li>
+            <li><strong>Profile it.</strong> <code>/spark profiler start</code>, play a minute, <code>/spark profiler stop</code>. The report names the specific code eating your tick time, which beats guessing.</li>
+          </ul>
+
+          <h2 id="modded">Stutter specific to modded setups</h2>
+
+          <p>Large modpacks add failure modes of their own:</p>
+
+          <ul>
+            <li><strong>A single badly behaved mod.</strong> Some mods scan every player&rsquo;s inventory every tick, or run world queries that should be cached. Spark identifies these by name. Binary search &mdash; disable half the pack, test, repeat &mdash; works when profiling is inconclusive.</li>
+            <li><strong>Resource pack and model memory.</strong> Very large modpacks load enormous numbers of models and textures. ModernFix&rsquo;s dynamic resource loading helps significantly here, as does FerriteCore.</li>
+            <li><strong>Worldgen mods.</strong> Packs with heavy custom terrain generation shift the cost dramatically toward chunk generation. Pre-generating the world is the real fix.</li>
+            <li><strong>Shader packs.</strong> The shadow pass renders the scene an additional time from the sun&rsquo;s point of view, so scene complexity costs roughly twice. Lowering shadow distance and resolution is far more effective than lowering anything else in the pack.</li>
+          </ul>
+
+          <h2 id="checklist">A practical order of attack</h2>
+
+          <ol>
+            <li>Open <code>Alt+F3</code> and characterise the spike pattern. Do not skip this.</li>
+            <li>If spikes are rhythmic: lower your RAM allocation to 4&ndash;6&nbsp;GB and apply proper GC flags.</li>
+            <li>If spikes track movement: install Sodium and drop render distance to 10&ndash;12.</li>
+            <li>Turn off the Discord overlay and any recording software.</li>
+            <li>Add antivirus exclusions for the launcher and instance directories.</li>
+            <li>Confirm the game is running on your dedicated GPU, not integrated graphics.</li>
+            <li>If the world feels delayed rather than choppy, lower simulation distance and profile with spark.</li>
+            <li>Retest after each change, in the same spot, for at least a minute.</li>
+          </ol>
+
+          <p>Most stutter resolves within the first three steps. The discipline that matters is changing one thing at a time and measuring &mdash; otherwise you end up unable to say which change helped, and carrying four unnecessary ones forever.</p>
+
+      <aside class="ad-slot" aria-label="Advertisement">
+        <div class="ad-slot-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7931973085541540"
+             data-ad-slot="4916563529"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </aside>
+
+
+        </div>
+
+        <nav class="next-read" aria-label="Related guides">
+          <h2>Related guides</h2>
+          <ul>
+            <li><a href="/guides/allocate-ram-minecraft.html">How much RAM should you allocate to Minecraft?</a></li>
+            <li><a href="/guides/minecraft-fps-boost.html">How to increase Minecraft FPS</a></li>
+            <li><a href="/guides/minecraft-performance-mods.html">Every Minecraft performance mod, explained</a></li>
+            <li><a href="/support.html">Support and troubleshooting</a></li>
+          </ul>
+        </nav>
+      </article>
+    </main>
+
+    <footer>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h2>SolarClient</h2>
+          <ul>
+            <li><a href="/#download">Download for Windows</a></li>
+            <li><a href="/#features">Features</a></li>
+            <li><a href="/#requirements">System requirements</a></li>
+            <li><a href="/#install">Install guide</a></li>
+            <li><a href="/changelog.html">Changelog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Guides</h2>
+          <ul>
+            <li><a href="/guides/">All guides</a></li>
+            <li><a href="/guides/minecraft-fps-boost.html">Increase Minecraft FPS</a></li>
+            <li><a href="/guides/allocate-ram-minecraft.html">How much RAM to allocate</a></li>
+            <li><a href="/guides/minecraft-java-version-guide.html">Java version chart</a></li>
+            <li><a href="/guides/fix-minecraft-lag-spikes.html">Fix lag spikes</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Help</h2>
+          <ul>
+            <li><a href="/faq.html">FAQ</a></li>
+            <li><a href="/support.html">Support &amp; troubleshooting</a></li>
+            <li><a href="https://discord.gg/DyeJ8tAvZY" rel="noopener" target="_blank">Discord server</a></li>
+            <li><a href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases" rel="noopener" target="_blank">GitHub releases</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Legal</h2>
+          <ul>
+            <li><a href="/privacy.html">Privacy policy</a></li>
+            <li><a href="/terms.html">Terms of service</a></li>
+            <li><a href="/cookies.html">Cookie policy</a></li>
+            <li><a href="/about.html">About us</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <p class="footer-cookie-note">This website is funded by advertising. Google AdSense and its partners set cookies to measure and personalise the ads you see here. Read our <a href="/cookies.html">cookie policy</a> and <a href="/privacy.html">privacy policy</a>, or manage your choices at <a href="https://myadcenter.google.com/" rel="noopener nofollow" target="_blank">Google My Ad Center</a>.</p>
+        <p>&copy; 2024&ndash;2026 SolarClient. SolarClient is an independent project and is <strong>not</strong> affiliated with, endorsed by, or sponsored by Mojang Studios or Microsoft Corporation.</p>
+        <p>Minecraft is a registered trademark of Mojang Studios. Sodium, Lithium, FerriteCore, Iris and other bundled mods are the property of their respective authors and are distributed under their own licences. All other trademarks are the property of their respective owners.</p>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast-msg" id="toast" role="status" aria-live="polite"></div>
+  <script src="/assets/js/site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About SolarClient — Who Makes It and How It Is Funded</title>
+  <meta name="description" content="What SolarClient is, who builds it, how an ad-funded free launcher pays for itself, what we will not do with it, and the open-source work it is built on.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <meta name="theme-color" content="#090611">
+  <link rel="canonical" href="https://figgysmp.shop/about.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="SolarClient">
+  <meta property="og:title" content="About SolarClient — Who Makes It and How It Is Funded">
+  <meta property="og:description" content="What SolarClient is, who builds it, how an ad-funded free launcher pays for itself, what we will not do with it, and the open-source work it is built on.">
+  <meta property="og:url" content="https://figgysmp.shop/about.html">
+  <meta property="og:image" content="https://figgysmp.shop/assets/img/logo.svg">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="About SolarClient — Who Makes It and How It Is Funded">
+  <meta name="twitter:description" content="What SolarClient is, who builds it, how an ad-funded free launcher pays for itself, what we will not do with it, and the open-source work it is built on.">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7931973085541540" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://figgysmp.shop/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "About"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "url": "https://figgysmp.shop/about.html",
+  "name": "About SolarClient",
+  "publisher": {
+    "@id": "https://figgysmp.shop/#organization"
+  }
+}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <canvas id="skyCanvas" aria-hidden="true"></canvas>
+  <div class="ambient-glow-purple" aria-hidden="true"></div>
+  <div class="ambient-glow-bottom" aria-hidden="true"></div>
+
+  <div class="container">
+    <header class="header-nav">
+      <a href="/" class="brand">
+        <img src="/assets/img/logo.svg" alt="" class="brand-logo" width="42" height="42">
+        <span>SolarClient</span>
+      </a>
+      <nav class="nav-actions" aria-label="Main">
+        <a href="/#download" class="nav-link">Download</a>
+        <a href="/#features" class="nav-link">Features</a>
+        <a href="/guides/" class="nav-link">Guides</a>
+        <a href="/faq.html" class="nav-link">FAQ</a>
+        <a href="/changelog.html" class="nav-link">Changelog</a>
+        <a href="/about.html" class="nav-link" aria-current="page">About</a>
+        <a href="/support.html" class="nav-link">Support</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><span aria-current="page">About</span></li>
+        </ol>
+      </nav>
+
+      <section class="hero-section">
+        <h1 class="hero-title">About <span class="highlight">SolarClient</span></h1>
+        <p class="hero-desc">What this project is, who makes it, how it is paid for, and what we will and will not do with it.</p>
+      </section>
+
+      <section class="section" style="margin-top:20px">
+        <h2 class="section-title">What SolarClient is</h2>
+        <div class="about-text">
+          <p>SolarClient is a free Minecraft: Java Edition launcher for Windows, built around one idea: most players want better performance and a few quality-of-life features, and should not have to assemble a mod stack by hand to get them.</p>
+          <p>Concretely, it does four things. It <strong>manages Java</strong>, downloading the correct Eclipse Temurin runtime for whichever Minecraft version you pick, so you never install or configure Java yourself. It <strong>ships a curated performance mod stack</strong> &mdash; Sodium, Lithium, FerriteCore and others &mdash; already version-matched and configured. It <strong>tunes the JVM</strong>, generating garbage collector flags scaled to your chosen memory allocation rather than leaving you with defaults designed for server throughput. And it adds a <strong>mod browser, HUD editor and waypoint system</strong> for the things people end up wanting anyway.</p>
+          <p>None of that is magic, and we try not to describe it as if it were. The performance mods are open source, freely available from Modrinth, and work perfectly well installed by hand. The JVM flags are public knowledge. What the launcher sells &mdash; except that it does not sell anything &mdash; is not having to do it yourself, and not having to redo it every time Minecraft updates.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Who makes it</h2>
+        <div class="about-text">
+          <p>SolarClient is made by a small independent team of Minecraft players. It started, as these things usually do, because we wanted a better launcher for ourselves and the existing options each had something we did not want &mdash; mandatory telemetry, a cosmetics store, a proprietary mod system, or simply more weight than we needed.</p>
+          <p>We are not a company. There is no funding round behind this, no support desk, and no service level agreement. What there is: an actively maintained project, a Discord server where the people who write the code read the messages, and a public release history on GitHub that you can check for yourself rather than taking our word for.</p>
+          <p>We think being clear about that is more useful than presenting a small project as something larger. If you need the assurances that come with a funded team &mdash; code-signed installers, guaranteed support response times, a long track record &mdash; the bigger clients genuinely offer those and we are not going to pretend otherwise.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">How it is funded</h2>
+        <div class="about-text">
+          <p>This website displays advertising through Google AdSense. That is the entire business model, and it pays for domain registration, hosting, and the time that goes into development and into the guides published here.</p>
+          <p>Some consequences of that we want to state plainly:</p>
+          <p><strong>The launcher sends no telemetry.</strong> It does not report what you play, when you play it, or anything about your machine. Your settings, session token, waypoints and HUD layout stay on your computer. We do not run servers that store user data, which means there is no user data to sell even if we wanted to.</p>
+          <p><strong>The website does use cookies for advertising.</strong> Google and its partners set them to measure and personalise the ads you see. We are not going to bury that in a footer &mdash; it is how this works, and the <a href="/cookies.html">cookie policy</a> explains exactly what is set and how to opt out of personalisation.</p>
+          <p><strong>There is no premium tier and there will not be one.</strong> No paid cosmetics, no subscription, no feature held back for a paying version. If that ever changes, it will be announced clearly rather than discovered.</p>
+        </div>
+      </section>
+
+      <aside class="ad-slot" aria-label="Advertisement">
+        <div class="ad-slot-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7931973085541540"
+             data-ad-slot="5583456558"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </aside>
+
+
+      <section class="section">
+        <h2 class="section-title">What we will not do</h2>
+        <div class="about-text">
+          <p>It is easier to trust a project that says where its limits are, so here are ours.</p>
+          <p><strong>No cheats.</strong> SolarClient contains no combat automation, no X-ray, no movement exploits, and no anti-cheat evasion. This is not a &ldquo;not yet&rdquo; &mdash; a performance launcher and a hacked client are different products and we are only building one of them.</p>
+          <p><strong>No cracked account support.</strong> Authentication goes through Microsoft&rsquo;s official OAuth flow. You need an account that owns the game. We will not add offline-mode account spoofing.</p>
+          <p><strong>No asking for your password.</strong> The launcher never sees your Microsoft credentials, and no legitimate Minecraft client ever needs them. If any launcher or website asks you to type your Microsoft password into its own form, close it.</p>
+          <p><strong>No bundled extras.</strong> The installer installs SolarClient. It does not install a toolbar, a search hijacker, a &ldquo;partner offer&rdquo;, or a download manager. Verify the SHA-256 on the home page against your file if you want to confirm that.</p>
+          <p><strong>No pretending about the SmartScreen warning.</strong> The installer is not code-signed, Windows will warn you, and we explain why on the home page rather than hoping you do not notice.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Why we publish guides</h2>
+        <div class="about-text">
+          <p>The <a href="/guides/">guides section</a> exists because the same questions kept arriving in Discord, and because a large amount of what is published about Minecraft performance is confidently wrong. &ldquo;Allocate 16&nbsp;GB of RAM&rdquo; is repeated constantly and makes stutter worse. Optimiser utilities that promise frame rates do nothing. JVM flag lists get copied forward for a decade after the flags stopped existing.</p>
+          <p>So the guides try to explain mechanisms rather than hand out steps, and they deliberately describe techniques that work without our launcher &mdash; because they do, and claiming otherwise would be a good way to lose the trust that makes the guides worth reading.</p>
+          <p>If you find an error in one, tell us. Corrections get made.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Legal and attribution</h2>
+        <div class="about-text">
+          <p>SolarClient is an independent project. It is <strong>not</strong> affiliated with, endorsed by, or sponsored by Mojang Studios or Microsoft Corporation. Minecraft is a registered trademark of Mojang Studios.</p>
+          <p>SolarClient bundles open-source mods including Sodium, Lithium, FerriteCore, ImmediatelyFast and EntityCulling. These are the work of their respective authors and are distributed under their own licences, which we comply with. We are grateful for them; the launcher would have very little to offer without that work.</p>
+          <p>Java runtimes are Eclipse Temurin builds from the Adoptium project. Mod listings in the built-in browser come from the Modrinth and CurseForge APIs, and content downloaded through it belongs to its own authors under its own terms.</p>
+          <p>Our <a href="/terms.html">terms of service</a> and <a href="/privacy.html">privacy policy</a> set out the rest.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Get in touch</h2>
+        <p class="section-subtitle">Bug reports, feature requests, corrections to a guide, or just a question &mdash; Discord is the fastest route, and the people who write the code are the ones reading it.</p>
+        <div class="contact-wrap">
+          <div class="contact-links">
+            <a class="contact-link" href="https://discord.gg/DyeJ8tAvZY" rel="noopener" target="_blank">Join our Discord server</a>
+            <a class="contact-link" href="https://github.com/sharktoothgaming56-maker/solarclientsite" rel="noopener" target="_blank">View releases on GitHub</a>
+            <a class="contact-link" href="/support.html">Support &amp; troubleshooting</a>
+          </div>
+        </div>
+      </section>
+
+      <aside class="ad-slot" aria-label="Advertisement">
+        <div class="ad-slot-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7931973085541540"
+             data-ad-slot="4916563529"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </aside>
+
+    </main>
+
+    <footer>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h2>SolarClient</h2>
+          <ul>
+            <li><a href="/#download">Download for Windows</a></li>
+            <li><a href="/#features">Features</a></li>
+            <li><a href="/#requirements">System requirements</a></li>
+            <li><a href="/#install">Install guide</a></li>
+            <li><a href="/changelog.html">Changelog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Guides</h2>
+          <ul>
+            <li><a href="/guides/">All guides</a></li>
+            <li><a href="/guides/minecraft-fps-boost.html">Increase Minecraft FPS</a></li>
+            <li><a href="/guides/allocate-ram-minecraft.html">How much RAM to allocate</a></li>
+            <li><a href="/guides/minecraft-java-version-guide.html">Java version chart</a></li>
+            <li><a href="/guides/fix-minecraft-lag-spikes.html">Fix lag spikes</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Help</h2>
+          <ul>
+            <li><a href="/faq.html">FAQ</a></li>
+            <li><a href="/support.html">Support &amp; troubleshooting</a></li>
+            <li><a href="https://discord.gg/DyeJ8tAvZY" rel="noopener" target="_blank">Discord server</a></li>
+            <li><a href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases" rel="noopener" target="_blank">GitHub releases</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Legal</h2>
+          <ul>
+            <li><a href="/privacy.html">Privacy policy</a></li>
+            <li><a href="/terms.html">Terms of service</a></li>
+            <li><a href="/cookies.html">Cookie policy</a></li>
+            <li><a href="/about.html">About us</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <p class="footer-cookie-note">This website is funded by advertising. Google AdSense and its partners set cookies to measure and personalise the ads you see here. Read our <a href="/cookies.html">cookie policy</a> and <a href="/privacy.html">privacy policy</a>, or manage your choices at <a href="https://myadcenter.google.com/" rel="noopener nofollow" target="_blank">Google My Ad Center</a>.</p>
+        <p>&copy; 2024&ndash;2026 SolarClient. SolarClient is an independent project and is <strong>not</strong> affiliated with, endorsed by, or sponsored by Mojang Studios or Microsoft Corporation.</p>
+        <p>Minecraft is a registered trademark of Mojang Studios. Sodium, Lithium, FerriteCore, Iris and other bundled mods are the property of their respective authors and are distributed under their own licences. All other trademarks are the property of their respective owners.</p>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast-msg" id="toast" role="status" aria-live="polite"></div>
+  <script src="/assets/js/site.js" defer></script>
+</body>
+</html>

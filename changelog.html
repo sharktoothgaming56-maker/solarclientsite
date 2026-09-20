@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SolarClient Changelog — Release History</title>
+  <meta name="description" content="The full SolarClient release history, read live from GitHub Releases, plus how versioning works and what is currently being worked on.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <meta name="theme-color" content="#090611">
+  <link rel="canonical" href="https://figgysmp.shop/changelog.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="SolarClient">
+  <meta property="og:title" content="SolarClient Changelog — Release History">
+  <meta property="og:description" content="The full SolarClient release history, read live from GitHub Releases, plus how versioning works and what is currently being worked on.">
+  <meta property="og:url" content="https://figgysmp.shop/changelog.html">
+  <meta property="og:image" content="https://figgysmp.shop/assets/img/logo.svg">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="SolarClient Changelog — Release History">
+  <meta name="twitter:description" content="The full SolarClient release history, read live from GitHub Releases, plus how versioning works and what is currently being worked on.">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <script src="/assets/js/changelog.js" defer></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7931973085541540" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://figgysmp.shop/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Changelog"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <canvas id="skyCanvas" aria-hidden="true"></canvas>
+  <div class="ambient-glow-purple" aria-hidden="true"></div>
+  <div class="ambient-glow-bottom" aria-hidden="true"></div>
+
+  <div class="container">
+    <header class="header-nav">
+      <a href="/" class="brand">
+        <img src="/assets/img/logo.svg" alt="" class="brand-logo" width="42" height="42">
+        <span>SolarClient</span>
+      </a>
+      <nav class="nav-actions" aria-label="Main">
+        <a href="/#download" class="nav-link">Download</a>
+        <a href="/#features" class="nav-link">Features</a>
+        <a href="/guides/" class="nav-link">Guides</a>
+        <a href="/faq.html" class="nav-link">FAQ</a>
+        <a href="/changelog.html" class="nav-link" aria-current="page">Changelog</a>
+        <a href="/about.html" class="nav-link">About</a>
+        <a href="/support.html" class="nav-link">Support</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><span aria-current="page">Changelog</span></li>
+        </ol>
+      </nav>
+
+      <section class="hero-section">
+        <h1 class="hero-title">Release <span class="highlight">Changelog</span></h1>
+        <p class="hero-desc">Every SolarClient release, pulled live from GitHub. This page reflects what actually shipped &mdash; it reads the release history directly rather than a list we maintain by hand and forget to update.</p>
+      </section>
+
+      <section class="section" style="margin-top:20px">
+        <h2 class="section-title">How releases work</h2>
+        <div class="about-text">
+          <p>SolarClient releases are published to <a href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases" rel="noopener" target="_blank">GitHub Releases</a>, and every build carries a SHA-256 hash so you can verify the file you downloaded matches what was uploaded. The download button and hash on the <a href="/">home page</a> read from the same source, which is why they never go stale.</p>
+          <p>Version numbers follow a <code>major.minor.patch</code> scheme. Patch releases fix bugs and update bundled mods. Minor releases add features or support for a new Minecraft version. Major releases change something structural about the launcher itself.</p>
+          <p>The launcher checks for updates on startup and can install them in place, so in normal use you do not need to return here &mdash; this page is for reading what changed, and for getting an older build if you need one.</p>
+          <p>The in-game SolarClient mod is versioned separately from the launcher and ships on a rolling <code>mod</code> tag rather than as a numbered release, so it does not appear in the list below. The launcher fetches the matching mod build for your Minecraft version automatically; you do not need to download it yourself.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Releases</h2>
+        <p class="section-subtitle">Newest first. Full release notes and downloadable assets for each build are on GitHub.</p>
+
+        <div class="changelog-list" id="releaseList">
+          <div class="changelog-entry" id="releaseLoading">
+            <div class="changelog-header">
+              <span class="changelog-version">Loading&hellip;</span>
+            </div>
+            <ul>
+              <li>Fetching the release history from GitHub.</li>
+              <li>If this does not update, the full list is always available <a href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases" rel="noopener" target="_blank">on the GitHub releases page</a>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="section-subtitle" style="margin-top:32px">
+          <a href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases" rel="noopener" target="_blank">View the complete release history on GitHub &rarr;</a>
+        </p>
+      </section>
+
+
+      <section class="section">
+        <h2 class="section-title">Ongoing work</h2>
+        <div class="about-text">
+          <p>Things currently being worked on or seriously considered. This is a statement of intent, not a set of promises with dates attached &mdash; a small team missing announced deadlines helps nobody.</p>
+          <p><strong>Cross-platform support.</strong> macOS and Linux builds are the most requested thing by a wide margin. The launcher shell is portable; the Java runtime management and installer work are not, and that is the actual effort.</p>
+          <p><strong>Code signing.</strong> A signing certificate would remove the SmartScreen warning that currently greets every new user. It costs several hundred dollars a year, which is the constraint.</p>
+          <p><strong>Modpack import.</strong> Reading existing CurseForge and Modrinth pack formats so you can bring a pack across instead of rebuilding it.</p>
+          <p><strong>Opening parts of the source.</strong> Under consideration, without a timeline.</p>
+          <p>Priorities are genuinely shaped by what people ask for in <a href="https://discord.gg/DyeJ8tAvZY" rel="noopener" target="_blank">Discord</a>. If something here matters to you, saying so has more effect than you would expect on a project this size.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h2>SolarClient</h2>
+          <ul>
+            <li><a href="/#download">Download for Windows</a></li>
+            <li><a href="/#features">Features</a></li>
+            <li><a href="/#requirements">System requirements</a></li>
+            <li><a href="/#install">Install guide</a></li>
+            <li><a href="/changelog.html">Changelog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Guides</h2>
+          <ul>
+            <li><a href="/guides/">All guides</a></li>
+            <li><a href="/guides/minecraft-fps-boost.html">Increase Minecraft FPS</a></li>
+            <li><a href="/guides/allocate-ram-minecraft.html">How much RAM to allocate</a></li>
+            <li><a href="/guides/minecraft-java-version-guide.html">Java version chart</a></li>
+            <li><a href="/guides/fix-minecraft-lag-spikes.html">Fix lag spikes</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Help</h2>
+          <ul>
+            <li><a href="/faq.html">FAQ</a></li>
+            <li><a href="/support.html">Support &amp; troubleshooting</a></li>
+            <li><a href="https://discord.gg/DyeJ8tAvZY" rel="noopener" target="_blank">Discord server</a></li>
+            <li><a href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases" rel="noopener" target="_blank">GitHub releases</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Legal</h2>
+          <ul>
+            <li><a href="/privacy.html">Privacy policy</a></li>
+            <li><a href="/terms.html">Terms of service</a></li>
+            <li><a href="/cookies.html">Cookie policy</a></li>
+            <li><a href="/about.html">About us</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <p class="footer-cookie-note">This website is funded by advertising. Google AdSense and its partners set cookies to measure and personalise the ads you see here. Read our <a href="/cookies.html">cookie policy</a> and <a href="/privacy.html">privacy policy</a>, or manage your choices at <a href="https://myadcenter.google.com/" rel="noopener nofollow" target="_blank">Google My Ad Center</a>.</p>
+        <p>&copy; 2024&ndash;2026 SolarClient. SolarClient is an independent project and is <strong>not</strong> affiliated with, endorsed by, or sponsored by Mojang Studios or Microsoft Corporation.</p>
+        <p>Minecraft is a registered trademark of Mojang Studios. Sodium, Lithium, FerriteCore, Iris and other bundled mods are the property of their respective authors and are distributed under their own licences. All other trademarks are the property of their respective owners.</p>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast-msg" id="toast" role="status" aria-live="polite"></div>
+  <script src="/assets/js/site.js" defer></script>
+</body>
+</html>

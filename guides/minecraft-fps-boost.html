@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Increase Minecraft FPS: A Complete Guide — SolarClient</title>
+  <meta name="description" content="A complete, technically grounded guide to increasing Minecraft: Java Edition frame rate — GPU selection, Sodium, the settings that actually cost frames, and how to measure the result.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <meta name="theme-color" content="#090611">
+  <link rel="canonical" href="https://figgysmp.shop/guides/minecraft-fps-boost.html">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="SolarClient">
+  <meta property="og:title" content="How to Increase Minecraft FPS: A Complete Guide — SolarClient">
+  <meta property="og:description" content="A complete, technically grounded guide to increasing Minecraft: Java Edition frame rate — GPU selection, Sodium, the settings that actually cost frames, and how to measure the result.">
+  <meta property="og:url" content="https://figgysmp.shop/guides/minecraft-fps-boost.html">
+  <meta property="og:image" content="https://figgysmp.shop/assets/img/logo.svg">
+  <meta property="og:locale" content="en_US">
+  <meta property="article:published_time" content="2026-09-20">
+  <meta property="article:modified_time" content="2026-09-20">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="How to Increase Minecraft FPS: A Complete Guide — SolarClient">
+  <meta name="twitter:description" content="A complete, technically grounded guide to increasing Minecraft: Java Edition frame rate — GPU selection, Sodium, the settings that actually cost frames, and how to measure the result.">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7931973085541540" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "How to Increase Minecraft FPS: A Complete Guide",
+  "description": "A complete, technically grounded guide to increasing Minecraft: Java Edition frame rate — GPU selection, Sodium, the settings that actually cost frames, and how to measure the result.",
+  "articleSection": "Performance",
+  "url": "https://figgysmp.shop/guides/minecraft-fps-boost.html",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://figgysmp.shop/guides/minecraft-fps-boost.html"
+  },
+  "datePublished": "2026-09-20",
+  "dateModified": "2026-09-20",
+  "inLanguage": "en",
+  "author": {
+    "@id": "https://figgysmp.shop/#organization"
+  },
+  "publisher": {
+    "@id": "https://figgysmp.shop/#organization"
+  },
+  "image": "https://figgysmp.shop/assets/img/logo.svg"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://figgysmp.shop/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://figgysmp.shop/guides/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Increase Minecraft FPS"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <canvas id="skyCanvas" aria-hidden="true"></canvas>
+  <div class="ambient-glow-purple" aria-hidden="true"></div>
+  <div class="ambient-glow-bottom" aria-hidden="true"></div>
+
+  <div class="container">
+    <header class="header-nav">
+      <a href="/" class="brand">
+        <img src="/assets/img/logo.svg" alt="" class="brand-logo" width="42" height="42">
+        <span>SolarClient</span>
+      </a>
+      <nav class="nav-actions" aria-label="Main">
+        <a href="/#download" class="nav-link">Download</a>
+        <a href="/#features" class="nav-link">Features</a>
+        <a href="/guides/" class="nav-link" aria-current="page">Guides</a>
+        <a href="/faq.html" class="nav-link">FAQ</a>
+        <a href="/changelog.html" class="nav-link">Changelog</a>
+        <a href="/about.html" class="nav-link">About</a>
+        <a href="/support.html" class="nav-link">Support</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><a href="/guides/">Guides</a></li>
+          <li><span aria-current="page">Increase Minecraft FPS</span></li>
+        </ol>
+      </nav>
+
+      <article class="article">
+        <header class="article-header">
+          <p class="article-eyebrow">Performance guide</p>
+          <h1 class="article-title">How to Increase Minecraft FPS: A Complete Guide</h1>
+          <p class="article-standfirst">Minecraft&rsquo;s frame rate is limited by very specific things &mdash; draw call overhead, single-threaded chunk meshing, and garbage collection &mdash; not by how many settings you turn down. This guide explains what actually costs you frames, in the order worth fixing.</p>
+          <div class="article-meta">
+            <span>Published <time datetime="2026-09-20">September 20, 2026</time></span>
+            <span aria-hidden="true">&middot;</span>
+            <span>Applies to Minecraft: Java Edition 1.16&ndash;1.21</span>
+            <span aria-hidden="true">&middot;</span>
+            <span>~12 min read</span>
+          </div>
+        </header>
+
+        <div class="prose">
+
+          <section class="key-takeaways">
+            <h2>The short version</h2>
+            <ul>
+              <li><strong>Install Sodium first.</strong> Nothing else on this list comes close. It replaces Minecraft&rsquo;s rendering engine and routinely doubles frame rates on its own.</li>
+              <li><strong>Check which GPU is actually running the game.</strong> On laptops, Minecraft very often runs on the integrated GPU by default. Fixing that is a one-minute change with a huge payoff.</li>
+              <li><strong>Allocate less RAM, not more.</strong> Oversized heaps make stutter worse, not better. 4&ndash;6&nbsp;GB covers almost everything.</li>
+              <li><strong>Render distance is the most expensive single setting</strong>, and it scales roughly with the square of the value.</li>
+              <li><strong>Low FPS and &ldquo;server lag&rdquo; are different problems</strong> with different fixes. Diagnose which one you have before changing anything.</li>
+            </ul>
+          </section>
+
+          <nav class="toc" aria-label="Contents">
+            <h2>What this guide covers</h2>
+            <ol>
+              <li><a href="#why-slow">Why vanilla Minecraft runs badly on fast hardware</a></li>
+              <li><a href="#fps-vs-tps">Is it FPS, or is it the server?</a></li>
+              <li><a href="#wrong-gpu">Step 1: Make sure the right GPU is running the game</a></li>
+              <li><a href="#sodium">Step 2: Install a modern rendering engine</a></li>
+              <li><a href="#settings">Step 3: The settings that actually matter</a></li>
+              <li><a href="#java-memory">Step 4: Java version and memory</a></li>
+              <li><a href="#system">Step 5: System-level fixes</a></li>
+              <li><a href="#measure">How to measure whether any of it worked</a></li>
+              <li><a href="#myths">Things that don&rsquo;t help (and why people think they do)</a></li>
+            </ol>
+          </nav>
+
+          <h2 id="why-slow">Why vanilla Minecraft runs badly on fast hardware</h2>
+
+          <p>It is genuinely strange the first time you notice it: a machine that plays modern AAA titles at 120&nbsp;FPS struggles to hold 60 in a game made of cubes. That is not your hardware being wasted &mdash; it is an artefact of how Minecraft was built.</p>
+
+          <p>Minecraft: Java Edition grew out of a codebase written in 2009, before the rendering techniques that modern games rely on were standard. Three consequences follow from that, and between them they explain most of the frame rate problem:</p>
+
+          <ul>
+            <li><strong>Draw call overhead.</strong> Vanilla issues a very large number of small, separate drawing commands to the GPU rather than batching geometry into a few large ones. Each command has fixed CPU cost. The result is that your CPU spends its time talking to the GPU instead of the GPU spending its time drawing, and your graphics card sits mostly idle.</li>
+            <li><strong>Single-threaded chunk work.</strong> When terrain changes or new chunks come into view, the game has to rebuild the mesh for that chunk &mdash; work the vanilla engine does largely on the main thread. Your other CPU cores are unused while the frame you are waiting for is blocked.</li>
+            <li><strong>Java memory churn.</strong> The game allocates and discards a very large number of short-lived objects every tick. Java cleans those up with a garbage collector, and collection means pausing. Small pauses are invisible; large ones are the stutter you feel.</li>
+          </ul>
+
+          <p>Every meaningful FPS fix targets one of those three. That is why the order in this guide matters: replacing the renderer addresses the first two directly, and most of the settings people reach for first barely touch any of them.</p>
+
+          <h2 id="fps-vs-tps">Is it FPS, or is it the server?</h2>
+
+          <p>Before changing anything, work out which problem you have, because the fixes do not overlap at all.</p>
+
+          <p><strong>Low FPS</strong> means the game is drawing few frames per second. The world keeps behaving correctly; it just looks choppy. Moving the mouse feels sluggish. Press <code>F3</code> and read the number in the top-left.</p>
+
+          <p><strong>Server lag</strong> &mdash; low TPS, or ticks per second &mdash; means the world simulation is behind. Blocks take a moment to break, mobs rubber-band, items hang in the air, doors open late. Crucially, your FPS can be a perfectly healthy 200 while this is happening. Minecraft targets 20&nbsp;TPS; anything below roughly 18 is noticeable.</p>
+
+          <p>If you are on a multiplayer server and everyone is experiencing the same delay, it is a server problem and nothing you change locally will help. If it happens in singleplayer, your own machine is running the server, so heavy redstone, large mob farms, or chunk loading can still cause it &mdash; and the fix is reducing simulation load, not graphics settings.</p>
+
+          <div class="callout">
+            <span class="callout-title">Worth installing</span>
+            <p>The <strong>spark</strong> profiler is the standard tool for telling these apart properly. Running <code>/spark profiler start</code>, playing for a minute, then <code>/spark profiler stop</code> gives you a shareable report showing exactly which code is consuming your tick time or frame time. It is free, open source, and available for both client and server.</p>
+          </div>
+
+          <h2 id="wrong-gpu">Step 1: Make sure the right GPU is running the game</h2>
+
+          <p>This is first because it is the single most common cause of &ldquo;my expensive laptop runs Minecraft at 30&nbsp;FPS,&rdquo; it takes about a minute to check, and the improvement can be several hundred percent.</p>
+
+          <p>Laptops with both integrated graphics and a dedicated GPU decide per-application which one to use. Windows makes that decision based on heuristics that frequently get Java applications wrong, because the process it sees is <code>javaw.exe</code>, not something it recognises as a game.</p>
+
+          <p>To check: press <code>F3</code> in game and look at the right-hand column. It names the graphics adapter in use. If it says Intel UHD, Intel Iris, or AMD Radeon Graphics on a machine that also has an NVIDIA or dedicated AMD card, you have found your problem.</p>
+
+          <p>To fix it on Windows 10 or 11:</p>
+
+          <ol>
+            <li>Open <strong>Settings &rarr; System &rarr; Display &rarr; Graphics</strong>.</li>
+            <li>Choose <strong>Desktop app</strong>, then <strong>Browse</strong>.</li>
+            <li>Point it at the Java executable your launcher actually uses. SolarClient manages its own Java runtimes, so this is inside the SolarClient directory rather than in Program Files &mdash; the launcher shows the exact path under Settings &rarr; Java.</li>
+            <li>Select the added entry, click <strong>Options</strong>, and set it to <strong>High performance</strong>.</li>
+            <li>Restart the game and confirm with <code>F3</code> that the adapter changed.</li>
+          </ol>
+
+          <p>NVIDIA users can do the same through the NVIDIA Control Panel under Manage 3D Settings &rarr; Program Settings, and AMD users through Adrenalin&rsquo;s per-application graphics profiles. Setting it in Windows is usually enough on modern drivers.</p>
+
+          <h2 id="sodium">Step 2: Install a modern rendering engine</h2>
+
+          <p>If you only do one thing from this guide, do this one.</p>
+
+          <p><a href="https://modrinth.com/mod/sodium" rel="noopener nofollow" target="_blank">Sodium</a> replaces Minecraft&rsquo;s chunk rendering pipeline with one written against modern OpenGL. Instead of thousands of small draw calls, it packs chunk geometry into large shared vertex buffers and submits them in batches. It also culls geometry the vanilla engine draws and throws away, and it moves chunk meshing off the render thread.</p>
+
+          <p>The practical effect is that your GPU finally becomes the thing doing the work. Improvements vary enormously with hardware &mdash; the bigger the gap between your CPU and GPU, the bigger the gain &mdash; but doubling frame rate is an ordinary result rather than a remarkable one, and on CPU-limited systems it can be more.</p>
+
+          <p>Sodium is Fabric-native and has official NeoForge support in recent versions. On older Forge versions, <strong>Embeddium</strong> is the maintained port.</p>
+
+          <p>Three companions are worth adding at the same time:</p>
+
+          <ul>
+            <li><strong>Lithium</strong> optimises the game logic and tick loop &mdash; pathfinding, block ticking, collision, chunk management. It changes no game behaviour and is safe on servers. This helps TPS, which Sodium does not touch.</li>
+            <li><strong>FerriteCore</strong> reduces the memory footprint of block states, models, and multipart predicates. Less memory in use means less garbage collection pressure, which means fewer pauses.</li>
+            <li><strong>ImmediatelyFast</strong> batches the immediate-mode rendering Minecraft still uses for text, items, GUI elements, and particles. Its effect is largest in inventory-heavy and HUD-heavy situations, which is precisely where a lot of people notice frame drops.</li>
+          </ul>
+
+          <p>SolarClient ships this stack pre-configured and version-matched, which is most of what the launcher is for &mdash; the combination is well established, but keeping it consistent across Minecraft versions by hand is tedious. There is a mod-by-mod breakdown in our <a href="/guides/minecraft-performance-mods.html">guide to Minecraft performance mods</a>.</p>
+
+      <aside class="ad-slot" aria-label="Advertisement">
+        <div class="ad-slot-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7931973085541540"
+             data-ad-slot="5583456558"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </aside>
+
+
+          <h2 id="settings">Step 3: The settings that actually matter</h2>
+
+          <p>Once the renderer is modern, settings have a different cost profile than the folklore suggests. These are the ones with real weight, in order:</p>
+
+          <h3>Render distance</h3>
+
+          <p>The most expensive setting in the game, and the one people leave highest. The number of loaded chunks grows with the square of the radius: a render distance of 16 loads roughly four times as many chunks as a render distance of 8, not twice as many. Every one of those chunks needs geometry built, stored in memory, and considered for drawing.</p>
+
+          <p>Twelve is a reasonable ceiling for most systems. Eight is comfortable on modest hardware and is still further than you can meaningfully see in most terrain. If you want long views specifically, <strong>Distant Horizons</strong> is a better answer than raising render distance &mdash; it renders far terrain as simplified level-of-detail geometry at a fraction of the cost.</p>
+
+          <h3>Simulation distance</h3>
+
+          <p>Separate from render distance since 1.18, and often overlooked. This controls how far away the world keeps <em>simulating</em> &mdash; mob AI, redstone, crop growth, block ticks. It affects TPS rather than FPS. If singleplayer feels laggy rather than choppy, lower this before touching anything visual. Most players notice nothing at 8.</p>
+
+          <h3>Graphics mode</h3>
+
+          <p>Fabulous is substantially more expensive than Fancy. It renders translucent surfaces into separate buffers so that water, glass, and particles composite correctly, which costs both VRAM and fill rate. Unless you specifically want correct translucency layering, Fancy looks nearly identical at a real discount. Fast is cheaper again and mainly changes leaves and water.</p>
+
+          <h3>Biome blend</h3>
+
+          <p>Smooths colour transitions between biomes by averaging colours over a radius. The cost is in chunk rebuilds, and it rises sharply with the setting. Vanilla&rsquo;s default of 5&times;5 is defensible; anything higher is expensive for a subtle effect. Sodium handles this more efficiently than vanilla, but it is still not free.</p>
+
+          <h3>Entity and particle settings</h3>
+
+          <p>Entity distance and particle density matter most in exactly the places where FPS matters most: mob farms, busy servers, combat. Dropping particles to Decreased and entity distance to 75% or 50% costs little visually and helps precisely when you need it. <strong>EntityCulling</strong> goes further, skipping entities that are not actually visible from the camera.</p>
+
+          <h3>VSync and frame rate cap</h3>
+
+          <p>VSync locks output to your monitor&rsquo;s refresh rate, which eliminates tearing at the cost of input latency and, when you cannot maintain the target, a disproportionate frame rate drop. Most players are better served by leaving VSync off and setting Max Framerate slightly below refresh rate &mdash; 141 on a 144&nbsp;Hz panel, for example. That keeps latency low and the frame time steady.</p>
+
+          <div class="callout good">
+            <span class="callout-title">One change at a time</span>
+            <p>Change a single setting, then watch the frame rate for thirty seconds in a consistent spot. Changing five settings together tells you nothing about which one helped, and people routinely keep four settings turned down for no benefit because they never isolated the one that mattered.</p>
+          </div>
+
+          <h2 id="java-memory">Step 4: Java version and memory</h2>
+
+          <p>Two things here, and the second one is where most advice on the internet goes wrong.</p>
+
+          <p><strong>Use the right Java version.</strong> Each Minecraft version targets a specific Java release, and running the wrong one produces anything from a silent performance penalty to a refusal to start. Newer Java releases also bring genuine runtime improvements. Our <a href="/guides/minecraft-java-version-guide.html">Java version guide</a> has the full mapping; SolarClient handles this automatically.</p>
+
+          <p><strong>Do not allocate more RAM than you need.</strong> This is counterintuitive enough that it needs stating plainly: giving Minecraft 16&nbsp;GB when it needs 4 will usually make your stutter <em>worse</em>. A larger heap means more garbage accumulates between collections, and collecting more garbage takes longer. Vanilla with a performance mod stack is comfortable in 4&nbsp;GB. Large modpacks want 6&ndash;8. Almost nothing benefits from more than that, and the downside is real. The <a href="/guides/allocate-ram-minecraft.html">RAM allocation guide</a> covers the reasoning and the numbers in detail.</p>
+
+          <p>Garbage collector tuning is the other half of this. Well-chosen G1GC flags trade a slightly lower average throughput for much shorter individual pauses, which is exactly the right trade for a game &mdash; you would rather lose one frame consistently than drop twelve at once. Java 21 and later also offer generational ZGC, which targets sub-millisecond pauses and suits large modded heaps well.</p>
+
+          <h2 id="system">Step 5: System-level fixes</h2>
+
+          <p>Worth a pass once the game itself is in order:</p>
+
+          <ul>
+            <li><strong>Update your GPU drivers.</strong> Minecraft leans on OpenGL, which vendors historically treat as a second-class path. Driver updates have produced double-digit percentage changes in Minecraft specifically, in both directions &mdash; so note your version before updating.</li>
+            <li><strong>Exclude your game directory from antivirus real-time scanning.</strong> Minecraft touches thousands of small files during chunk loading and world saving. On-access scanning of every one of them shows up as periodic hitching. Exclude the launcher and <code>.minecraft</code> directories, not your whole drive.</li>
+            <li><strong>Close overlays.</strong> Discord, Steam, GeForce Experience, Xbox Game Bar, and RGB software all inject themselves into the rendering path. Discord&rsquo;s overlay in particular has a long history of causing hitching in Java applications. Turn them off and test.</li>
+            <li><strong>Set the Windows power plan to High performance</strong> on desktops, and make sure laptops are plugged in. Balanced plans downclock aggressively, and Minecraft&rsquo;s bursty CPU pattern is exactly the kind that confuses a power governor.</li>
+            <li><strong>Watch your RAM headroom.</strong> If the system is short on physical memory, Windows starts paging to disk, and a paged-out Java heap produces stutter that no in-game setting will fix. Leave at least 2&ndash;3&nbsp;GB free for the OS.</li>
+          </ul>
+
+          <h2 id="measure">How to measure whether any of it worked</h2>
+
+          <p>Average FPS is a poor metric. A game that renders at a steady 60 feels far better than one that averages 90 while dropping to 20 four times a minute. What you care about is frame time consistency.</p>
+
+          <p>Practical approach:</p>
+
+          <ol>
+            <li>Pick a fixed spot &mdash; a specific location, facing a specific direction, at a specific time of day. Reuse it for every test.</li>
+            <li>Open the <code>F3</code> lag meter (<code>Alt+F3</code> on most versions) and read the frame time graph rather than the average. Tall spikes are the thing to hunt; a flat line is the goal.</li>
+            <li>Test for at least a minute. First-load chunk meshing distorts the first few seconds badly.</li>
+            <li>Change one thing, retest, write it down.</li>
+          </ol>
+
+          <p>If the graph shows regular spikes at roughly even intervals, that pattern is characteristic of garbage collection. Irregular spikes while moving point at chunk loading. A steady low number with no spikes means you are simply GPU- or CPU-bound and need to lower settings rather than fix a stall.</p>
+
+          <h2 id="myths">Things that don&rsquo;t help (and why people think they do)</h2>
+
+          <ul>
+            <li><strong>&ldquo;Allocate 16&nbsp;GB.&rdquo;</strong> Covered above. It is the most widely repeated piece of bad Minecraft advice, and it survives because the person giving it also installed Sodium at the same time and credited the wrong change.</li>
+            <li><strong>&ldquo;Optimiser&rdquo; and &ldquo;booster&rdquo; utilities.</strong> Programs that promise to speed up games by cleaning the registry or freeing RAM do nothing useful, and freeing RAM in particular is actively counterproductive &mdash; it forces the OS to discard caches it will immediately need again.</li>
+            <li><strong>Setting Java to Realtime priority.</strong> Above-normal is defensible. Realtime can starve the kernel of scheduling time and make the whole system, including the game, worse.</li>
+            <li><strong>Copying JVM flags from a ten-year-old forum post.</strong> Many widely circulated flag lists reference options that were removed from the JVM years ago, or enable collectors that no longer exist. On modern Java these are ignored at best and refuse to start at worst.</li>
+            <li><strong>Turning down every setting at once.</strong> Once the renderer is modern, most low settings cost you visual quality for a rounding error in frame time. Find the two or three that matter on your hardware and leave the rest alone.</li>
+          </ul>
+
+          <h2>Where to go next</h2>
+
+          <p>Work through the list in order and stop when the frame rate is where you want it. In practice most people find that the GPU selection fix and Sodium together account for nearly all of the improvement available to them, and everything after that is refinement.</p>
+
+      <aside class="ad-slot" aria-label="Advertisement">
+        <div class="ad-slot-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7931973085541540"
+             data-ad-slot="4916563529"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </aside>
+
+
+        </div>
+
+        <nav class="next-read" aria-label="Related guides">
+          <h2>Related guides</h2>
+          <ul>
+            <li><a href="/guides/allocate-ram-minecraft.html">How much RAM should you allocate to Minecraft?</a> &mdash; why more is usually worse</li>
+            <li><a href="/guides/fix-minecraft-lag-spikes.html">How to fix Minecraft stutter and lag spikes</a> &mdash; diagnosing frame time spikes</li>
+            <li><a href="/guides/sodium-vs-optifine.html">Sodium vs OptiFine</a> &mdash; which rendering mod to use, and when</li>
+            <li><a href="/guides/minecraft-performance-mods.html">Every Minecraft performance mod, explained</a></li>
+          </ul>
+        </nav>
+      </article>
+    </main>
+
+    <footer>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h2>SolarClient</h2>
+          <ul>
+            <li><a href="/#download">Download for Windows</a></li>
+            <li><a href="/#features">Features</a></li>
+            <li><a href="/#requirements">System requirements</a></li>
+            <li><a href="/#install">Install guide</a></li>
+            <li><a href="/changelog.html">Changelog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Guides</h2>
+          <ul>
+            <li><a href="/guides/">All guides</a></li>
+            <li><a href="/guides/minecraft-fps-boost.html">Increase Minecraft FPS</a></li>
+            <li><a href="/guides/allocate-ram-minecraft.html">How much RAM to allocate</a></li>
+            <li><a href="/guides/minecraft-java-version-guide.html">Java version chart</a></li>
+            <li><a href="/guides/fix-minecraft-lag-spikes.html">Fix lag spikes</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Help</h2>
+          <ul>
+            <li><a href="/faq.html">FAQ</a></li>
+            <li><a href="/support.html">Support &amp; troubleshooting</a></li>
+            <li><a href="https://discord.gg/DyeJ8tAvZY" rel="noopener" target="_blank">Discord server</a></li>
+            <li><a href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases" rel="noopener" target="_blank">GitHub releases</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h2>Legal</h2>
+          <ul>
+            <li><a href="/privacy.html">Privacy policy</a></li>
+            <li><a href="/terms.html">Terms of service</a></li>
+            <li><a href="/cookies.html">Cookie policy</a></li>
+            <li><a href="/about.html">About us</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <p class="footer-cookie-note">This website is funded by advertising. Google AdSense and its partners set cookies to measure and personalise the ads you see here. Read our <a href="/cookies.html">cookie policy</a> and <a href="/privacy.html">privacy policy</a>, or manage your choices at <a href="https://myadcenter.google.com/" rel="noopener nofollow" target="_blank">Google My Ad Center</a>.</p>
+        <p>&copy; 2024&ndash;2026 SolarClient. SolarClient is an independent project and is <strong>not</strong> affiliated with, endorsed by, or sponsored by Mojang Studios or Microsoft Corporation.</p>
+        <p>Minecraft is a registered trademark of Mojang Studios. Sodium, Lithium, FerriteCore, Iris and other bundled mods are the property of their respective authors and are distributed under their own licences. All other trademarks are the property of their respective owners.</p>
+      </div>
+    </footer>
+  </div>
+
+  <div class="toast-msg" id="toast" role="status" aria-live="polite"></div>
+  <script src="/assets/js/site.js" defer></script>
+</body>
+</html>
