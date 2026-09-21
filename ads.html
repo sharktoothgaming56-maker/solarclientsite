@@ -5,9 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow, noarchive">
   <meta name="googlebot" content="noindex, nofollow">
-  <!-- This file is NOT part of the SolarClient website. It is an ad frame loaded
-       inside the desktop launcher only. It is excluded from the sitemap and
-       disallowed in robots.txt, and nothing on the website links to it. -->
+  <!-- This file is NOT part of the SolarClient website. It is the ad frame
+       loaded inside the desktop launcher only. It is excluded from the
+       sitemap and disallowed in robots.txt, and nothing on the website links
+       to it.
+
+       Why it is hosted rather than inlined: the launcher's own pages hold a
+       privileged bridge (window.nebula). An ad rendered in a srcdoc iframe
+       shares the launcher's origin and can reach that bridge. Served from
+       figgysmp.shop, the ad runs on a different origin, so the browser
+       blocks it from touching the launcher, while cookies still work and
+       the ad network's script runs normally. -->
   <title>SolarClient Ad</title>
   <style>
     html, body {
@@ -15,7 +23,7 @@
       background: transparent; overflow: hidden;
     }
     #wrap {
-      width: 100%; height: 100%;
+      width: 100%; height: 100%; overflow: hidden;
       display: flex; align-items: center; justify-content: center;
     }
   </style>
@@ -24,31 +32,53 @@
   <div id="wrap"></div>
   <script>
     (async () => {
-      const slotIdx = Math.max(0, (Number(new URLSearchParams(location.search).get('slot')) || 1) - 1);
-      const sources = [
-        './ads-config.json',
-      ];
+      // Only real Adsterra banner sizes and hosts are accepted, so this page
+      // cannot be pointed at an arbitrary script URL.
+      const SIZES = new Set(['160x600', '160x300', '300x250', '728x90', '468x60', '320x50']);
+      const HOSTS = ['www.highrevenueformat.com', 'www.highperformanceformat.com'];
+      const q = new URLSearchParams(location.search);
+
       let slot = null;
-      for (const url of sources) {
-        try {
-          const res = await fetch(url, { cache: 'no-store' });
-          if (!res.ok) continue;
-          const data = await res.json();
-          if (data?.slots?.[slotIdx]?.key) { slot = data.slots[slotIdx]; break; }
-        } catch (_) {}
+
+      // Launcher 3.22.4 and later pass the placement directly, taken from the
+      // config it fetched (VPS first, then this site).
+      const key = (q.get('key') || '').toLowerCase();
+      const w = Number(q.get('w'));
+      const h = Number(q.get('h'));
+      if (/^[a-f0-9]{32}$/.test(key) && SIZES.has(w + 'x' + h)) {
+        slot = { key, width: w, height: h, invoke: q.get('host') || '' };
       }
-      if (!slot?.key) return;
-      const width = Number(slot.width) || 160;
-      const height = Number(slot.height) || 300;
-      const invoke = slot.invoke || ('https://www.highperformanceformat.com/' + slot.key + '/invoke.js');
-      const s1 = document.createElement('script');
-      s1.textContent = 'atOptions = ' + JSON.stringify({
-        key: slot.key, format: 'iframe', width, height, params: {}
-      }) + ';';
-      document.body.appendChild(s1);
-      const s2 = document.createElement('script');
-      s2.src = invoke;
-      document.body.appendChild(s2);
+
+      // Older launchers pass ?slot=N, or nothing at all. Look it up here.
+      if (!slot) {
+        const idx = Math.max(0, (Number(q.get('slot')) || 1) - 1);
+        try {
+          const res = await fetch('./ads-config.json', { cache: 'no-store' });
+          if (res.ok) {
+            const data = await res.json();
+            const s = data && Array.isArray(data.slots) ? data.slots[idx] : null;
+            if (s && /^[a-f0-9]{32}$/.test(String(s.key || '').toLowerCase())) {
+              slot = { key: String(s.key).toLowerCase(), width: Number(s.width) || 160,
+                       height: Number(s.height) || 300, invoke: s.invoke || '' };
+            }
+          }
+        } catch (_) { /* no config reachable: render nothing */ }
+      }
+      if (!slot) return;
+
+      let host = HOSTS[0];
+      try {
+        const raw = slot.invoke.includes('://') ? new URL(slot.invoke).hostname : slot.invoke;
+        if (HOSTS.includes(raw)) host = raw;
+      } catch (_) { /* keep default host */ }
+
+      // Inject INTO #wrap. Appending to <body> instead places the ad below
+      // #wrap, which fills the frame, so the ad renders entirely out of view.
+      const wrap = document.getElementById('wrap');
+      window.atOptions = { key: slot.key, format: 'iframe', width: slot.width, height: slot.height, params: {} };
+      const s = document.createElement('script');
+      s.src = 'https://' + host + '/' + slot.key + '/invoke.js';
+      wrap.appendChild(s);
     })();
   </script>
 </body>

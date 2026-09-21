@@ -1,1 +1,61 @@
-{"slots":[{"id":"slot-1","width":160,"provider":"adsterra","format":"iframe","ready":true,"height":300,"invoke":"https://www.highrevenueformat.com/5c44bc7a903949c21f685b8010991430/invoke.js","key":"5c44bc7a903949c21f685b8010991430"},{"id":"slot-2","width":160,"provider":"adsterra","format":"iframe","ready":true,"height":300,"invoke":"https://www.highrevenueformat.com/5c44bc7a903949c21f685b8010991430/invoke.js","key":"5c44bc7a903949c21f685b8010991430"}],"provider":"adsterra"}
+{
+  "provider": "adsterra",
+  "_readme": "Launcher 3.22.4+ looks units up by SIZE. Older launchers read slots[0] and slots[1] by position into 160x300-sized boxes, so those two entries must stay 160x300. Append new sizes after them; never reorder.",
+  "slots": [
+    {
+      "id": "slot-1",
+      "provider": "adsterra",
+      "format": "iframe",
+      "ready": true,
+      "width": 160,
+      "height": 300,
+      "key": "5c44bc7a903949c21f685b8010991430",
+      "invoke": "https://www.highrevenueformat.com/5c44bc7a903949c21f685b8010991430/invoke.js",
+      "note": "legacy box 1 / logs page left"
+    },
+    {
+      "id": "slot-2",
+      "provider": "adsterra",
+      "format": "iframe",
+      "ready": true,
+      "width": 160,
+      "height": 300,
+      "key": "5c44bc7a903949c21f685b8010991430",
+      "invoke": "https://www.highrevenueformat.com/5c44bc7a903949c21f685b8010991430/invoke.js",
+      "note": "legacy box 2 (same unit)"
+    },
+    {
+      "id": "slot-3",
+      "provider": "adsterra",
+      "format": "iframe",
+      "ready": true,
+      "width": 160,
+      "height": 600,
+      "key": "994f84fa2856a0b79a8f43d619796885",
+      "invoke": "https://www.highrevenueformat.com/994f84fa2856a0b79a8f43d619796885/invoke.js",
+      "note": "right-hand column, every page"
+    },
+    {
+      "id": "slot-4",
+      "provider": "adsterra",
+      "format": "iframe",
+      "ready": true,
+      "width": 300,
+      "height": 250,
+      "key": "303c071b9a2270778e9958812cf4b04c",
+      "invoke": "https://www.highrevenueformat.com/303c071b9a2270778e9958812cf4b04c/invoke.js",
+      "note": "logs page right"
+    },
+    {
+      "id": "slot-5",
+      "provider": "adsterra",
+      "format": "iframe",
+      "ready": true,
+      "width": 728,
+      "height": 90,
+      "key": "895cc8bc1456414a9d3ee1d9981de1b9",
+      "invoke": "https://www.highrevenueformat.com/895cc8bc1456414a9d3ee1d9981de1b9/invoke.js",
+      "note": "home page banner"
+    }
+  ]
+}
