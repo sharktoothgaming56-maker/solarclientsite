@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SolarClient</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-bg-kind="nebula">
+
+<!-- background stack: starfield canvas + nebula blobs + scene image -->
+<div class="bg-stack">
+  <div class="bg-nebula">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+  <div class="bg-scene" id="bg-scene"></div>
+  <div class="bg-scene-dark"></div>
+  <canvas id="starfield"></canvas>
+</div>
+
+<div class="titlebar">
+  <div class="titlebar-drag">
+    <div class="logo-orbit">
+      <svg class="logo-planet" viewBox="0 0 40 40">
+        <defs>
+          <radialGradient id="lg-core" cx="35%" cy="32%" r="75%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="35%" stop-color="var(--accent)"/>
+            <stop offset="100%" stop-color="var(--accent2)"/>
+          </radialGradient>
+          <linearGradient id="lg-ring" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="var(--accent2)" stop-opacity="0.35"/>
+          </linearGradient>
+        </defs>
+        <ellipse class="logo-ring-back" cx="20" cy="20" rx="17" ry="6.5" fill="none" stroke="url(#lg-ring)" stroke-width="2"/>
+        <circle cx="20" cy="20" r="10" fill="url(#lg-core)"/>
+        <ellipse class="logo-ring-front" cx="20" cy="20" rx="17" ry="6.5" fill="none" stroke="url(#lg-ring)" stroke-width="2"/>
+      </svg>
+      <span class="logo-spark s1"></span>
+      <span class="logo-spark s2"></span>
+    </div>
+    <span class="titlebar-title">SolarClient<span class="titlebar-version" id="titlebar-version"></span></span>
+  </div>
+  <div class="window-controls">
+    <button id="win-min" title="Minimize">–</button>
+    <button id="win-max" title="Maximize">▢</button>
+    <button id="win-close" title="Close" class="close-btn">✕</button>
+  </div>
+</div>
+
+<div class="app">
+  <aside class="sidebar glass">
+    <button class="nav-btn active" data-view="launchpad" title="Launchpad">
+      <!-- launchpad: a rocket over a planet ring, drawn on the voxel grid -->
+      <svg viewBox="0 0 24 24"><path d="M12 2.5c2.6 2 4 5 4 8.1v3.1l1.7 1.7v2.3l-3-1.2h-5.4l-3 1.2v-2.3L8 13.7v-3.1c0-3.1 1.4-6.1 4-8.1z"/><rect x="10.8" y="7.6" width="2.4" height="2.4" rx="0.4" opacity="0.45"/><path d="M9.6 19.1h4.8l-2.4 3.2-2.4-3.2z" opacity="0.75"/></svg>
+    </button>
+    <button class="nav-btn" data-view="instances" title="Versions">
+      <!-- versions: stacked blocks, like a column of worlds -->
+      <svg viewBox="0 0 24 24"><path d="M12 2.2l8 4.1-8 4.1-8-4.1 8-4.1z"/><path d="M4 9.3l8 4.1 8-4.1v2.3l-8 4.1-8-4.1V9.3z" opacity="0.72"/><path d="M4 14.6l8 4.1 8-4.1v2.3l-8 4.1-8-4.1v-2.3z" opacity="0.45"/></svg>
+    </button>
+    <button class="nav-btn" data-view="mods" title="Content">
+      <!-- content: a chest / crate, the thing that actually holds your stuff -->
+      <svg viewBox="0 0 24 24"><path d="M3.2 7.4h17.6v3.4H3.2V7.4z"/><path d="M4.4 12h15.2v8.4H4.4V12z" opacity="0.72"/><rect x="10.6" y="9.2" width="2.8" height="5.4" rx="0.5"/><path d="M5.6 3.6h12.8l2.4 3.2H3.2l2.4-3.2z" opacity="0.5"/></svg>
+    </button>
+    <button class="nav-btn" data-view="customize" title="Customize">
+      <!-- customize: a star cluster / constellation -->
+      <svg viewBox="0 0 24 24"><path d="M12 3.2l1.5 3.9 3.9 1.5-3.9 1.5L12 14l-1.5-3.9L6.6 8.6l3.9-1.5L12 3.2z"/><path d="M18 13.4l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8.8-2z" opacity="0.62"/><path d="M6.4 15.2l.6 1.5 1.5.6-1.5.6-.6 1.5-.6-1.5-1.5-.6 1.5-.6.6-1.5z" opacity="0.42"/></svg>
+    </button>
+    <button class="nav-btn" data-view="friends" title="Friends">
+      <!-- friends: two overlapping blocky figures -->
+      <svg viewBox="0 0 24 24"><path d="M8.6 3.6h5.4v5.4H8.6V3.6z"/><path d="M5.6 10.4h11.4v8.2H5.6v-8.2z" opacity="0.72"/><path d="M15.4 6.2h4.2v4.2h-4.2V6.2z" opacity="0.55"/><path d="M13.8 11.6h6.4v6.2h-6.4v-6.2z" opacity="0.4"/></svg>
+      <span class="nav-badge hidden" id="friends-nav-badge">0</span>
+    </button>
+    <button class="nav-btn" data-view="servers" title="Servers">
+      <!-- servers: stacked rack units -->
+      <svg viewBox="0 0 24 24"><path d="M3.4 4.2h17.2v5.2H3.4V4.2z"/><path d="M3.4 11.2h17.2v5.2H3.4v-5.2z" opacity="0.72"/><path d="M3.4 18.2h17.2v2.2H3.4v-2.2z" opacity="0.45"/><circle cx="6.6" cy="6.8" r="1.1" fill="#0a0714"/><circle cx="6.6" cy="13.8" r="1.1" fill="#0a0714"/></svg>
+    </button>
+    <button class="nav-btn" data-view="skins" title="Skins">
+      <!-- skins: a player bust on a hanger, blocky -->
+      <svg viewBox="0 0 24 24"><path d="M8.4 3.2h7.2v7.2H8.4V3.2z"/><path d="M4.8 11.6h14.4v9.2H4.8v-9.2z" opacity="0.7"/><rect x="10.1" y="5.4" width="1.5" height="1.5" rx="0.3" fill="#0a0714"/><rect x="12.4" y="5.4" width="1.5" height="1.5" rx="0.3" fill="#0a0714"/></svg>
+    </button>
+    <div class="sidebar-spacer"></div>
+    <button class="nav-btn" data-view="settings" title="Settings">
+      <!-- settings: a blocky gear rather than the thin outline one -->
+      <svg viewBox="0 0 24 24"><path d="M10.2 2.4h3.6l.5 2.5 2.1 1.2 2.3-1 1.8 3.1-1.8 1.8v2.4l1.8 1.8-1.8 3.1-2.3-1-2.1 1.2-.5 2.5h-3.6l-.5-2.5-2.1-1.2-2.3 1-1.8-3.1L5.3 12V9.6L3.5 7.8l1.8-3.1 2.3 1 2.1-1.2.5-2.5z"/><circle cx="12" cy="12" r="2.9" fill="#0a0714"/></svg>
+    </button>
+  </aside>
+
+  <div class="main glass">      
+    <header class="topbar">
+      <div class="instance-select-wrap">
+        <select id="launch-instance-select"></select>
+      </div>
+      <div class="topbar-right">
+        <div id="running-indicator" class="running-indicator hidden"></div>
+        <div class="account" id="account-box"></div>
+      </div>
+    </header>
+
+    <!-- LAUNCHPAD -->
+    <section class="view active" id="view-launchpad">
+      <div class="launchpad-hero" id="launchpad-hero">
+        <span class="launch-art" id="launch-art"></span>
+        <span class="launch-art-stars" id="launch-art-stars"></span>
+        <!-- Moved out of .launch-col. That column is 440px and right
+             aligned, so `left:50%` centred the watermark on the column
+             rather than on the hero — it sat behind the buttons instead
+             of behind the character. -->
+        <div id="bg-version-watermark"></div>
+        <span class="launch-badge" id="launch-badge">
+          <span class="lb-ver" id="lb-ver">—</span>
+          <span class="lb-loader" id="lb-loader">vanilla</span>
+        </span>
+        <div class="hero-sheen"></div>
+        <div class="launch-center">
+          <div class="skin-render-wrap" id="skin-wrap">
+            <div class="skin-stage">
+              <canvas id="skin-canvas" class="skin-canvas"></canvas>
+              <img id="skin-render" class="skin-render" alt="" style="display:none;">
+              <div class="skin-ring"></div>
+              <div class="skin-shadow"></div>
+            </div>
+          </div>
+          <div class="launch-col">
+            <div class="edition-switch liquid-glass" id="edition-switch">
+              <button class="edition-btn active" data-edition="java">
+                <span class="ed-dot"></span>Java
+              </button>
+              <button class="edition-btn" data-edition="bedrock">
+                <span class="ed-dot"></span>Bedrock
+              </button>
+            </div>
+          <div class="launch-cluster">
+              <div class="launch-btn-row">
+                <button id="launch-btn" class="launch-btn liquid-glass" disabled>
+                  <span class="launch-label" id="launch-label">LAUNCH GAME</span>
+                  <span class="launch-sub" id="launch-sub">Sign in to get started</span>
+                </button>
+                <button id="launch-another-btn" class="launch-another liquid-glass hidden" title="Launch the selected instance as an additional game">
+                  <span class="plus">+</span><span>Launch<br>another</span>
+                </button>
+              </div>
+            <div class="launch-chips">
+              <button id="version-chip" class="chip liquid-glass" title="Switch instance or grab a new version">
+                <span class="chip-icon">◆</span><span id="version-chip-label">No instance</span><span class="chip-caret">▾</span>
+              </button>
+              <button id="perf-chip" class="chip chip-toggle liquid-glass" title="Tuned Java flags for smoother frame times">
+                <span class="chip-icon">⚡</span><span class="chip-label">Performance</span><span class="chip-state" id="perf-chip-state">ON</span>
+              </button>
+              <button id="monitor-chip" class="chip liquid-glass hidden" title="Open the live game monitor">
+                <span class="chip-icon">◉</span><span>Monitor</span>
+              </button>
+            </div>
+
+            <!-- level card -->
+            <div class="level-card liquid-glass" id="level-card">
+              <div class="level-card-left">
+                <span class="level-card-ore" id="level-card-ore">⬛</span>
+                <div class="level-card-info">
+                  <span class="level-card-name" id="level-card-name">Netherite</span>
+                  <span class="level-card-num" id="level-card-num">Level —</span>
+                </div>
+              </div>
+              <div class="level-card-right">
+                <div class="level-card-bar-wrap">
+                  <div class="level-card-bar" id="level-card-bar"></div>
+                </div>
+                <span class="level-card-xp" id="level-card-xp">— / — XP</span>
+              </div>
+            </div>
+            <div id="prewarm-chip" class="prewarm-chip hidden">
+              <div class="prewarm-spinner"></div>
+              <span id="prewarm-label">Pre-downloading…</span>
+              <div class="prewarm-track"><div class="prewarm-fill" id="prewarm-fill"></div></div>
+            </div>
+          </div>
+
+          <!-- Bedrock mode -->
+          <div class="bedrock-panel hidden" id="bedrock-panel">
+            <button id="bedrock-launch-btn" class="bedrock-launch liquid-glass" disabled>
+              <span class="bl-label">LAUNCH BEDROCK</span>
+              <span class="bl-sub" id="bedrock-sub">Checking for Minecraft for Windows…</span>
+            </button>
+            <div class="edition-switch liquid-glass" id="bedrock-edition-switch">
+              <button class="edition-btn active" data-bedrock="release"><span class="ed-dot"></span>Release</button>
+              <button class="edition-btn" data-bedrock="preview"><span class="ed-dot"></span>Preview</button>
+            </div>
+            <div class="bedrock-note" id="bedrock-note">
+              Starts your installed copy from the Microsoft Store.
+            </div>
+            <button id="bedrock-store-btn" class="pill-btn hidden">Get it from the Microsoft Store</button>
+          </div>
+          </div>
+        </div>
+
+        <!-- version switcher popover -->
+        <div id="version-popover" class="version-popover glass hidden">
+          <div class="pop-section-title">Instances</div>
+          <div id="pop-instance-list" class="pop-list"></div>
+          <div class="pop-divider"></div>
+          <div class="pop-section-title">New instance </div>
+          <div class="pop-loader-row">
+            <span class="pop-loader-label">Loader</span>
+            <div class="pop-loader-opts" id="pop-loader-opts">
+              <button class="pop-loader-btn active" data-loader="vanilla">Vanilla</button>
+              <button class="pop-loader-btn" data-loader="fabric">Fabric</button>
+              <button class="pop-loader-btn" data-loader="quilt">Quilt</button>
+              <button class="pop-loader-btn" data-loader="forge">Forge</button>
+            </div>
+            <div class="pop-search-wrap">
+              <span class="search-icon">⌕</span>
+              <input id="pop-version-search" placeholder="Find a version…">
+            </div>
+          </div>
+          <div id="pop-version-groups" class="version-art-grid"></div>
+        </div>
+      </div>
+
+      <!-- Discord link CTA — shown until an Application ID is configured -->
+      <!-- starts hidden: it is only shown once we know you have not linked -->
+      <div id="discord-link-banner" class="discord-link-banner hidden">
+        <div class="dlb-icon">
+          <svg width="22" height="22" viewBox="0 0 71 55" fill="white" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0)"><path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.44077 45.4204 0.52529C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.52529C25.5141 0.44359 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z"/></g><defs><clipPath id="clip0"><rect width="71" height="55" fill="white"/></clipPath></defs></svg>
+        </div>
+        <div class="dlb-text">
+          <b id="dlb-title">Discord</b>
+          <span id="dlb-sub">Shows what you're playing on your profile</span>
+        </div>
+        <button id="dlb-link-btn" class="pill-btn primary">Link Discord</button>
+        <button id="dlb-dismiss-btn" class="dlb-dismiss hidden" title="Dismiss">✕</button>
+      </div>
+
+      <!-- PERFORMANCE DOCK — lives on the launch page now -->
+      <div class="perf-dock" id="perf-dock">
+        <div class="dock-card glass rig-card">
+          <div class="dock-head">
+            <span class="dock-title">Your rig</span>
+            <span class="perf-tier-badge" id="perf-tier-badge"><span class="ptb-label">Reading…</span></span>
+          </div>
+          <div class="perf-specs">
+            <div class="spec-row"><span class="spec-k">CPU</span><span class="spec-v" id="spec-cpu">—</span></div>
+            <div class="spec-row"><span class="spec-k">GPU</span><span class="spec-v" id="spec-gpu">—</span></div>
+            <div class="spec-row"><span class="spec-k">RAM</span><span class="spec-v" id="spec-ram">—</span></div>
+            <div class="spec-row"><span class="spec-k">Cores</span><span class="spec-v" id="spec-cores">—</span></div>
+          </div>
+          <div class="mem-block">
+            <div class="mem-head"><span>Memory</span><b><span id="mem-max-label">4</span> GB</b></div>
+            <div class="mem-vis" id="mem-vis"></div>
+            <input type="range" id="mem-max" min="1" max="32" value="4">
+            <input type="range" id="mem-min" min="1" max="32" value="2" class="hidden">
+            <span id="mem-min-label" class="hidden">2</span>
+            <div class="mem-advice" id="mem-advice">—</div>
+          </div>
+        </div>
+
+        <!-- FPS ballpark card removed in 3.9.1. The numbers behind it were
+             never measured — just a tier lookup table with a couple of
+             multipliers — and the ceiling of ~400 was well below what real
+             machines actually hit, so it read as a lowball on decent rigs. -->
+
+        <div class="dock-card glass stack-card">
+          <div class="dock-head">
+            <span class="dock-title">Performance mods</span>
+            <span class="dock-sub" id="stack-status">—</span>
+          </div>
+          <div class="stack-strip" id="mod-stack"></div>
+          <button id="optimize-btn" class="optimize-btn full">
+            <span class="ob-bolt">⚡</span><span>INSTALL ALL &amp; AUTO-TUNE</span>
+          </button>
+          <div class="dock-foot" id="optimize-foot">Installs and tunes each mod for your hardware.</div>
+        </div>
+      </div>
+
+      <!-- applied settings, collapsible -->
+      <details class="applied-details glass" id="applied-details">
+        <summary><span>Applied game settings</span><span class="ad-hint" id="ad-hint">verified from disk</span></summary>
+        <div class="applied-grid" id="applied-grid"></div>
+        <div class="applied-actions">
+          <button id="autotune-btn" class="pill-btn">Re-detect hardware</button>
+          <label class="toggle-inline">
+            <label class="toggle"><input type="checkbox" id="perf-toggle" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+            <span>Tuned Java flags</span>
+          </label>
+        </div>
+      </details>
+      <button id="install-boost-btn" class="hidden"></button>
+
+      <div id="launch-progress" class="launch-progress hidden">
+        <div class="launch-progress-head">
+          <span class="launch-progress-label" id="launch-progress-label">Preparing…</span>
+          <span class="launch-progress-meta"><span id="launch-progress-speed"></span><b id="launch-progress-pct">0%</b></span>
+        </div>
+        <div class="launch-progress-track"><div class="launch-progress-fill" id="launch-progress-fill"></div></div>
+      </div>
+
+      <div id="crash-banner" class="crash-banner hidden"></div>
+    </section>
+
+    <!-- INSTANCES -->
+    <section class="view" id="view-instances">
+      <div class="view-header"><h1>Versions</h1><button id="quick-create-btn" class="pill-btn primary">+ New instance</button></div>
+      <p class="dim"></p>
+
+      <div id="version-picker-panel" class="version-picker-panel glass hidden"></div>
+      <div id="version-grid" class="instance-grid"></div>
+
+      <div class="mods-list-header">Your instances</div>
+      <div id="instance-list" class="instance-grid"></div>
+    </section>
+
+    <!-- MODS -->
+    <section class="view" id="view-mods">
+      <div class="view-header"><h1>Content</h1></div>
+
+      <div class="content-bar glass">
+        <div class="cb-row">
+          <div class="search-wrap">
+            <span class="search-icon">⌕</span>
+            <input id="mods-search" placeholder="Search mods, modpacks, resource packs…">
+          </div>
+          <button id="import-mod-btn" class="pill-btn">+ Add mod file</button>
+          <button id="import-respack-btn" class="pill-btn">+ Add resource pack</button>
+        </div>
+        <!-- Content = things you can install, Library = what this instance
+             already has. The installed panels used to sit permanently above
+             the browser, so the page was half yours and half the store. -->
+        <div class="cb-row mode-row">
+          <div class="mode-tabs" id="mode-tabs">
+            <button class="mode-tab active" data-mode="content">Content</button>
+            <button class="mode-tab" data-mode="library">Library</button>
+          </div>
+          <div class="cb-spacer"></div>
+          <button id="sync-content-btn" class="pill-btn">⇄ Sync from another instance</button>
+        </div>
+        <div class="cb-row" id="content-controls">
+          <div class="type-tabs" id="type-tabs">
+            <button class="type-tab active" data-type="mod">Mods</button>
+            <button class="type-tab" data-type="modpack">Modpacks</button>
+            <button class="type-tab" data-type="resourcepack">Resource packs</button>
+          </div>
+          <div class="source-tabs" id="source-tabs">
+            <button class="source-tab active" data-source="modrinth">Modrinth</button>
+          </div>
+          <div class="cb-spacer"></div>
+          <span class="cb-label">Installing into</span>
+          <select id="mods-instance-select"></select>
+        </div>
+      </div>
+
+      <div id="library-pane">
+        <div id="installed-mods-panel" class="installed-mods-panel"></div>
+        <div id="installed-respacks-panel" class="installed-mods-panel"></div>
+      </div>
+
+      <div id="mods-drop-hint" class="mods-drop-hint hidden">Drop files to install</div>
+
+      <div id="content-pane">
+        <div class="mods-list-header">Browse &amp; install</div>
+        <div id="mods-list" class="mod-card-grid"></div>
+      </div>
+    </section>
+
+    <!-- SYNC DIALOG -->
+    <div id="sync-modal" class="sync-modal hidden">
+      <div class="sync-card glass">
+        <div class="sync-title">Sync content between instances</div>
+        <p class="sync-sub">Copies into the target instance. Nothing is removed from the source.</p>
+        <div class="sync-row">
+          <label>From<select id="sync-from"></select></label>
+          <span class="sync-arrow">→</span>
+          <label>Into<select id="sync-to"></select></label>
+        </div>
+        <div class="sync-opts">
+          <label class="toggle-inline">
+            <label class="toggle"><input type="checkbox" id="sync-mods" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+            <span>Mods <span class="hint" id="sync-mods-hint"></span></span>
+          </label>
+          <label class="toggle-inline">
+            <label class="toggle"><input type="checkbox" id="sync-packs" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+            <span>Resource packs <span class="hint">copied as-is — packs usually work across versions</span></span>
+          </label>
+        </div>
+        <div class="sync-status dim" id="sync-status"></div>
+        <div class="sync-actions">
+          <button class="pill-btn" id="sync-cancel">Cancel</button>
+          <button class="pill-btn primary" id="sync-go">Sync</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FRIENDS -->
+    <section class="view" id="view-friends">
+      <div class="view-header">
+        <h1>Friends</h1>
+        <div class="fr-status" id="fr-status"><span class="fr-dot"></span><span id="fr-status-text">Offline mode</span></div>
+      </div>
+
+      <div class="fr-layout">
+        <div class="fr-sidebar glass">
+          <div class="fr-search-row">
+            <input id="fr-search" placeholder="Add by username or UUID" spellcheck="false">
+            <button class="pill-btn primary" id="fr-add-btn">Follow</button>
+          </div>
+
+          <div class="fr-tabs" id="fr-tabs">
+            <button class="fr-tab active" data-tab="friends">Friends <span class="fr-count" id="fr-c-friends">0</span></button>
+            <button class="fr-tab" data-tab="following">Following <span class="fr-count" id="fr-c-following">0</span></button>
+            <button class="fr-tab" data-tab="followers">Followers <span class="fr-count" id="fr-c-followers">0</span></button>
+            <button class="fr-tab" data-tab="blocked">Blocked</button>
+          </div>
+
+          <div class="fr-list" id="fr-list"></div>
+
+          <div class="fr-groups-head">
+            <span class="dock-title">Group chats</span>
+            <button class="pill-btn" id="fr-new-group">+ New</button>
+          </div>
+          <div class="fr-list fr-groups" id="fr-groups"></div>
+        </div>
+
+        <div class="fr-main glass">
+          <div class="fr-chat-head" id="fr-chat-head">
+            <div class="fr-chat-title" id="fr-chat-title">Select someone to chat</div>
+            <div class="fr-chat-actions" id="fr-chat-actions"></div>
+          </div>
+          <div class="fr-messages" id="fr-messages">
+            <p class="dim fr-empty">Follow someone to start a conversation. They appear as a friend once you follow each other.</p>
+          </div>
+          <div class="fr-compose" id="fr-compose">
+            <input id="fr-input" placeholder="Message" maxlength="500" disabled>
+            <button class="pill-btn primary" id="fr-send" disabled>Send</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="fr-invites" id="fr-invites"></div>
+    </section>
+
+    <!-- SERVERS -->
+    <section class="view" id="view-servers">
+      <div class="view-header">
+        <h1>Servers</h1>
+        <button class="pill-btn primary" id="srv-new">+ New server</button>
+      </div>
+
+      <p class="dim srv-intro">
+        A server here runs on this PC, using the RAM you give it. It is only up while
+        you are running it — close the launcher and it stops.
+        <b>Reaching it from the internet at your <code>.nebulahosting.co</code> address
+        isn't connected yet</b>; on your own network people can join at your local IP.
+      </p>
+
+      <div class="srv-grid" id="srv-list"></div>
+
+      <div class="srv-console glass hidden" id="srv-console">
+        <div class="srv-console-head">
+          <span class="dock-title" id="srv-console-title">Console</span>
+          <div class="srv-console-actions">
+            <button class="pill-btn" id="srv-console-close">Close</button>
+          </div>
+        </div>
+        <div class="srv-log" id="srv-log"></div>
+        <div class="srv-cmd-row">
+          <input id="srv-cmd" placeholder="Type a server command, e.g. say hello" spellcheck="false">
+          <button class="pill-btn" id="srv-cmd-send">Run</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKINS -->
+    <section class="view" id="view-skins">
+      <div class="view-header"><h1>Skins</h1></div>
+
+      <div class="skins-layout">
+        <div class="skins-preview glass">
+          <canvas id="skins-canvas" class="skins-canvas"></canvas>
+          <div class="skins-preview-controls">
+            <label class="toggle-inline">
+              <label class="toggle"><input type="checkbox" id="skins-overlay" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+              <span>Outer layer</span>
+            </label>
+            <div class="model-toggle" id="view-toggle">
+              <button class="model-btn active" data-view="front">Front</button>
+              <button class="model-btn" data-view="back">Back</button>
+            </div>
+            <div class="model-toggle" id="model-toggle">
+              <button class="model-btn active" data-model="classic">Classic</button>
+              <button class="model-btn" data-model="slim">Slim</button>
+            </div>
+          </div>
+          <div class="skins-preview-name" id="skins-preview-name">No skin selected</div>
+          <div class="skins-preview-actions">
+            <button class="pill-btn primary" id="skin-apply-btn" disabled>Apply to my account</button>
+            <button class="pill-btn" id="skin-edit-btn" disabled>Edit</button>
+          </div>
+        </div>
+
+        <div class="skins-library glass">
+          <div class="skins-lib-head">
+            <span class="dock-title">Your library</span>
+            <div class="skins-lib-actions">
+              <button class="pill-btn" id="skin-import-btn">+ Upload PNG</button>
+              <button class="pill-btn" id="skin-new-btn">✎ New skin</button>
+            </div>
+          </div>
+          <div class="skins-grid" id="skins-grid"></div>
+          <div class="skins-drop-hint" id="skins-drop-hint">Drop a 64×64 skin PNG anywhere here</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKIN EDITOR -->
+    <div id="skin-editor" class="skin-editor hidden">
+      <div class="se-card glass">
+        <div class="se-head">
+          <span class="se-title">Skin editor</span>
+          <input id="se-name" class="se-name" placeholder="Skin name">
+          <button class="se-close" id="se-close">✕</button>
+        </div>
+        <div class="se-body se-body-3d">
+          <div class="se-tools">
+            <button class="se-tool active" data-tool="pencil" title="Pencil (B)">✏</button>
+            <button class="se-tool" data-tool="eraser" title="Eraser (E)">◻</button>
+            <button class="se-tool" data-tool="picker" title="Pick colour (I)">⊙</button>
+            <button class="se-tool" data-tool="fill" title="Fill (G)">▩</button>
+            <div class="se-tool-sep"></div>
+            <button class="se-tool" id="se-undo" title="Undo (Ctrl+Z)">↶</button>
+            <button class="se-tool" id="se-redo" title="Redo (Ctrl+Y)">↷</button>
+            <div class="se-tool-sep"></div>
+            <button class="se-tool" id="se-grid-toggle" title="Toggle grid">#</button>
+          </div>
+          <div class="se-stage">
+            <div class="se-mode" id="se-mode">
+              <button class="se-mode-btn active" data-mode="paint">✎ Paint</button>
+              <button class="se-mode-btn" data-mode="rotate">⟲ Rotate</button>
+            </div>
+            <canvas id="se-model" class="se-model"></canvas>
+            <div class="se-stage-hint">Right-drag to turn at any time</div>
+          </div>
+          <div class="se-side">
+            <div class="se-wheel-wrap">
+              <canvas id="se-wheel" class="se-wheel" width="180" height="180"></canvas>
+              <canvas id="se-sv" class="se-sv" width="86" height="86"></canvas>
+              <div class="se-hex-chip" id="se-hex-chip">
+                <input id="se-hex" value="#8B5CF6" spellcheck="false" maxlength="7">
+              </div>
+            </div>
+            <div class="se-swatches" id="se-swatches"></div>
+
+            <div class="se-layer-toggle" id="se-layer-toggle">
+              <button class="se-layer-btn active" data-layer="inner">Body</button>
+              <button class="se-layer-btn" data-layer="outer">Outer layer</button>
+            </div>
+
+            <!-- Click a part to work on just that piece; the rest is masked
+                 off so you can't paint into a neighbouring region by
+                 accident, and the preview isolates it too. -->
+            <div class="se-parts" id="se-parts">
+              <button class="se-part se-part-head" data-part="head" title="Head"></button>
+              <div class="se-part-row">
+                <button class="se-part se-part-arm" data-part="armR" title="Right arm"></button>
+                <button class="se-part se-part-body" data-part="body" title="Body"></button>
+                <button class="se-part se-part-arm" data-part="armL" title="Left arm"></button>
+              </div>
+              <div class="se-part-row">
+                <button class="se-part se-part-leg" data-part="legR" title="Right leg"></button>
+                <button class="se-part se-part-leg" data-part="legL" title="Left leg"></button>
+              </div>
+              <button class="se-part-all active" data-part="all">Whole skin</button>
+            </div>
+
+            <div class="se-sheet-wrap">
+              <canvas id="se-canvas" class="se-canvas" width="64" height="64"></canvas>
+              <canvas id="se-grid" class="se-grid"></canvas>
+            </div>
+            <div class="se-hint">Texture sheet — paintable too</div>
+          </div>
+        </div>
+        <div class="se-foot">
+          <span class="se-part-label" id="se-part-label">&nbsp;</span>
+          <div class="se-foot-actions">
+            <button class="pill-btn" id="se-cancel">Cancel</button>
+            <button class="pill-btn primary" id="se-save">Save to library</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUSTOMIZE -->
+    <section class="view" id="view-customize">
+      <div class="view-header"><h1>Customize</h1></div>
+      <p class="dim">Pick a vibe. Everything saves automatically.</p>
+
+      <div class="settings-group glass">
+        <h3>Background</h3>
+        <div id="bg-preset-grid" class="bg-preset-grid"></div>
+      </div>
+
+      <div class="settings-group glass">
+        <h3>Accent color</h3>
+        <div id="accent-row" class="accent-row"></div>
+      </div>
+
+      <div class="settings-group glass">
+        <h3>Liquid glass</h3>
+        <label class="slider-row">
+          <span>Blur <b id="glass-blur-label">18</b> px</span>
+          <input type="range" id="glass-blur" min="0" max="40" value="18">
+        </label>
+        <label class="slider-row">
+          <span>Glass opacity <b id="glass-alpha-label">55</b>%</span>
+          <input type="range" id="glass-alpha" min="20" max="90" value="55">
+        </label>
+        <label class="slider-row">
+          <span>Background dim <b id="scene-dim-label">55</b>%</span>
+          <input type="range" id="scene-dim" min="0" max="85" value="55">
+        </label>
+      </div>
+
+      <div class="settings-group glass">
+        <h3>Motion &amp; space feel</h3>
+        <div class="setting-toggle-row">
+          <span>Animations<span class="hint">Floating character, glows, transitions</span></span>
+          <label class="toggle"><input type="checkbox" id="anim-toggle" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+        </div>
+        <div class="setting-toggle-row">
+          <span>Shooting stars &amp; particles<span class="hint">Ambient starfield effects behind the glass</span></span>
+          <label class="toggle"><input type="checkbox" id="particles-toggle" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+        </div>
+        <div class="setting-toggle-row">
+          <span>Depth parallax<span class="hint">The world shifts gently as you move your mouse</span></span>
+          <label class="toggle"><input type="checkbox" id="parallax-toggle" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+        </div>
+        <div class="setting-toggle-row">
+          <span>Stardust cursor trail<span class="hint">Glowing motes follow your cursor</span></span>
+          <label class="toggle"><input type="checkbox" id="trail-toggle"><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+        </div>
+        <div class="setting-toggle-row">
+          <span>Lightweight graphics<span class="hint">Drops the glass blur and the nebula. Turns itself on automatically if the launcher can&#39;t hold a smooth frame rate.</span></span>
+          <label class="toggle"><input type="checkbox" id="lowgfx-toggle"><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="view" id="view-settings">
+      <div class="view-header"><h1>Settings</h1></div>
+
+      <div class="settings-group glass">
+        <h3>Accounts</h3>
+        <div id="settings-account-list" class="account-list"></div>
+        <button id="settings-add-account" class="pill-btn">+ Add account</button>
+      </div>
+
+      <div class="settings-group glass">
+        <h3>Auto-install mods</h3>
+        <p class="dim" style="margin-bottom:10px;">Any .jar here gets copied into every new Fabric/Quilt instance automatically.</p>
+        <button id="open-default-mods" class="pill-btn">Open folder</button>
+      </div>
+
+      <div class="settings-group glass">
+        <h3>Friends</h3>
+        <label class="toggle-inline">
+          <label class="toggle"><input type="checkbox" id="set-notify-follow" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+          <span>Notify me when someone follows me</span>
+        </label>
+        <label class="toggle-inline">
+          <label class="toggle"><input type="checkbox" id="set-notify-followback" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+          <span>Notify me when someone follows me back</span>
+        </label>
+        <label class="toggle-inline">
+          <label class="toggle"><input type="checkbox" id="set-notify-message" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+          <span>Notify me about messages and invites</span>
+        </label>
+        <label class="toggle-inline">
+          <label class="toggle"><input type="checkbox" id="set-show-online" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+          <span>Show my online status to friends</span>
+        </label>
+        <div class="fr-conn-line">
+          <span class="fr-dot" id="set-friends-dot"></span>
+          <span id="set-friends-state">Checking…</span>
+          <button class="pill-btn" id="set-friends-retry">Reconnect</button>
+        </div>
+      </div>
+
+      <div class="settings-group glass">
+        <h3>Discord</h3>
+        <div class="setting-toggle-row">
+          <span>Show on Discord<span class="hint">Displays SolarClient on your profile</span></span>
+          <label class="toggle"><input type="checkbox" id="discord-toggle" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+        </div>
+        <div class="setting-toggle-row">
+          <span>Show version &amp; instance<span class="hint">Off shows only "Java Edition"</span></span>
+          <label class="toggle"><input type="checkbox" id="discord-details-toggle" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+        </div>
+        <div class="discord-preview" id="discord-preview">
+          <div class="dp-art"><img id="dp-art-img" src="img/nebula.png" alt=""><img class="dp-badge-img" id="dp-badge-img" src="img/nebula.png" alt=""></div>
+          <div class="dp-text">
+            <div class="dp-name">SolarClient</div>
+            <div class="dp-line" id="dp-details">In the launcher</div>
+            <div class="dp-line dim" id="dp-state">Browsing instances</div>
+          </div>
+          <div class="dp-status" id="dp-status">Connecting…</div>
+        </div>
+      </div>
+    
+      <div class="settings-group glass">
+        <h3>About</h3>
+        <div class="setting-toggle-row">
+          <span>Version<span class="hint">The build of SolarClient you are running right now</span></span>
+          <span class="about-version" id="about-version">—</span>
+        </div>
+        <div class="setting-toggle-row">
+          <span>Electron<span class="hint">Runtime this build was packaged against</span></span>
+          <span class="about-version dim" id="about-electron">—</span>
+        </div>
+      </div>
+</section>
+  </div>
+</div>
+
+<!-- full-screen launch animation overlay -->
+<div id="launch-overlay" class="launch-overlay">
+  <div class="portal" id="portal">
+    <div class="portal-ring"></div>
+    <div class="portal-ring r2"></div>
+    <div class="portal-ring r3"></div>
+    <div class="portal-core"></div>
+  </div>
+  <div class="overlay-title" id="overlay-title">Launching…</div>
+  <div class="overlay-label" id="overlay-label">Preparing…</div>
+  <div class="overlay-track"><div class="overlay-fill" id="overlay-fill"></div></div>
+  <div class="overlay-meta"><span id="overlay-speed"></span><b id="overlay-pct"></b></div>
+  <div class="overlay-tip" id="overlay-tip"></div>
+  <button class="overlay-hide" id="overlay-hide">Hide</button>
+</div>
+
+<!-- command palette (Ctrl/Cmd+K) -->
+<div id="palette" class="palette hidden">
+  <div class="palette-box glass">
+    <input id="palette-input" placeholder="Search…">
+    <div id="palette-list" class="palette-list"></div>
+    <div class="palette-foot">↑↓  Enter  Esc</div>
+  </div>
+</div>
+
+<!-- reusable themed confirm dialog -->
+<div id="confirm-modal" class="confirm-modal hidden">
+  <div class="confirm-panel glass">
+    <div class="confirm-title" id="confirm-title">Are you sure?</div>
+    <div class="confirm-message" id="confirm-message"></div>
+    <div class="confirm-actions">
+      <button id="confirm-cancel" class="pill-btn">Cancel</button>
+      <button id="confirm-ok" class="pill-btn danger">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- background crop tool -->
+<div id="crop-modal" class="crop-modal hidden">
+  <div class="crop-panel glass">
+    <div class="crop-title">Position your photo</div>
+    <p class="dim" style="margin:0 0 12px;">Drag to position your photo.</p>
+    <div id="crop-box" class="crop-box"></div>
+    <div class="crop-actions">
+      <button id="crop-cancel" class="pill-btn">Cancel</button>
+      <button id="crop-save" class="pill-btn primary">Save position</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<div id="download-bar-container" class="download-bar-container"></div>
+
+<!-- Persistent right-side ad column — always visible on every page -->
+<aside class="ad-column glass" id="ad-column">
+  <div class="ad-column-label">Ads</div>
+  <!-- Two ads. renderer.js sizes them to the column: 160x300 each normally,
+       160x600 when the window is tall enough to fit them. -->
+  <div class="ad-box" id="ad-box-1"></div>
+  <div class="ad-box" id="ad-box-2"></div>
+</aside>
+
+<!-- Themed "update ready" modal — replaces the native Windows dialog.
+     Shown by renderer.js when the auto-updater reports a downloaded update. -->
+<div class="update-modal" id="update-modal">
+  <div class="update-card">
+    <div class="update-head">
+      <div class="update-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+      </div>
+      <div class="update-title">Update ready</div>
+    </div>
+    <div class="update-sub">SolarClient <b id="update-version">3.19.2</b> has been downloaded and is ready to install.</div>
+    <div class="update-actions">
+      <button class="pill-btn primary" id="update-restart">Restart now</button>
+      <button class="pill-btn" id="update-later">Later</button>
+    </div>
+    <div class="update-foot">The update applies the next time the launcher starts.</div>
+  </div>
+</div>
+
+<script src="backgrounds.js"></script>
+<script src="skin2d.js"></script>
+<script src="skin3d.js"></script>
+  <script src="renderer.js"></script>
+<!-- What's New modal -->
+<div class="whatsnew-modal" id="whatsnew-modal">
+  <div class="whatsnew-card">
+    <div class="whatsnew-head">
+      <div class="update-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+      </div>
+      <div class="whatsnew-title">What's New in <span id="whatsnew-version"></span></div>
+    </div>
+    <div class="whatsnew-content" id="whatsnew-content">Loading changelog...</div>
+    <div class="whatsnew-actions">
+      <button class="pill-btn primary" id="whatsnew-close">Awesome!</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+
+
+
