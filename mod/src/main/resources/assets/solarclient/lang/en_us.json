@@ -1,0 +1,14 @@
+{
+  "key.category.solarclient.main": "SolarClient",
+  "key.solarclient.create_waypoint": "Create Waypoint",
+  "key.solarclient.forward_view": "Forward View Key",
+  "key.solarclient.freelook": "Freelook",
+  "key.solarclient.mod_menu": "Solar Menu",
+  "key.solarclient.reset_counts": "Reset Counts Keybind",
+  "key.solarclient.send_coordinates": "Send Coordinates Keybind",
+  "key.solarclient.toggle_chat_visibility": "Toggle Chat Visibility",
+  "key.solarclient.toggle_waypoint_display": "Toggle Display of Waypoints",
+  "key.solarclient.waypoint_menu": "Waypoint Menu",
+  "key.solarclient.zoom": "Zoom Key",
+  "key.solarclient.party_menu": "Party & Friends"
+}

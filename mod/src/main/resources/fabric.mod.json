@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "solarclient",
+  "version": "${version}",
+  "name": "SolarClient",
+  "description": "Client-side HUDs, waypoints, and quality-of-life keybinds for SolarClient Launcher.",
+  "authors": ["SolarClient"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.solarclient.mod.client.SolarClientModClient"
+    ]
+  },
+  "mixins": [
+    "solarclient.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric-api": "*",
+    "minecraft": "1.21.11",
+    "java": ">=21"
+  }
+}

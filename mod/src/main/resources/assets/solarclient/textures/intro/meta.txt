@@ -1,0 +1,4 @@
+frames=84
+fps=12
+logo_src=595x205
+frame_size=960x540
