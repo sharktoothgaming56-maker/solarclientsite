@@ -27,11 +27,11 @@ public class SolarTitleScreen extends SpaceTheme.SpaceScreen {
     private boolean titleWasMouseDown = true;
 
     /** Rise to title slot while staying large. */
-    private static final float LOGO_RISE_MS = 950f;
+    private static final float LOGO_RISE_MS = 520f;
     /** Then shrink into resting size. */
-    private static final float LOGO_SHRINK_MS = 750f;
+    private static final float LOGO_SHRINK_MS = 400f;
     /** Then reveal the menu under it. */
-    private static final float MENU_IN_MS = 650f;
+    private static final float MENU_IN_MS = 360f;
 
     public SolarTitleScreen() {
         this(java.util.List.of());
@@ -67,13 +67,14 @@ public class SolarTitleScreen extends SpaceTheme.SpaceScreen {
         return restingLogoWidth();
     }
 
-    /** Resting logo / panel width — scales with window; keeps aspect of new mark. */
+    /** Resting logo / panel width — deliberately smaller than the end-card. */
     private int restingLogoWidth() {
-        float byW = this.width * 0.52f;
-        float byH = this.height * 0.22f * IntroPlayback.LOGO_W / (float) IntroPlayback.LOGO_H;
+        float byW = this.width * 0.34f;
+        float byH = this.height * 0.13f * IntroPlayback.LOGO_W / (float) IntroPlayback.LOGO_H;
         int w = Math.round(Math.min(byW, byH));
-        int max = Math.min(this.width - 48, 620);
-        return Math.max(220, Math.min(w, max));
+        int max = Math.min(this.width - 64, 360);
+        w = Math.max(160, Math.min(w, max));
+        return w & ~1;
     }
 
     private int logoHeightFor(int logoW) {
@@ -176,38 +177,33 @@ public class SolarTitleScreen extends SpaceTheme.SpaceScreen {
 
         IntroPlayback.renderMenuBackground(ctx, this.width, this.height);
 
-        // Start exactly where the MP4 end-card lettering sat (cover-mapped).
+        // Start at end-card size/top, always horizontally centred.
         IntroPlayback.EndcardLogoPlacement endcard =
                 IntroPlayback.endcardLogoOnScreen(this.width, this.height);
         int startW = endcard.width();
         int startTop = endcard.top();
-        int startCx = endcard.cx();
+        int cx = this.width / 2;
 
         int restW = restingLogoWidth();
         int restH = logoHeightFor(restW);
         int restTop = restingLogoTop(restH);
-        int restCx = this.width / 2;
 
         int logoW;
         int logoTop;
-        int logoCx;
         if (phase == Phase.LOGO_RISE) {
             float t = IntroPlayback.easeInOut(phaseRaw(LOGO_RISE_MS));
             logoW = startW;
             logoTop = Math.round(IntroPlayback.lerp(startTop, restTop, t));
-            logoCx = Math.round(IntroPlayback.lerp(startCx, restCx, t));
         } else if (phase == Phase.LOGO_SHRINK) {
             float t = IntroPlayback.easeInOut(phaseRaw(LOGO_SHRINK_MS));
-            logoW = Math.round(IntroPlayback.lerp(startW, restW, t));
+            logoW = Math.round(IntroPlayback.lerp(startW, restW, t)) & ~1;
             logoTop = restTop;
-            logoCx = restCx;
         } else {
             logoW = restW;
             logoTop = restTop;
-            logoCx = restCx;
         }
 
-        IntroPlayback.drawLogo(ctx, logoCx, logoTop, logoW);
+        IntroPlayback.drawLogo(ctx, cx, logoTop, logoW);
 
         // Menus stay completely hidden until rise + shrink finish.
         if (phase == Phase.LOGO_RISE || phase == Phase.LOGO_SHRINK) {

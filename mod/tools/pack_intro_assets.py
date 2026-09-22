@@ -1,4 +1,4 @@
-"""Rebuild intro assets from the new MP4 + provided logo PNG."""
+"""Rebuild intro assets: high-quality frames + logo-free BG still + logo PNG."""
 from __future__ import annotations
 
 import os
@@ -6,7 +6,7 @@ import shutil
 import subprocess
 import sys
 
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image
 
 try:
     import imageio_ffmpeg
@@ -14,11 +14,12 @@ except ImportError:
     sys.exit("imageio_ffmpeg required")
 
 VIDEO = r"C:\Users\Marrow-001\Downloads\SolarClient-Loading-Intro.mp4"
+VIDEO_BG = r"C:\Users\Marrow-001\Downloads\SolarClient-Loading-Intro-BG.mp4"
 LOGO_SRC = (
     r"C:\Users\Marrow-001\.cursor\projects\c-Users-Marrow-001-gemini-antigravity-scratch-SolarClient-mod"
     r"\assets\c__Users_Marrow-001_AppData_Roaming_Cursor_User_workspaceStorage_"
     r"a7d2cf61fd16c0ba311feb06cc8459b2_images_0f94ce3f-2336-4917-86d7-90689b1845e0-"
-    r"b23f8702-ae32-4937-a829-9dcd6a90ac58.png"
+    r"515c373f-436a-43f7-b07c-be663fa15c01.png"
 )
 MOD_ROOT = r"C:\Users\Marrow-001\.gemini\antigravity\scratch\SolarClient\mod"
 EXTRACT = os.path.join(MOD_ROOT, "tools", "intro_extract")
@@ -26,6 +27,7 @@ ASSETS = os.path.join(
     MOD_ROOT, "src", "main", "resources", "assets", "solarclient", "textures", "intro"
 )
 
+# Quality over tiny size — lag is fixed in Java via async decode, not by blurring.
 OUT_W, OUT_H = 960, 540
 FPS = 12
 
@@ -44,21 +46,30 @@ def extract_frames() -> list[str]:
     clear_dir(EXTRACT)
     pattern = os.path.join(EXTRACT, "frame_%04d.png")
     cmd = [
-        ffmpeg(),
-        "-y",
-        "-i",
-        VIDEO,
-        "-vf",
-        f"fps={FPS},scale={OUT_W}:{OUT_H}:flags=lanczos",
-        "-start_number",
-        "0",
-        pattern,
+        ffmpeg(), "-y", "-i", VIDEO,
+        "-vf", f"fps={FPS},scale={OUT_W}:{OUT_H}:flags=lanczos",
+        "-start_number", "0", pattern,
     ]
-    print("running", " ".join(cmd))
+    print("extract intro", " ".join(cmd))
     subprocess.check_call(cmd)
     frames = sorted(f for f in os.listdir(EXTRACT) if f.startswith("frame_") and f.endswith(".png"))
     print("extracted", len(frames), "frames")
     return frames
+
+
+def extract_menu_bg() -> None:
+    out = os.path.join(EXTRACT, "menu_bg_src.png")
+    # Last frame of the logo-free BG video.
+    cmd = [
+        ffmpeg(), "-y", "-sseof", "-0.05", "-i", VIDEO_BG,
+        "-frames:v", "1",
+        "-vf", f"scale={OUT_W}:{OUT_H}:flags=lanczos",
+        out,
+    ]
+    print("extract bg", " ".join(cmd))
+    subprocess.check_call(cmd)
+    Image.open(out).convert("RGBA").save(os.path.join(ASSETS, "menu_bg.png"), optimize=True)
+    print("menu_bg written")
 
 
 def logo_to_transparent(src_path: str) -> Image.Image:
@@ -69,7 +80,6 @@ def logo_to_transparent(src_path: str) -> Image.Image:
         for x in range(w):
             r, g, b, a = px[x, y]
             lum = 0.2126 * r + 0.7152 * g + 0.0722 * b
-            # Pure/near-black → transparent; soft edge from dark grey.
             if lum < 18:
                 px[x, y] = (255, 255, 255, 0)
             elif lum < 90:
@@ -77,7 +87,6 @@ def logo_to_transparent(src_path: str) -> Image.Image:
                 px[x, y] = (255, 255, 255, alpha)
             else:
                 px[x, y] = (255, 255, 255, 255)
-    # Trim empty margins so LOGO_W/H match the artwork tightly.
     bbox = im.getbbox()
     if bbox:
         im = im.crop(bbox)
@@ -85,70 +94,30 @@ def logo_to_transparent(src_path: str) -> Image.Image:
 
 
 def find_bright_bbox(im: Image.Image, thresh: int = 140) -> tuple[int, int, int, int]:
-    """Bounding box of bright (logo) pixels on the last frame."""
     g = im.convert("L")
     px = g.load()
     w, h = g.size
     min_x, min_y, max_x, max_y = w, h, 0, 0
     found = False
-    # Search a generous center band where the end-card logo sits.
-    y0, y1 = int(h * 0.18), int(h * 0.82)
-    x0, x1 = int(w * 0.08), int(w * 0.92)
+    y0, y1 = int(h * 0.15), int(h * 0.85)
+    x0, x1 = int(w * 0.05), int(w * 0.95)
     for y in range(y0, y1):
         for x in range(x0, x1):
             if px[x, y] >= thresh:
                 found = True
-                if x < min_x:
-                    min_x = x
-                if y < min_y:
-                    min_y = y
-                if x > max_x:
-                    max_x = x
-                if y > max_y:
-                    max_y = y
+                min_x = min(min_x, x)
+                min_y = min(min_y, y)
+                max_x = max(max_x, x)
+                max_y = max(max_y, y)
     if not found:
         cw, ch = int(w * 0.55), int(h * 0.32)
         cx0, cy0 = (w - cw) // 2, (h - ch) // 2
         return cx0, cy0, cx0 + cw, cy0 + ch
-    # Pad a little so blur covers glow.
-    pad = 8
-    return (
-        max(0, min_x - pad),
-        max(0, min_y - pad),
-        min(w, max_x + 1 + pad),
-        min(h, max_y + 1 + pad),
-    )
-
-
-def make_menu_bg(last: Image.Image, bbox: tuple[int, int, int, int]) -> Image.Image:
-    w, h = last.size
-    x0, y0, x1, y1 = bbox
-    bg = last.copy()
-    mask = Image.new("L", (w, h), 0)
-    draw = ImageDraw.Draw(mask)
-    pad = 36
-    draw.rounded_rectangle(
-        (x0 - pad, y0 - pad, x1 + pad, y1 + pad),
-        radius=28,
-        fill=255,
-    )
-    # Soft feather
-    mask = mask.filter(ImageFilter.GaussianBlur(radius=18))
-    blurred = last.filter(ImageFilter.GaussianBlur(radius=36))
-    bg = Image.composite(blurred, bg, mask)
-    # Slight darken so white overlay logo stays crisp.
-    overlay = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-    od = ImageDraw.Draw(overlay)
-    od.rounded_rectangle(
-        (x0 - pad, y0 - pad, x1 + pad, y1 + pad),
-        radius=28,
-        fill=(6, 4, 16, 90),
-    )
-    return Image.alpha_composite(bg.convert("RGBA"), overlay)
+    pad = 6
+    return max(0, min_x - pad), max(0, min_y - pad), min(w, max_x + 1 + pad), min(h, max_y + 1 + pad)
 
 
 def write_assets(frames: list[str], logo: Image.Image) -> None:
-    # Wipe previous packed frames so leftover higher indices disappear.
     if os.path.isdir(ASSETS):
         for name in os.listdir(ASSETS):
             if name.startswith("frame_") and name.endswith(".png"):
@@ -157,20 +126,19 @@ def write_assets(frames: list[str], logo: Image.Image) -> None:
         os.makedirs(ASSETS, exist_ok=True)
 
     for i, name in enumerate(frames):
-        im = Image.open(os.path.join(EXTRACT, name)).convert("RGBA")
-        im.save(os.path.join(ASSETS, f"frame_{i:03d}.png"), optimize=True)
+        Image.open(os.path.join(EXTRACT, name)).convert("RGBA").save(
+            os.path.join(ASSETS, f"frame_{i:03d}.png"), optimize=True
+        )
 
     last = Image.open(os.path.join(EXTRACT, frames[-1])).convert("RGBA")
     bbox = find_bright_bbox(last)
-    print("end-card logo bbox", bbox, "size", bbox[2] - bbox[0], "x", bbox[3] - bbox[1])
+    print("end-card logo bbox", bbox)
 
     logo.save(os.path.join(ASSETS, "logo.png"), optimize=True)
     print("logo", logo.size)
 
-    menu_bg = make_menu_bg(last, bbox)
-    menu_bg.save(os.path.join(ASSETS, "menu_bg.png"), optimize=True)
+    extract_menu_bg()
 
-    # Start placement: match end-card logo rect (center + width).
     bx0, by0, bx1, by1 = bbox
     with open(os.path.join(ASSETS, "meta.txt"), "w", encoding="utf-8") as f:
         f.write(f"frames={len(frames)}\n")
@@ -178,10 +146,6 @@ def write_assets(frames: list[str], logo: Image.Image) -> None:
         f.write(f"frame_size={OUT_W}x{OUT_H}\n")
         f.write(f"logo_src={logo.size[0]}x{logo.size[1]}\n")
         f.write(f"endcard_logo_box={bx0},{by0},{bx1},{by1}\n")
-        f.write(f"endcard_logo_cx={(bx0 + bx1) / 2:.1f}\n")
-        f.write(f"endcard_logo_cy={(by0 + by1) / 2:.1f}\n")
-        f.write(f"endcard_logo_w={bx1 - bx0}\n")
-        f.write(f"endcard_logo_h={by1 - by0}\n")
 
     total = sum(
         os.path.getsize(os.path.join(root, fn))
@@ -192,10 +156,9 @@ def write_assets(frames: list[str], logo: Image.Image) -> None:
 
 
 def main() -> None:
-    if not os.path.isfile(VIDEO):
-        sys.exit(f"missing video: {VIDEO}")
-    if not os.path.isfile(LOGO_SRC):
-        sys.exit(f"missing logo: {LOGO_SRC}")
+    for path in (VIDEO, VIDEO_BG, LOGO_SRC):
+        if not os.path.isfile(path):
+            sys.exit(f"missing: {path}")
     frames = extract_frames()
     logo = logo_to_transparent(LOGO_SRC)
     write_assets(frames, logo)

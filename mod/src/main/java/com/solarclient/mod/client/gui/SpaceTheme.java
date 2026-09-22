@@ -193,12 +193,13 @@ public final class SpaceTheme {
         // window is resized. init() re-runs on resize, so reading these
         // there keeps the layout correct at any window size.
 
-        /** Full-width button width: ~44% of the window, clamped to a sane range. */
+        /** Full-width button width: ~44% of the window, clamped to a sane range. Even so left/right margins match. */
         protected int panelWidth() {
-            return Math.max(160, Math.min(320, (int) (this.width * 0.44f)));
+            int w = Math.max(160, Math.min(320, (int) (this.width * 0.44f)));
+            return w & ~1;
         }
 
-        /** Left x for a centred full-width button. */
+        /** Left x for a centred full-width button (identical left/right inset). */
         protected int panelX() {
             return (this.width - panelWidth()) / 2;
         }
