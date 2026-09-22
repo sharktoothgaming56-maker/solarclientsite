@@ -1,5 +1,6 @@
 package com.solarclient.mod.client.gui;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
@@ -19,9 +20,17 @@ public final class IntroPlayback {
     /** Native size of each intro frame / menu_bg. */
     public static final int FRAME_W = 960, FRAME_H = 540;
 
+    private static final Identifier[] FRAMES = new Identifier[FRAME_COUNT];
+    static {
+        for (int i = 0; i < FRAME_COUNT; i++) {
+            FRAMES[i] = Identifier.of("solarclient", String.format("textures/intro/frame_%03d.png", i));
+        }
+    }
+
     private static boolean videoFinished;
     private static boolean sessionIntroHandled;
-    private static long videoStartMs = -1L;
+    private static boolean preloaded;
+    private static long videoStartNs = -1L;
     private static int lastFrameIndex = 0;
 
     private IntroPlayback() {}
@@ -39,7 +48,7 @@ public final class IntroPlayback {
     }
 
     public static void resetVideoClock() {
-        videoStartMs = -1L;
+        videoStartNs = -1L;
         videoFinished = false;
         lastFrameIndex = 0;
     }
@@ -48,18 +57,32 @@ public final class IntroPlayback {
         return lastFrameIndex;
     }
 
+    /**
+     * Force-load every intro frame (+ logo / menu bg) into the texture
+     * manager so playback does not hitch on first bind of each PNG.
+     */
+    public static void preload(MinecraftClient client) {
+        if (preloaded || client == null) return;
+        var tm = client.getTextureManager();
+        for (Identifier id : FRAMES) {
+            tm.getTexture(id);
+        }
+        tm.getTexture(MENU_BG);
+        tm.getTexture(LOGO);
+        preloaded = true;
+    }
+
     /** Cover the screen with the current intro frame (letterboxed fill). */
     public static void renderVideoFrame(DrawContext ctx, int screenW, int screenH) {
-        long now = System.currentTimeMillis();
-        if (videoStartMs < 0L) videoStartMs = now;
-        float elapsed = (now - videoStartMs) / 1000f;
+        long now = System.nanoTime();
+        if (videoStartNs < 0L) videoStartNs = now;
+        float elapsed = (now - videoStartNs) / 1_000_000_000f;
         int frame = Math.min(FRAME_COUNT - 1, Math.max(0, (int) (elapsed * FPS)));
         lastFrameIndex = frame;
         if (frame >= FRAME_COUNT - 1 && elapsed >= (FRAME_COUNT - 1) / FPS) {
             videoFinished = true;
         }
-        Identifier tex = Identifier.of("solarclient", String.format("textures/intro/frame_%03d.png", frame));
-        drawCover(ctx, tex, FRAME_W, FRAME_H, screenW, screenH);
+        drawCover(ctx, FRAMES[frame], FRAME_W, FRAME_H, screenW, screenH);
     }
 
     /** Draw the frozen end-card background (logo removed / cleaned). */
@@ -88,9 +111,24 @@ public final class IntroPlayback {
 
     /** Ease in-out cubic, t in 0..1. */
     public static float easeInOut(float t) {
-        t = Math.max(0f, Math.min(1f, t));
+        t = clamp01(t);
         return t < 0.5f
                 ? 4f * t * t * t
                 : 1f - (float) Math.pow(-2f * t + 2f, 3) / 2f;
+    }
+
+    /** Ease-out quint — soft settle at the end of a move. */
+    public static float easeOut(float t) {
+        t = clamp01(t);
+        float u = 1f - t;
+        return 1f - u * u * u * u * u;
+    }
+
+    public static float clamp01(float t) {
+        return t < 0f ? 0f : (t > 1f ? 1f : t);
+    }
+
+    public static float lerp(float a, float b, float t) {
+        return a + (b - a) * t;
     }
 }

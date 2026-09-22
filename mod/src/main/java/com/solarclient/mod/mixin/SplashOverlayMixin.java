@@ -28,6 +28,7 @@ public class SplashOverlayMixin {
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private void solar$introInsteadOfMojang(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (!this.solar$started) {
+            IntroPlayback.preload(this.client);
             IntroPlayback.resetVideoClock();
             this.solar$started = true;
         }

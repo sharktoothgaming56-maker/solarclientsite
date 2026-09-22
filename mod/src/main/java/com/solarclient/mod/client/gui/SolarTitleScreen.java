@@ -9,22 +9,29 @@ import org.lwjgl.glfw.GLFW;
 
 /**
  * Custom main menu. On the first open of a session (right after the intro
- * video), the SOLAR CLIENT lettering from the end card eases up to the
- * usual title position, scales down, then the menu buttons fade/slide in
+ * video): the end-card lettering rises to the title position (still large),
+ * then scales down to the resting size, then menu buttons fade/slide in
  * under it — keeping the intro's space background the whole time.
+ *
+ * Logo width == button panel width so the sides line up; both scale with
+ * the window on resize (init() re-runs).
  */
 public class SolarTitleScreen extends SpaceTheme.SpaceScreen {
-    private enum Phase { LOGO_MOVE, MENU_IN, DONE }
+    private enum Phase { LOGO_RISE, LOGO_SHRINK, MENU_IN, DONE }
 
     private final java.util.List<ModCompat.ModButton> modExtras;
 
     private Phase phase = Phase.DONE;
-    private long phaseStartMs;
+    private long phaseStartNs;
     private float menuAlpha = 1f;
     private boolean titleWasMouseDown = true;
 
-    private static final float LOGO_MOVE_MS = 1100f;
-    private static final float MENU_IN_MS = 700f;
+    /** Rise to title slot while staying large. */
+    private static final float LOGO_RISE_MS = 950f;
+    /** Then shrink into resting size. */
+    private static final float LOGO_SHRINK_MS = 750f;
+    /** Then reveal the menu under it. */
+    private static final float MENU_IN_MS = 650f;
 
     public SolarTitleScreen() {
         this(java.util.List.of());
@@ -34,8 +41,8 @@ public class SolarTitleScreen extends SpaceTheme.SpaceScreen {
         super(Text.literal("SolarClient"));
         this.modExtras = modExtras;
         if (!IntroPlayback.hasPlayedThisSession()) {
-            this.phase = Phase.LOGO_MOVE;
-            this.phaseStartMs = System.currentTimeMillis();
+            this.phase = Phase.LOGO_RISE;
+            this.phaseStartNs = System.nanoTime();
             this.menuAlpha = 0f;
             IntroPlayback.markSessionHandled();
         }
@@ -51,38 +58,94 @@ public class SolarTitleScreen extends SpaceTheme.SpaceScreen {
         return false;
     }
 
+    /**
+     * Button column matches resting logo width so left/right edges align,
+     * and grows/shrinks with the window (fullscreen vs windowed).
+     */
+    @Override
+    protected int panelWidth() {
+        return restingLogoWidth();
+    }
+
+    /** Resting logo / panel width — a bit larger than the old title mark. */
+    private int restingLogoWidth() {
+        float byW = this.width * 0.50f;
+        float byH = this.height * 0.26f * IntroPlayback.LOGO_W / (float) IntroPlayback.LOGO_H;
+        int w = Math.round(Math.min(byW, byH));
+        int max = Math.min(this.width - 48, 560);
+        return Math.max(200, Math.min(w, max));
+    }
+
+    /** Large end-card size used at the start of the rise. */
+    private int startLogoWidth() {
+        int rest = restingLogoWidth();
+        int big = Math.round(this.width * 0.78f);
+        return Math.min(this.width - 32, Math.max(rest + 80, big));
+    }
+
+    private int logoHeightFor(int logoW) {
+        return Math.max(1, (int) ((long) logoW * IntroPlayback.LOGO_H / IntroPlayback.LOGO_W));
+    }
+
+    private int restingLogoTop(int restH) {
+        return Math.max(10, this.height / 5 - restH / 2);
+    }
+
+    private int startLogoTop(int startH) {
+        return this.height / 2 - startH / 2;
+    }
+
+    private int buttonHeight() {
+        return Math.max(20, Math.min(28, this.height / 28));
+    }
+
+    private int rowStride() {
+        int h = buttonHeight();
+        return h + Math.max(4, this.height / 90);
+    }
+
+    private int logoMenuGap(int restH) {
+        return Math.max(16, Math.min(36, this.height / 28));
+    }
+
     @Override
     protected void init() {
         solarButtons.clear();
         int w = panelWidth();
+        int btnH = buttonHeight();
+        int stride = rowStride();
 
         this.sideRail = SolarSideRail.standard(this, s -> this.client.setScreen(s));
 
-        java.util.List<ModCompat.ModButton> column = ModCompat.columnButtons(modExtras);
-        int y = this.height / 2 - 25 - (column.size() * 26) / 2;
+        int restW = restingLogoWidth();
+        int restH = logoHeightFor(restW);
+        int restTop = restingLogoTop(restH);
+        int y = restTop + restH + logoMenuGap(restH);
 
-        SpaceTheme.SolarButton single = new SpaceTheme.SolarButton(panelX(), y, w, 22, "Singleplayer",
+        java.util.List<ModCompat.ModButton> column = ModCompat.columnButtons(modExtras);
+
+        SpaceTheme.SolarButton single = new SpaceTheme.SolarButton(panelX(), y, w, btnH, "Singleplayer",
                 () -> this.client.setScreen(new SelectWorldScreen(this)));
         single.bold = true;
         solarButtons.add(single);
-        y += 26;
-        SpaceTheme.SolarButton multi = new SpaceTheme.SolarButton(panelX(), y, w, 22, "Multiplayer",
+        y += stride;
+        SpaceTheme.SolarButton multi = new SpaceTheme.SolarButton(panelX(), y, w, btnH, "Multiplayer",
                 () -> this.client.setScreen(new MultiplayerScreen(this)));
         multi.bold = true;
         solarButtons.add(multi);
-        y += 26;
+        y += stride;
 
         for (ModCompat.ModButton mb : column) {
-            solarButtons.add(ModCompat.fold(mb, panelX(), y, w, 22));
-            y += 26;
+            solarButtons.add(ModCompat.fold(mb, panelX(), y, w, btnH));
+            y += stride;
         }
 
-        solarButtons.add(new SpaceTheme.SolarButton(leftColX(), y, halfWidth(), 22, "Options...",
+        solarButtons.add(new SpaceTheme.SolarButton(leftColX(), y, halfWidth(), btnH, "Options...",
                 () -> this.client.setScreen(new OptionsScreen(this, this.client.options))));
-        solarButtons.add(new SpaceTheme.SolarButton(rightColX(), y, halfWidth(), 22, "Solar Menu",
+        solarButtons.add(new SpaceTheme.SolarButton(rightColX(), y, halfWidth(), btnH, "Solar Menu",
                 () -> this.client.setScreen(new SolarMenuScreen(this))));
-        y += 26;
-        solarButtons.add(new SpaceTheme.SolarButton(panelX(), y, w, 22, "Quit",
+        y += stride;
+        solarButtons.add(new SpaceTheme.SolarButton(panelX(), y, w, btnH, "Quit",
                 () -> this.client.scheduleStop()));
 
         ModCompat.placeFree(modExtras, this.width, this.height);
@@ -91,27 +154,31 @@ public class SolarTitleScreen extends SpaceTheme.SpaceScreen {
         }
     }
 
-    private float phaseT(float durationMs) {
-        return IntroPlayback.easeInOut((System.currentTimeMillis() - phaseStartMs) / durationMs);
+    private float phaseRaw(float durationMs) {
+        float ms = (System.nanoTime() - phaseStartNs) / 1_000_000f;
+        return IntroPlayback.clamp01(ms / durationMs);
     }
 
     private void advancePhases() {
-        if (phase == Phase.LOGO_MOVE && System.currentTimeMillis() - phaseStartMs >= LOGO_MOVE_MS) {
+        if (phase == Phase.LOGO_RISE && phaseRaw(LOGO_RISE_MS) >= 1f) {
+            phase = Phase.LOGO_SHRINK;
+            phaseStartNs = System.nanoTime();
+        } else if (phase == Phase.LOGO_SHRINK && phaseRaw(LOGO_SHRINK_MS) >= 1f) {
             phase = Phase.MENU_IN;
-            phaseStartMs = System.currentTimeMillis();
-        } else if (phase == Phase.MENU_IN && System.currentTimeMillis() - phaseStartMs >= MENU_IN_MS) {
+            phaseStartNs = System.nanoTime();
+            menuAlpha = 0f;
+        } else if (phase == Phase.MENU_IN && phaseRaw(MENU_IN_MS) >= 1f) {
             phase = Phase.DONE;
             menuAlpha = 1f;
         }
         if (phase == Phase.MENU_IN) {
-            menuAlpha = phaseT(MENU_IN_MS);
+            menuAlpha = IntroPlayback.easeOut(phaseRaw(MENU_IN_MS));
         }
     }
 
-    private int restingLogoWidth() {
-        int logoW = (int) (this.width * 0.42f);
-        int maxByHeight = (int) (this.height * 0.24f * IntroPlayback.LOGO_W / (float) IntroPlayback.LOGO_H);
-        return Math.max(40, Math.min(logoW, maxByHeight));
+    private void skipIntro() {
+        phase = Phase.DONE;
+        menuAlpha = 1f;
     }
 
     @Override
@@ -122,30 +189,44 @@ public class SolarTitleScreen extends SpaceTheme.SpaceScreen {
 
         int cx = this.width / 2;
         int restW = restingLogoWidth();
-        int restH = Math.max(1, (int) ((long) restW * IntroPlayback.LOGO_H / IntroPlayback.LOGO_W));
-        int restTop = this.height / 4 - restH / 2;
+        int restH = logoHeightFor(restW);
+        int restTop = restingLogoTop(restH);
 
-        int startW = Math.min(this.width - 40, Math.max(restW + 40, (int) (this.width * 0.72f)));
-        int startH = Math.max(1, (int) ((long) startW * IntroPlayback.LOGO_H / IntroPlayback.LOGO_W));
-        int startTop = this.height / 2 - startH / 2;
+        int startW = startLogoWidth();
+        int startH = logoHeightFor(startW);
+        int startTop = startLogoTop(startH);
 
-        float logoT = phase == Phase.LOGO_MOVE ? phaseT(LOGO_MOVE_MS) : 1f;
-        int logoW = Math.round(startW + (restW - startW) * logoT);
-        IntroPlayback.drawLogo(ctx, cx,
-                Math.round(startTop + (restTop - startTop) * logoT),
-                logoW);
-
-        if (phase == Phase.LOGO_MOVE) {
-            return; // logo only — menus come in after
+        int logoW;
+        int logoTop;
+        if (phase == Phase.LOGO_RISE) {
+            float t = IntroPlayback.easeInOut(phaseRaw(LOGO_RISE_MS));
+            logoW = startW;
+            logoTop = Math.round(IntroPlayback.lerp(startTop, restTop, t));
+        } else if (phase == Phase.LOGO_SHRINK) {
+            float t = IntroPlayback.easeInOut(phaseRaw(LOGO_SHRINK_MS));
+            logoW = Math.round(IntroPlayback.lerp(startW, restW, t));
+            logoTop = restTop;
+        } else {
+            logoW = restW;
+            logoTop = restTop;
         }
 
-        int slide = phase == Phase.MENU_IN ? Math.round((1f - menuAlpha) * 22f) : 0;
+        IntroPlayback.drawLogo(ctx, cx, logoTop, logoW);
+
+        // Menus stay completely hidden until rise + shrink finish.
+        if (phase == Phase.LOGO_RISE || phase == Phase.LOGO_SHRINK) {
+            return;
+        }
+
+        int slide = phase == Phase.MENU_IN ? Math.round((1f - menuAlpha) * 28f) : 0;
         int my = mouseY - slide;
 
         boolean mouseDown = GLFW.glfwGetMouseButton(this.client.getWindow().getHandle(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
         justPressed = mouseDown && !titleWasMouseDown;
         titleWasMouseDown = mouseDown;
 
+        // Soft fade via partial transparency isn't available on SolarButton;
+        // slide + delayed click gate still reads as a clean entrance.
         java.util.List<SpaceTheme.SolarButton> snapshot = new java.util.ArrayList<>(solarButtons);
         for (SpaceTheme.SolarButton b : snapshot) {
             int ox = b.x, oy = b.y;
@@ -154,7 +235,7 @@ public class SolarTitleScreen extends SpaceTheme.SpaceScreen {
             b.y = oy;
             b.x = ox;
         }
-        if (justPressed && menuAlpha > 0.5f) {
+        if (justPressed && menuAlpha > 0.55f) {
             for (SpaceTheme.SolarButton b : snapshot) {
                 int oy = b.y;
                 b.y = oy + slide;
@@ -167,11 +248,8 @@ public class SolarTitleScreen extends SpaceTheme.SpaceScreen {
         if (sideRail != null) {
             sideRail.layout(this.width, this.height);
             sideRail.render(ctx, mouseX, my);
-            if (justPressed && menuAlpha > 0.5f) sideRail.mouseClicked(mouseX, my, 0);
+            if (justPressed && menuAlpha > 0.55f) sideRail.mouseClicked(mouseX, my, 0);
         }
-
-        // Mod Menu / Iris extras are already folded into solarButtons via ModCompat.
-        // Screen.drawables is private in 1.21.11 — do not walk it here.
     }
 
     @Override
@@ -185,8 +263,7 @@ public class SolarTitleScreen extends SpaceTheme.SpaceScreen {
         if (phase != Phase.DONE && (key == GLFW.GLFW_KEY_ENTER
                 || key == GLFW.GLFW_KEY_SPACE
                 || key == GLFW.GLFW_KEY_ESCAPE)) {
-            phase = Phase.DONE;
-            menuAlpha = 1f;
+            skipIntro();
             return true;
         }
         return super.keyPressed(keyInput);
