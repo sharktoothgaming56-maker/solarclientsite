@@ -2463,7 +2463,9 @@ body.dropdown-open .instance-grid {
 .titlebar:not(#_):not(#__),
 .sidebar:not(#_):not(#__),
 .main:not(#_):not(#__),
-.content-bar:not(#_):not(#__){
+.content-bar:not(#_):not(#__),
+#ad-column:not(#_):not(#__),
+.ad-column:not(#_):not(#__){
   -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.5) !important;
   backdrop-filter:blur(var(--glass-blur)) saturate(1.5) !important;
 }
@@ -2728,7 +2730,6 @@ body.perf-lite #starfield{display:none !important;}
 .confirm-panel.liquid-glass,
 .palette-box.liquid-glass,
 .discord-link-banner.liquid-glass,
-.ad-column.liquid-glass,
 .srv-console.liquid-glass,
 .crop-panel.liquid-glass,
 .version-picker-panel.liquid-glass{
@@ -2812,8 +2813,7 @@ body.perf-lite #starfield{display:none !important;}
 .sync-card.liquid-glass::before,
 .confirm-panel.liquid-glass::before,
 .palette-box.liquid-glass::before,
-.discord-link-banner.liquid-glass::before,
-.ad-column.liquid-glass::before{
+.discord-link-banner.liquid-glass::before{
   content:'' !important;
   position:absolute !important;
   inset:1px !important;
@@ -2869,8 +2869,7 @@ body.perf-lite #starfield{display:none !important;}
 .sync-card.liquid-glass::after,
 .confirm-panel.liquid-glass::after,
 .palette-box.liquid-glass::after,
-.discord-link-banner.liquid-glass::after,
-.ad-column.liquid-glass::after{
+.discord-link-banner.liquid-glass::after{
   content:'' !important;
   position:absolute !important;
   inset:0 !important;
@@ -3084,5 +3083,53 @@ body.perf-lite .liquid-glass::before{ opacity:0.70 !important; }
 .installed-mod-row > *{
   position:relative !important;
   z-index:2 !important;
+}
+
+/* ---- AD COLUMN LOCK — never break with liquid-glass experiments ----
+   Restores the persistent right-side Ads column exactly as before. */
+#ad-column.ad-column,
+.ad-column#ad-column{
+  display:flex !important;
+  position:fixed !important;
+  top:54px !important;
+  right:14px !important;
+  bottom:14px !important;
+  width:180px !important;
+  z-index:300 !important;
+  border-radius:16px !important;
+  padding:10px 8px !important;
+  flex-direction:column !important;
+  gap:10px !important;
+  align-items:center !important;
+  overflow:hidden !important;
+  isolation:auto !important;
+  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.5) !important;
+  backdrop-filter:blur(var(--glass-blur)) saturate(1.5) !important;
+  background:var(--glass-bg) !important;
+  border:1px solid var(--glass-line) !important;
+  box-shadow:inset 0 1px 0 var(--glass-highlight), 0 8px 32px rgba(0,0,0,0.35) !important;
+  color:inherit !important;
+}
+#ad-column::before,
+#ad-column::after{
+  content:none !important;
+  display:none !important;
+}
+#ad-column > *{
+  position:relative !important;
+  z-index:auto !important;
+}
+#ad-column .ad-box{
+  width:160px !important;
+  flex:0 0 auto !important;
+  border-radius:10px !important;
+  overflow:hidden !important;
+  display:block !important;
+  background:transparent !important;
+  border:none !important;
+  padding:0 !important;
+}
+.app{
+  padding-right:208px !important;
 }
 
