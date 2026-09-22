@@ -11,14 +11,22 @@ import net.minecraft.util.Identifier;
  * title-screen transition. One play per game session.
  */
 public final class IntroPlayback {
-    public static final int FRAME_COUNT = 84;
+    public static final int FRAME_COUNT = 106;
     public static final float FPS = 12f;
     public static final Identifier MENU_BG = Identifier.of("solarclient", "textures/intro/menu_bg.png");
     public static final Identifier LOGO = Identifier.of("solarclient", "textures/intro/logo.png");
     /** Native pixel size of textures/intro/logo.png (alpha-trimmed lettering). */
-    public static final int LOGO_W = 595, LOGO_H = 205;
+    public static final int LOGO_W = 942, LOGO_H = 258;
     /** Native size of each intro frame / menu_bg. */
     public static final int FRAME_W = 960, FRAME_H = 540;
+
+    /**
+     * Bounding box of the end-card lettering inside a FRAME_W×FRAME_H frame
+     * (from meta.txt). Used so the title transition starts at the same spot
+     * the video left the logo.
+     */
+    public static final int ENDCARD_X0 = 227, ENDCARD_Y0 = 141;
+    public static final int ENDCARD_X1 = 765, ENDCARD_Y1 = 345;
 
     private static final Identifier[] FRAMES = new Identifier[FRAME_COUNT];
     static {
@@ -94,16 +102,53 @@ public final class IntroPlayback {
         SolarLogos.drawCentered(ctx, LOGO, LOGO_W, LOGO_H, cx, top, targetWidth);
     }
 
-    /** Aspect-fill: cover the whole screen, crop overflow. */
-    public static void drawCover(DrawContext ctx, Identifier tex, int srcW, int srcH, int screenW, int screenH) {
-        float scale = Math.max(screenW / (float) srcW, screenH / (float) srcH);
-        int dw = Math.max(1, Math.round(srcW * scale));
-        int dh = Math.max(1, Math.round(srcH * scale));
+    /** How the FRAME_W×FRAME_H image is mapped onto the screen (cover). */
+    public static CoverMapping coverMapping(int screenW, int screenH) {
+        float scale = Math.max(screenW / (float) FRAME_W, screenH / (float) FRAME_H);
+        int dw = Math.max(1, Math.round(FRAME_W * scale));
+        int dh = Math.max(1, Math.round(FRAME_H * scale));
         int x = (screenW - dw) / 2;
         int y = (screenH - dh) / 2;
+        return new CoverMapping(scale, x, y, dw, dh);
+    }
+
+    /**
+     * On-screen rect matching the video end-card lettering, for the logo
+     * transition start (same spot the MP4 ends on).
+     */
+    public static EndcardLogoPlacement endcardLogoOnScreen(int screenW, int screenH) {
+        CoverMapping m = coverMapping(screenW, screenH);
+        int boxW = Math.max(1, Math.round((ENDCARD_X1 - ENDCARD_X0) * m.scale));
+        int boxH = Math.max(1, Math.round((ENDCARD_Y1 - ENDCARD_Y0) * m.scale));
+        int boxX = m.x + Math.round(ENDCARD_X0 * m.scale);
+        int boxY = m.y + Math.round(ENDCARD_Y0 * m.scale);
+        // Fit our clean logo PNG inside that box (contain), keep centered.
+        float logoAspect = LOGO_W / (float) LOGO_H;
+        float boxAspect = boxW / (float) boxH;
+        int logoW;
+        int logoH;
+        if (logoAspect >= boxAspect) {
+            logoW = boxW;
+            logoH = Math.max(1, Math.round(boxW / logoAspect));
+        } else {
+            logoH = boxH;
+            logoW = Math.max(1, Math.round(boxH * logoAspect));
+        }
+        int logoTop = boxY + (boxH - logoH) / 2;
+        int logoCx = boxX + boxW / 2;
+        return new EndcardLogoPlacement(logoCx, logoTop, logoW, logoH);
+    }
+
+    public record CoverMapping(float scale, int x, int y, int dw, int dh) {}
+
+    public record EndcardLogoPlacement(int cx, int top, int width, int height) {}
+
+    /** Aspect-fill: cover the whole screen, crop overflow. */
+    public static void drawCover(DrawContext ctx, Identifier tex, int srcW, int srcH, int screenW, int screenH) {
+        CoverMapping m = coverMapping(screenW, screenH);
         ctx.drawTexture(RenderPipelines.GUI_TEXTURED, tex,
-                x, y, 0f, 0f,
-                dw, dh,
+                m.x, m.y, 0f, 0f,
+                m.dw, m.dh,
                 srcW, srcH,
                 srcW, srcH,
                 0xFFFFFFFF);

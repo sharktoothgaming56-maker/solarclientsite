@@ -67,20 +67,13 @@ public class SolarTitleScreen extends SpaceTheme.SpaceScreen {
         return restingLogoWidth();
     }
 
-    /** Resting logo / panel width — a bit larger than the old title mark. */
+    /** Resting logo / panel width — scales with window; keeps aspect of new mark. */
     private int restingLogoWidth() {
-        float byW = this.width * 0.50f;
-        float byH = this.height * 0.26f * IntroPlayback.LOGO_W / (float) IntroPlayback.LOGO_H;
+        float byW = this.width * 0.52f;
+        float byH = this.height * 0.22f * IntroPlayback.LOGO_W / (float) IntroPlayback.LOGO_H;
         int w = Math.round(Math.min(byW, byH));
-        int max = Math.min(this.width - 48, 560);
-        return Math.max(200, Math.min(w, max));
-    }
-
-    /** Large end-card size used at the start of the rise. */
-    private int startLogoWidth() {
-        int rest = restingLogoWidth();
-        int big = Math.round(this.width * 0.78f);
-        return Math.min(this.width - 32, Math.max(rest + 80, big));
+        int max = Math.min(this.width - 48, 620);
+        return Math.max(220, Math.min(w, max));
     }
 
     private int logoHeightFor(int logoW) {
@@ -89,10 +82,6 @@ public class SolarTitleScreen extends SpaceTheme.SpaceScreen {
 
     private int restingLogoTop(int restH) {
         return Math.max(10, this.height / 5 - restH / 2);
-    }
-
-    private int startLogoTop(int startH) {
-        return this.height / 2 - startH / 2;
     }
 
     private int buttonHeight() {
@@ -187,31 +176,38 @@ public class SolarTitleScreen extends SpaceTheme.SpaceScreen {
 
         IntroPlayback.renderMenuBackground(ctx, this.width, this.height);
 
-        int cx = this.width / 2;
+        // Start exactly where the MP4 end-card lettering sat (cover-mapped).
+        IntroPlayback.EndcardLogoPlacement endcard =
+                IntroPlayback.endcardLogoOnScreen(this.width, this.height);
+        int startW = endcard.width();
+        int startTop = endcard.top();
+        int startCx = endcard.cx();
+
         int restW = restingLogoWidth();
         int restH = logoHeightFor(restW);
         int restTop = restingLogoTop(restH);
-
-        int startW = startLogoWidth();
-        int startH = logoHeightFor(startW);
-        int startTop = startLogoTop(startH);
+        int restCx = this.width / 2;
 
         int logoW;
         int logoTop;
+        int logoCx;
         if (phase == Phase.LOGO_RISE) {
             float t = IntroPlayback.easeInOut(phaseRaw(LOGO_RISE_MS));
             logoW = startW;
             logoTop = Math.round(IntroPlayback.lerp(startTop, restTop, t));
+            logoCx = Math.round(IntroPlayback.lerp(startCx, restCx, t));
         } else if (phase == Phase.LOGO_SHRINK) {
             float t = IntroPlayback.easeInOut(phaseRaw(LOGO_SHRINK_MS));
             logoW = Math.round(IntroPlayback.lerp(startW, restW, t));
             logoTop = restTop;
+            logoCx = restCx;
         } else {
             logoW = restW;
             logoTop = restTop;
+            logoCx = restCx;
         }
 
-        IntroPlayback.drawLogo(ctx, cx, logoTop, logoW);
+        IntroPlayback.drawLogo(ctx, logoCx, logoTop, logoW);
 
         // Menus stay completely hidden until rise + shrink finish.
         if (phase == Phase.LOGO_RISE || phase == Phase.LOGO_SHRINK) {
