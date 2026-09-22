@@ -18,7 +18,8 @@ import java.util.List;
  *    sky doesn't reshuffle every frame; only brightness animates)
  *  - two soft glowing planets (layered translucent discs)
  *  - a shooting star every few seconds (time-derived, no state needed)
- *  - SolarButton: a glowing purple gradient button drawn by hand
+ *  - SolarButton: clear 3D liquid-glass capsule (rounded ends) matching
+ *    the launcher glass recipe — frosted clear fill, specular, iridescent rim
  *
  * Everything here uses only ctx.fill / fillGradient / text drawing —
  * the APIs already proven working in this project — deliberately
@@ -107,7 +108,10 @@ public final class SpaceTheme {
     }
 
     // =================================================================
-    // SolarButton — hand-drawn glowing button
+    // SolarButton — clear 3D liquid-glass, capsule (rounded) ends
+    // Matches the launcher liquid-glass recipe as closely as DrawContext
+    // fill/fillGradient allows. Shape is a stadium/pill: fully circled
+    // left and right ends (radius = height/2).
     // =================================================================
     public static class SolarButton {
         public int x, y, width, height;
@@ -123,54 +127,262 @@ public final class SpaceTheme {
         public void setLabel(String label) { this.label = label; }
         public void setAction(Runnable action) { this.action = action; }
 
+        /** Pill hit-test: rectangle middle + circular caps on each end. */
         public boolean isHovered(int mouseX, int mouseY) {
-            return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
+            if (mouseX < x || mouseX >= x + width || mouseY < y || mouseY >= y + height) return false;
+            int r = Math.max(1, height / 2);
+            int leftCap = x + r;
+            int rightCap = x + width - r;
+            if (mouseX >= leftCap && mouseX < rightCap) return true;
+            float cy = y + height * 0.5f;
+            float dy = mouseY + 0.5f - cy;
+            if (mouseX < leftCap) {
+                float dx = mouseX + 0.5f - leftCap;
+                return dx * dx + dy * dy <= (float) r * r;
+            }
+            float dx = mouseX + 0.5f - rightCap;
+            return dx * dx + dy * dy <= (float) r * r;
         }
 
         public void render(DrawContext ctx, MinecraftClient client, int mouseX, int mouseY) {
             boolean hover = isHovered(mouseX, mouseY);
-            // Fill/gradient tint follows the button colour; border + glow
-            // follow the stroke colour — both picked independently in
-            // Solar Menu > Colours.
+            // Stroke accent still follows Solar Menu > Colours (rim only).
+            // Body stays clear glass like the launcher — no heavy fill tint.
             SolarConfig cfg = com.solarclient.mod.client.config.SolarConfig.get();
-            int fillRgb = cfg.getButtonColor() & 0xFFFFFF;
             int strokeRgb = cfg.getStrokeColor() & 0xFFFFFF;
 
-            // Tint the base gradient toward the fill colour (darkened) so
-            // the button body actually reflects the chosen colour rather
-            // than a fixed purple.
-            int top = hover ? tint(fillRgb, 0.42f, 0.94f) : tint(fillRgb, 0.28f, 0.88f);
-            int bottom = hover ? tint(fillRgb, 0.24f, 0.94f) : tint(fillRgb, 0.14f, 0.88f);
-            ctx.fillGradient(x, y, x + width, y + height, top, bottom);
-
-            int border = hover ? (0xFF000000 | strokeRgb) : (0x80000000 | strokeRgb);
-            ctx.fill(x, y, x + width, y + 1, border);
-            ctx.fill(x, y + height - 1, x + width, y + height, border);
-            ctx.fill(x, y, x + 1, y + height, border);
-            ctx.fill(x + width - 1, y, x + width, y + height, border);
-            // (no outer hover glow — the vanilla button texture can't draw
-            // outside its bounds, so both button types omit it and render
-            // pixel-identically)
+            paintLiquidGlass(ctx, x, y, width, height, strokeRgb, hover);
 
             Text text = bold ? Text.literal(label).formatted(Formatting.BOLD) : Text.literal(label);
             int tx = x + (width - client.textRenderer.getWidth(text)) / 2;
             int ty = y + (height - 8) / 2;
-            ctx.drawTextWithShadow(client.textRenderer, text, tx, ty, hover ? 0xFFFFFFFF : 0xFFEAE6F7);
+            ctx.drawTextWithShadow(client.textRenderer, text, tx, ty, hover ? 0xFFFFFFFF : 0xFFF2F0FA);
         }
 
         public void click() { if (action != null) action.run(); }
 
         /**
-         * Darken an RGB toward black by {@code factor} (0..1) and apply an
-         * alpha (0..1), returning ARGB. Used so the button body takes on a
-         * dim shade of the chosen fill colour rather than a fixed purple.
+         * Clear liquid-glass capsule matching the launcher CSS recipe:
+         *   fill 155°: white 26% → 8% → 3% → dark 28%
+         *   specular top-left + caustic bottom-right + sheen band
+         *   inset bevel + iridescent rim
+         * Ends are fully rounded (radius = h/2).
          */
-        private static int tint(int rgb, float factor, float alpha) {
-            int r = (int) (((rgb >> 16) & 0xFF) * factor);
-            int g = (int) (((rgb >> 8) & 0xFF) * factor);
-            int b = (int) ((rgb & 0xFF) * factor);
-            int a = (int) (alpha * 255) & 0xFF;
-            return (a << 24) | (r << 16) | (g << 8) | b;
+        private static void paintLiquidGlass(DrawContext ctx, int x, int y, int w, int h,
+                                             int strokeRgb, boolean hover) {
+            int r = Math.max(1, Math.min(h / 2, w / 2));
+
+            // Soft drop shadow under the pill (depth).
+            int shadowA = hover ? 0x48 : 0x32;
+            fillPill(ctx, x + 1, y + 2, w, h, (shadowA << 24));
+
+            // ---- clear glass body (launcher gradient stops) ----
+            // top ~26%/32% white, then 8%/10%, 3%/4%, bottom dark ~28%/30%
+            if (hover) {
+                fillPillVGradient(ctx, x, y, w, h, r,
+                        argb(0.32f, 255, 255, 255),
+                        argb(0.10f, 255, 255, 255),
+                        argb(0.04f, 255, 255, 255),
+                        argb(0.30f, 22, 16, 42));
+            } else {
+                fillPillVGradient(ctx, x, y, w, h, r,
+                        argb(0.26f, 255, 255, 255),
+                        argb(0.08f, 255, 255, 255),
+                        argb(0.03f, 255, 255, 255),
+                        argb(0.28f, 18, 14, 36));
+            }
+
+            // Specular sheet — bright radial wash top-left (launcher ::before).
+            float specA = hover ? 0.55f : 0.42f;
+            fillPillRadial(ctx, x, y, w, h, r,
+                    x + w * 0.16f, y - h * 0.10f, w * 0.85f,
+                    argb(specA, 255, 255, 255), 0x00FFFFFF);
+
+            // Lower-right caustic (aqua/violet wash).
+            float cauA = hover ? 0.18f : 0.12f;
+            int cau = blendRgb(0xAA96FF, strokeRgb, 0.25f);
+            fillPillRadial(ctx, x, y, w, h, r,
+                    x + w * 0.92f, y + h * 1.15f, w * 0.70f,
+                    0x00000000, withAlpha(cau, cauA));
+
+            // Diagonal sheen band (soft-light highlight stripe).
+            float sheenA = hover ? 0.30f : 0.22f;
+            fillPillSheen(ctx, x, y, w, h, r, sheenA);
+
+            // Inset bevel: bright top edge, dark bottom edge (clipped to pill).
+            int hi = hover ? argb(0.70f, 255, 255, 255) : argb(0.55f, 255, 255, 255);
+            int lo = hover ? argb(0.38f, 0, 0, 0) : argb(0.32f, 0, 0, 0);
+            strokePillEdge(ctx, x, y, w, h, r, hi, true);   // top half brighter
+            strokePillEdge(ctx, x, y, w, h, r, lo, false);  // bottom half darker
+
+            // Iridescent 1px rim (launcher ::after chromatic edge).
+            drawIridescentPillRim(ctx, x, y, w, h, r, strokeRgb, hover);
+        }
+
+        // ----- pill geometry helpers -----
+
+        /** Horizontal inset from each side at row {@code row} (0..h-1) for a stadium. */
+        private static int pillInset(int row, int h, int radius) {
+            float cy = (h - 1) * 0.5f;
+            float dy = row - cy;
+            float rr = radius;
+            float inside = rr * rr - dy * dy;
+            if (inside <= 0f) return radius; // degenerate tip
+            float half = (float) Math.sqrt(inside);
+            // Distance from rect side to the arc: radius - chord half-width.
+            return Math.max(0, Math.round(rr - half));
+        }
+
+        private static void fillPill(DrawContext ctx, int x, int y, int w, int h, int argb) {
+            int r = Math.max(1, Math.min(h / 2, w / 2));
+            for (int row = 0; row < h; row++) {
+                int inset = pillInset(row, h, r);
+                int x0 = x + inset;
+                int x1 = x + w - inset;
+                if (x1 > x0) ctx.fill(x0, y + row, x1, y + row + 1, argb);
+            }
+        }
+
+        /** 4-stop vertical gradient clipped to the pill. */
+        private static void fillPillVGradient(DrawContext ctx, int x, int y, int w, int h, int r,
+                                              int c0, int c1, int c2, int c3) {
+            for (int row = 0; row < h; row++) {
+                float t = h <= 1 ? 0f : (float) row / (h - 1);
+                int color;
+                if (t < 0.26f) color = lerpArgb(c0, c1, t / 0.26f);
+                else if (t < 0.52f) color = lerpArgb(c1, c2, (t - 0.26f) / 0.26f);
+                else color = lerpArgb(c2, c3, (t - 0.52f) / 0.48f);
+                int inset = pillInset(row, h, r);
+                int x0 = x + inset;
+                int x1 = x + w - inset;
+                if (x1 > x0) ctx.fill(x0, y + row, x1, y + row + 1, color);
+            }
+        }
+
+        /** Soft radial wash clipped to the pill (centre → edge fades). */
+        private static void fillPillRadial(DrawContext ctx, int x, int y, int w, int h, int r,
+                                           float cx, float cy, float radius,
+                                           int centre, int edge) {
+            float invR = radius <= 1f ? 1f : 1f / radius;
+            for (int row = 0; row < h; row++) {
+                int inset = pillInset(row, h, r);
+                int x0 = x + inset;
+                int x1 = x + w - inset;
+                float py = y + row + 0.5f;
+                for (int px = x0; px < x1; px++) {
+                    float dx = px + 0.5f - cx;
+                    float dy = py - cy;
+                    float d = (float) Math.sqrt(dx * dx + dy * dy) * invR;
+                    if (d >= 1f) continue;
+                    // Smoothstep falloff
+                    float t = d * d * (3f - 2f * d);
+                    int col = lerpArgb(centre, edge, t);
+                    if (((col >>> 24) & 0xFF) < 3) continue;
+                    ctx.fill(px, y + row, px + 1, y + row + 1, col);
+                }
+            }
+        }
+
+        /** Diagonal sheen stripe across the pill (launcher liquid-sheen band). */
+        private static void fillPillSheen(DrawContext ctx, int x, int y, int w, int h, int r, float peakA) {
+            // Band centre runs ~diagonal; animate gently by time so it feels liquid.
+            float phase = (float) ((System.currentTimeMillis() % 5800L) / 5800.0);
+            // Sweep from right→left like the CSS keyframes.
+            float bandX = x + w * (1.2f - phase * 1.6f);
+            float bandW = Math.max(6f, w * 0.18f);
+            for (int row = 0; row < h; row++) {
+                int inset = pillInset(row, h, r);
+                int x0 = x + inset;
+                int x1 = x + w - inset;
+                float py = y + row + 0.5f;
+                // Slight diagonal skew
+                float skew = (py - y) * 0.35f;
+                for (int px = x0; px < x1; px++) {
+                    float d = Math.abs(px + 0.5f - (bandX + skew)) / bandW;
+                    if (d >= 1f) continue;
+                    float a = peakA * (1f - d) * (1f - d);
+                    int col = argb(a, 255, 255, 255);
+                    ctx.fill(px, y + row, px + 1, y + row + 1, col);
+                }
+            }
+        }
+
+        /** Top or bottom half outline stroke along the pill perimeter. */
+        private static void strokePillEdge(DrawContext ctx, int x, int y, int w, int h, int r,
+                                           int color, boolean topHalf) {
+            int mid = h / 2;
+            for (int row = 0; row < h; row++) {
+                boolean inHalf = topHalf ? row <= mid : row >= mid;
+                if (!inHalf) continue;
+                int inset = pillInset(row, h, r);
+                // Only the outermost pixel of the pill on this row.
+                int ly = y + row;
+                ctx.fill(x + inset, ly, x + inset + 1, ly + 1, color);
+                ctx.fill(x + w - inset - 1, ly, x + w - inset, ly + 1, color);
+                if (row == 0 || row == h - 1) {
+                    // Flat top/bottom span between caps.
+                    int x0 = x + inset;
+                    int x1 = x + w - inset;
+                    if (x1 > x0) ctx.fill(x0, ly, x1, ly + 1, color);
+                }
+            }
+        }
+
+        /** Chromatic rim around the capsule edge. */
+        private static void drawIridescentPillRim(DrawContext ctx, int x, int y, int w, int h, int r,
+                                                  int strokeRgb, boolean hover) {
+            float a = hover ? 0.95f : 0.82f;
+            int cTL = withAlpha(blendRgb(0xFFFFFF, strokeRgb, 0.12f), a);
+            int cTR = withAlpha(blendRgb(0xAAF0DC, strokeRgb, 0.22f), a * 0.92f);
+            int cBR = withAlpha(blendRgb(0xD2AFFF, strokeRgb, 0.28f), a * 0.88f);
+            int cBL = withAlpha(blendRgb(0x96C8FF, strokeRgb, 0.22f), a * 0.92f);
+
+            for (int row = 0; row < h; row++) {
+                float ty = h <= 1 ? 0f : (float) row / (h - 1);
+                int leftCol = lerpArgb(cTL, cBL, ty);
+                int rightCol = lerpArgb(cTR, cBR, ty);
+                int inset = pillInset(row, h, r);
+                int ly = y + row;
+                ctx.fill(x + inset, ly, x + inset + 1, ly + 1, leftCol);
+                ctx.fill(x + w - inset - 1, ly, x + w - inset, ly + 1, rightCol);
+            }
+            // Top & bottom spans between the caps.
+            for (int i = r; i < w - r; i++) {
+                float tx = w <= 1 ? 0f : (float) i / (w - 1);
+                ctx.fill(x + i, y, x + i + 1, y + 1, lerpArgb(cTL, cTR, tx));
+                ctx.fill(x + i, y + h - 1, x + i + 1, y + h, lerpArgb(cBL, cBR, tx));
+            }
+        }
+
+        private static int argb(float alpha, int r, int g, int b) {
+            return (clamp255((int) (alpha * 255)) << 24) | (clamp255(r) << 16) | (clamp255(g) << 8) | clamp255(b);
+        }
+
+        private static int blendRgb(int a, int b, float bWeight) {
+            float aw = 1f - bWeight;
+            int r = clamp255((int) (((a >> 16) & 0xFF) * aw + ((b >> 16) & 0xFF) * bWeight));
+            int g = clamp255((int) (((a >> 8) & 0xFF) * aw + ((b >> 8) & 0xFF) * bWeight));
+            int bl = clamp255((int) ((a & 0xFF) * aw + (b & 0xFF) * bWeight));
+            return (r << 16) | (g << 8) | bl;
+        }
+
+        private static int withAlpha(int rgb, float alpha) {
+            return (clamp255((int) (alpha * 255)) << 24) | (rgb & 0xFFFFFF);
+        }
+
+        private static int lerpArgb(int a, int b, float t) {
+            if (t <= 0f) return a;
+            if (t >= 1f) return b;
+            int aa = (a >>> 24) & 0xFF, ar = (a >> 16) & 0xFF, ag = (a >> 8) & 0xFF, ab = a & 0xFF;
+            int ba = (b >>> 24) & 0xFF, br = (b >> 16) & 0xFF, bg = (b >> 8) & 0xFF, bb = b & 0xFF;
+            return (clamp255((int) (aa + (ba - aa) * t)) << 24)
+                    | (clamp255((int) (ar + (br - ar) * t)) << 16)
+                    | (clamp255((int) (ag + (bg - ag) * t)) << 8)
+                    | clamp255((int) (ab + (bb - ab) * t));
+        }
+
+        private static int clamp255(int v) {
+            return v < 0 ? 0 : (v > 255 ? 255 : v);
         }
     }
 
