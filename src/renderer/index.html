@@ -51,7 +51,7 @@
 </div>
 
 <div class="app">
-  <aside class="sidebar glass">
+  <aside class="sidebar glass liquid-glass">
     <button class="nav-btn active" data-view="launchpad" title="Launchpad">
       <!-- launchpad: a rocket over a planet ring, drawn on the voxel grid -->
       <svg viewBox="0 0 24 24"><path d="M12 2.5c2.6 2 4 5 4 8.1v3.1l1.7 1.7v2.3l-3-1.2h-5.4l-3 1.2v-2.3L8 13.7v-3.1c0-3.1 1.4-6.1 4-8.1z"/><rect x="10.8" y="7.6" width="2.4" height="2.4" rx="0.4" opacity="0.45"/><path d="M9.6 19.1h4.8l-2.4 3.2-2.4-3.2z" opacity="0.75"/></svg>
@@ -101,7 +101,7 @@
 
     <!-- LAUNCHPAD -->
     <section class="view active" id="view-launchpad">
-      <div class="launchpad-hero" id="launchpad-hero">
+      <div class="launchpad-hero liquid-glass" id="launchpad-hero">
         <span class="launch-art" id="launch-art"></span>
         <span class="launch-art-stars" id="launch-art-stars"></span>
         <!-- Moved out of .launch-col. That column is 440px and right
@@ -196,7 +196,7 @@
         </div>
 
         <!-- version switcher popover -->
-        <div id="version-popover" class="version-popover glass hidden">
+        <div id="version-popover" class="version-popover glass liquid-glass hidden">
           <div class="pop-section-title">Instances</div>
           <div id="pop-instance-list" class="pop-list"></div>
           <div class="pop-divider"></div>
@@ -220,7 +220,7 @@
 
       <!-- Discord link CTA — shown until an Application ID is configured -->
       <!-- starts hidden: it is only shown once we know you have not linked -->
-      <div id="discord-link-banner" class="discord-link-banner hidden">
+      <div id="discord-link-banner" class="discord-link-banner liquid-glass hidden">
         <div class="dlb-icon">
           <svg width="22" height="22" viewBox="0 0 71 55" fill="white" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0)"><path d="M60.1045 4.8978C55.5792 2.8214 50.7265 1.2916 45.6527 0.41542C45.5603 0.39851 45.468 0.44077 45.4204 0.52529C44.7963 1.6353 44.105 3.0834 43.6209 4.2216C38.1637 3.4046 32.7345 3.4046 27.3892 4.2216C26.905 3.0581 26.1886 1.6353 25.5617 0.52529C25.5141 0.44359 25.4218 0.40133 25.3294 0.41542C20.2584 1.2888 15.4057 2.8186 10.8776 4.8978C10.8384 4.9147 10.8048 4.9429 10.7825 4.9795C1.57795 18.7309 -0.943561 32.1443 0.293408 45.3914C0.299005 45.4562 0.335386 45.5182 0.385761 45.5576C6.45866 50.0174 12.3413 52.7249 18.1147 54.5195C18.2071 54.5477 18.305 54.5139 18.3638 54.4378C19.7295 52.5728 20.9469 50.6063 21.9907 48.5383C22.0523 48.4172 21.9935 48.2735 21.8676 48.2256C19.9366 47.4931 18.0979 46.6 16.3292 45.5858C16.1893 45.5041 16.1781 45.304 16.3068 45.2082C16.679 44.9293 17.0513 44.6391 17.4067 44.3461C17.471 44.2926 17.5606 44.2813 17.6362 44.3151C29.2558 49.6202 41.8354 49.6202 53.3179 44.3151C53.3935 44.2785 53.4831 44.2898 53.5502 44.3433C53.9057 44.6363 54.2779 44.9293 54.6529 45.2082C54.7816 45.304 54.7732 45.5041 54.6333 45.5858C52.8646 46.6197 51.0259 47.4931 49.0921 48.2228C48.9662 48.2707 48.9102 48.4172 48.9718 48.5383C50.038 50.6034 51.2554 52.5699 52.5959 54.435C52.6519 54.5139 52.7526 54.5477 52.845 54.5195C58.6464 52.7249 64.529 50.0174 70.6019 45.5576C70.6551 45.5182 70.6887 45.459 70.6943 45.3942C72.1747 30.0791 68.2147 16.7757 60.1968 4.9823C60.1772 4.9429 60.1437 4.9147 60.1045 4.8978ZM23.7259 37.3253C20.2276 37.3253 17.3451 34.1136 17.3451 30.1693C17.3451 26.225 20.1717 23.0133 23.7259 23.0133C27.308 23.0133 30.1626 26.2532 30.1066 30.1693C30.1066 34.1136 27.28 37.3253 23.7259 37.3253ZM47.3178 37.3253C43.8196 37.3253 40.9371 34.1136 40.9371 30.1693C40.9371 26.225 43.7636 23.0133 47.3178 23.0133C50.9 23.0133 53.7545 26.2532 53.6986 30.1693C53.6986 34.1136 50.9 37.3253 47.3178 37.3253Z"/></g><defs><clipPath id="clip0"><rect width="71" height="55" fill="white"/></clipPath></defs></svg>
         </div>
@@ -234,7 +234,7 @@
 
       <!-- PERFORMANCE DOCK — lives on the launch page now -->
       <div class="perf-dock" id="perf-dock">
-        <div class="dock-card glass rig-card">
+        <div class="dock-card glass liquid-glass rig-card">
           <div class="dock-head">
             <span class="dock-title">Your rig</span>
             <span class="perf-tier-badge" id="perf-tier-badge"><span class="ptb-label">Reading…</span></span>
@@ -260,7 +260,7 @@
              multipliers — and the ceiling of ~400 was well below what real
              machines actually hit, so it read as a lowball on decent rigs. -->
 
-        <div class="dock-card glass stack-card">
+        <div class="dock-card glass liquid-glass stack-card">
           <div class="dock-head">
             <span class="dock-title">Performance mods</span>
             <span class="dock-sub" id="stack-status">—</span>
@@ -274,7 +274,7 @@
       </div>
 
       <!-- applied settings, collapsible -->
-      <details class="applied-details glass" id="applied-details">
+      <details class="applied-details glass liquid-glass" id="applied-details">
         <summary><span>Applied game settings</span><span class="ad-hint" id="ad-hint">verified from disk</span></summary>
         <div class="applied-grid" id="applied-grid"></div>
         <div class="applied-actions">
@@ -303,7 +303,7 @@
       <div class="view-header"><h1>Versions</h1><button id="quick-create-btn" class="pill-btn primary">+ New instance</button></div>
       <p class="dim"></p>
 
-      <div id="version-picker-panel" class="version-picker-panel glass hidden"></div>
+      <div id="version-picker-panel" class="version-picker-panel glass liquid-glass hidden"></div>
       <div id="version-grid" class="instance-grid"></div>
 
       <div class="mods-list-header">Your instances</div>
@@ -314,7 +314,7 @@
     <section class="view" id="view-mods">
       <div class="view-header"><h1>Content</h1></div>
 
-      <div class="content-bar glass">
+      <div class="content-bar glass liquid-glass">
         <div class="cb-row">
           <div class="search-wrap">
             <span class="search-icon">⌕</span>
@@ -364,7 +364,7 @@
 
     <!-- SYNC DIALOG -->
     <div id="sync-modal" class="sync-modal hidden">
-      <div class="sync-card glass">
+      <div class="sync-card glass liquid-glass">
         <div class="sync-title">Sync content between instances</div>
         <p class="sync-sub">Copies into the target instance. Nothing is removed from the source.</p>
         <div class="sync-row">
@@ -398,7 +398,7 @@
       </div>
 
       <div class="fr-layout">
-        <div class="fr-sidebar glass">
+        <div class="fr-sidebar glass liquid-glass">
           <div class="fr-search-row">
             <input id="fr-search" placeholder="Add by username or UUID" spellcheck="false">
             <button class="pill-btn primary" id="fr-add-btn">Follow</button>
@@ -420,7 +420,7 @@
           <div class="fr-list fr-groups" id="fr-groups"></div>
         </div>
 
-        <div class="fr-main glass">
+        <div class="fr-main glass liquid-glass">
           <div class="fr-chat-head" id="fr-chat-head">
             <div class="fr-chat-title" id="fr-chat-title">Select someone to chat</div>
             <div class="fr-chat-actions" id="fr-chat-actions"></div>
@@ -454,7 +454,7 @@
 
       <div class="srv-grid" id="srv-list"></div>
 
-      <div class="srv-console glass hidden" id="srv-console">
+      <div class="srv-console glass liquid-glass hidden" id="srv-console">
         <div class="srv-console-head">
           <span class="dock-title" id="srv-console-title">Console</span>
           <div class="srv-console-actions">
@@ -474,7 +474,7 @@
       <div class="view-header"><h1>Skins</h1></div>
 
       <div class="skins-layout">
-        <div class="skins-preview glass">
+        <div class="skins-preview glass liquid-glass">
           <canvas id="skins-canvas" class="skins-canvas"></canvas>
           <div class="skins-preview-controls">
             <label class="toggle-inline">
@@ -497,7 +497,7 @@
           </div>
         </div>
 
-        <div class="skins-library glass">
+        <div class="skins-library glass liquid-glass">
           <div class="skins-lib-head">
             <span class="dock-title">Your library</span>
             <div class="skins-lib-actions">
@@ -513,7 +513,7 @@
 
     <!-- SKIN EDITOR -->
     <div id="skin-editor" class="skin-editor hidden">
-      <div class="se-card glass">
+      <div class="se-card glass liquid-glass">
         <div class="se-head">
           <span class="se-title">Skin editor</span>
           <input id="se-name" class="se-name" placeholder="Skin name">
@@ -593,17 +593,17 @@
       <div class="view-header"><h1>Customize</h1></div>
       <p class="dim">Pick a vibe. Everything saves automatically.</p>
 
-      <div class="settings-group glass">
+      <div class="settings-group glass liquid-glass">
         <h3>Background</h3>
         <div id="bg-preset-grid" class="bg-preset-grid"></div>
       </div>
 
-      <div class="settings-group glass">
+      <div class="settings-group glass liquid-glass">
         <h3>Accent color</h3>
         <div id="accent-row" class="accent-row"></div>
       </div>
 
-      <div class="settings-group glass">
+      <div class="settings-group glass liquid-glass">
         <h3>Liquid glass</h3>
         <label class="slider-row">
           <span>Blur <b id="glass-blur-label">18</b> px</span>
@@ -619,7 +619,7 @@
         </label>
       </div>
 
-      <div class="settings-group glass">
+      <div class="settings-group glass liquid-glass">
         <h3>Motion &amp; space feel</h3>
         <div class="setting-toggle-row">
           <span>Animations<span class="hint">Floating character, glows, transitions</span></span>
@@ -648,19 +648,19 @@
     <section class="view" id="view-settings">
       <div class="view-header"><h1>Settings</h1></div>
 
-      <div class="settings-group glass">
+      <div class="settings-group glass liquid-glass">
         <h3>Accounts</h3>
         <div id="settings-account-list" class="account-list"></div>
         <button id="settings-add-account" class="pill-btn">+ Add account</button>
       </div>
 
-      <div class="settings-group glass">
+      <div class="settings-group glass liquid-glass">
         <h3>Auto-install mods</h3>
         <p class="dim" style="margin-bottom:10px;">Any .jar here gets copied into every new Fabric/Quilt instance automatically.</p>
         <button id="open-default-mods" class="pill-btn">Open folder</button>
       </div>
 
-      <div class="settings-group glass">
+      <div class="settings-group glass liquid-glass">
         <h3>Friends</h3>
         <label class="toggle-inline">
           <label class="toggle"><input type="checkbox" id="set-notify-follow" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
@@ -685,7 +685,7 @@
         </div>
       </div>
 
-      <div class="settings-group glass">
+      <div class="settings-group glass liquid-glass">
         <h3>Discord</h3>
         <div class="setting-toggle-row">
           <span>Show on Discord<span class="hint">Displays SolarClient on your profile</span></span>
@@ -706,7 +706,7 @@
         </div>
       </div>
     
-      <div class="settings-group glass">
+      <div class="settings-group glass liquid-glass">
         <h3>About</h3>
         <div class="setting-toggle-row">
           <span>Version<span class="hint">The build of SolarClient you are running right now</span></span>
@@ -739,7 +739,7 @@
 
 <!-- command palette (Ctrl/Cmd+K) -->
 <div id="palette" class="palette hidden">
-  <div class="palette-box glass">
+  <div class="palette-box glass liquid-glass">
     <input id="palette-input" placeholder="Search…">
     <div id="palette-list" class="palette-list"></div>
     <div class="palette-foot">↑↓  Enter  Esc</div>
@@ -748,7 +748,7 @@
 
 <!-- reusable themed confirm dialog -->
 <div id="confirm-modal" class="confirm-modal hidden">
-  <div class="confirm-panel glass">
+  <div class="confirm-panel glass liquid-glass">
     <div class="confirm-title" id="confirm-title">Are you sure?</div>
     <div class="confirm-message" id="confirm-message"></div>
     <div class="confirm-actions">
@@ -760,7 +760,7 @@
 
 <!-- background crop tool -->
 <div id="crop-modal" class="crop-modal hidden">
-  <div class="crop-panel glass">
+  <div class="crop-panel glass liquid-glass">
     <div class="crop-title">Position your photo</div>
     <p class="dim" style="margin:0 0 12px;">Drag to position your photo.</p>
     <div id="crop-box" class="crop-box"></div>
@@ -775,7 +775,7 @@
 <div id="download-bar-container" class="download-bar-container"></div>
 
 <!-- Persistent right-side ad column — always visible on every page -->
-<aside class="ad-column glass" id="ad-column">
+<aside class="ad-column glass liquid-glass" id="ad-column">
   <div class="ad-column-label">Ads</div>
   <!-- Two ads. renderer.js sizes them to the column: 160x300 each normally,
        160x600 when the window is tall enough to fit them. -->
