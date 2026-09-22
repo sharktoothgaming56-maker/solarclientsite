@@ -2486,24 +2486,24 @@ body.dropdown-open .instance-grid {
 .version-popover:not(#_):not(#__),
 .version-picker-panel:not(#_):not(#__),
 .toast:not(#_):not(#__),
-/* Launchpad liquid-glass — light frost + SDF lens (heavy blur kills refraction). */
+/* Launchpad liquid-glass — light frost + strong SDF lens (refs need visible bend). */
 .liquid-glass:not(#_):not(#__){
-  -webkit-backdrop-filter: blur(10px) saturate(1.75) brightness(1.08) !important;
-  backdrop-filter: blur(10px) saturate(1.75) brightness(1.08) !important;
-  -webkit-backdrop-filter: blur(8px) saturate(1.85) brightness(1.10) url(#solar-liquid-glass) !important;
-  backdrop-filter: blur(8px) saturate(1.85) brightness(1.10) url(#solar-liquid-glass) !important;
+  -webkit-backdrop-filter: blur(6px) saturate(1.9) brightness(1.12) !important;
+  backdrop-filter: blur(6px) saturate(1.9) brightness(1.12) !important;
+  -webkit-backdrop-filter: blur(4px) saturate(2.0) brightness(1.14) url(#solar-liquid-glass) !important;
+  backdrop-filter: blur(4px) saturate(2.0) brightness(1.14) url(#solar-liquid-glass) !important;
 }
-.level-card.liquid-glass:not(#_):not(#__){
-  -webkit-backdrop-filter: blur(10px) saturate(1.75) brightness(1.08) !important;
-  backdrop-filter: blur(10px) saturate(1.75) brightness(1.08) !important;
-  -webkit-backdrop-filter: blur(8px) saturate(1.85) brightness(1.10) url(#solar-liquid-glass-card) !important;
-  backdrop-filter: blur(8px) saturate(1.85) brightness(1.10) url(#solar-liquid-glass-card) !important;
+.level-card.liquid-glass:not(#_):not(#__),
+.dock-card.liquid-glass:not(#_):not(#__),
+.settings-group.liquid-glass:not(#_):not(#__),
+.sidebar.liquid-glass:not(#_):not(#__){
+  -webkit-backdrop-filter: blur(6px) saturate(1.9) brightness(1.12) !important;
+  backdrop-filter: blur(6px) saturate(1.9) brightness(1.12) !important;
+  -webkit-backdrop-filter: blur(4px) saturate(2.0) brightness(1.14) url(#solar-liquid-glass-card) !important;
+  backdrop-filter: blur(4px) saturate(2.0) brightness(1.14) url(#solar-liquid-glass-card) !important;
 }
 
-/* ---- 3. fake glass for everything that lost its blur ------------------
-   A single gradient paint. It reads as glass because it IS sitting on the
-   blurred .main sheet -- the highlight and the hairline are what the eye
-   actually reads as "glass", not the (invisible, at this point) blur. */
+/* ---- 3. fake glass for non-lens surfaces only (NEVER launch controls) -- */
 .instance-card, .version-tile, .mod-card, .mod-row, .installed-mod-row,
 .settings-group, .dock-card, .se-card, .sync-card, .skins-library,
 .skins-preview, .fr-main, .fr-sidebar, .ad-column, .applied-details,
@@ -2514,15 +2514,6 @@ body.dropdown-open .instance-grid {
     rgba(255,255,255,0.055) 0%,
     rgba(255,255,255,0.018) 42%,
     rgba(255,255,255,0.006) 100%);
-}
-
-.launch-btn, .chip, .level-card, .edition-switch, .launch-another, .bedrock-launch, .monitor-chip{
-  background-color:rgba(30,24,56,0.46) !important;
-  background-image:linear-gradient(
-    180deg,
-    rgba(255,255,255,0.10) 0%,
-    rgba(255,255,255,0.035) 45%,
-    rgba(255,255,255,0.012) 100%) !important;
 }
 
 /* ---- 4. containment --------------------------------------------------
@@ -2711,15 +2702,8 @@ body.perf-lite #starfield{display:none !important;}
 .about-version.dim{ color:var(--text-dim); font-weight:600; }
 
 /* =====================================================================
-   LIQUID GLASS — launchpad controls (reference-matched)
-   Real liquid glass (SDF edge refraction + chromatic aberration):
-     1. Clear low-alpha fill so the world shows through
-     2. Light frost + url(#solar-liquid-glass) SDF lens (not flat blur)
-     3. Convex specular (static — no looping sheen)
-     4. Iridescent prism rim + deep inset bevel for thickness
-     5. Level card uses url(#solar-liquid-glass-card) map
-   Same surface on Launch / another / Bedrock / chips / level / edition.
-   Does NOT change padding, width, gap, or fonts — layout stays put.
+   LIQUID GLASS — exact reference match (photos: lens + prism + crescents)
+   SURFACE ONLY — never set padding, font-size, text-align, width, gap.
    ===================================================================== */
 
 .liquid-glass,
@@ -2728,40 +2712,54 @@ body.perf-lite #starfield{display:none !important;}
 .bedrock-launch.liquid-glass,
 .chip.liquid-glass,
 .level-card.liquid-glass,
-.edition-switch.liquid-glass{
-  --lg-fill-top: rgba(255,255,255,0.22);
-  --lg-fill-mid: rgba(255,255,255,0.06);
-  --lg-fill-bot: rgba(255,255,255,0.02);
-  --lg-tint: rgba(18, 22, 40, 0.18);
+.edition-switch.liquid-glass,
+.dock-card.liquid-glass,
+.sidebar.liquid-glass,
+.settings-group.liquid-glass,
+.version-popover.liquid-glass,
+.applied-details.liquid-glass,
+.content-bar.liquid-glass,
+.fr-sidebar.liquid-glass,
+.fr-main.liquid-glass,
+.skins-preview.liquid-glass,
+.skins-library.liquid-glass,
+.se-card.liquid-glass,
+.sync-card.liquid-glass,
+.confirm-panel.liquid-glass,
+.palette-box.liquid-glass,
+.discord-link-banner.liquid-glass,
+.ad-column.liquid-glass,
+.srv-console.liquid-glass,
+.crop-panel.liquid-glass,
+.version-picker-panel.liquid-glass{
   position:relative !important;
   isolation:isolate !important;
   overflow:hidden !important;
-  color:#fff !important;
-  border:1px solid rgba(255,255,255,0.28) !important;
+  /* Dark glass body — backdrop still reads through the SDF lens */
+  border:1px solid rgba(255,255,255,0.38) !important;
   background:
     linear-gradient(165deg,
-      var(--lg-fill-top) 0%,
-      var(--lg-fill-mid) 38%,
-      var(--lg-fill-bot) 72%,
-      var(--lg-tint) 100%) !important;
+      rgba(255,255,255,0.28) 0%,
+      rgba(255,255,255,0.08) 28%,
+      rgba(8,10,18,0.22) 58%,
+      rgba(4,6,14,0.38) 100%) !important;
   background-color:transparent !important;
-  /* Light frost + SDF lens. Heavy blur kills refraction — keep ≤10px. */
-  -webkit-backdrop-filter: blur(10px) saturate(1.75) brightness(1.08) !important;
-  backdrop-filter: blur(10px) saturate(1.75) brightness(1.08) !important;
-  -webkit-backdrop-filter: blur(8px) saturate(1.85) brightness(1.10) url(#solar-liquid-glass) !important;
-  backdrop-filter: blur(8px) saturate(1.85) brightness(1.10) url(#solar-liquid-glass) !important;
+  -webkit-backdrop-filter: blur(6px) saturate(1.9) brightness(1.12) !important;
+  backdrop-filter: blur(6px) saturate(1.9) brightness(1.12) !important;
+  -webkit-backdrop-filter: blur(4px) saturate(2.05) brightness(1.16) contrast(1.08) url(#solar-liquid-glass) !important;
+  backdrop-filter: blur(4px) saturate(2.05) brightness(1.16) contrast(1.08) url(#solar-liquid-glass) !important;
   box-shadow:
-    /* outer lift */
-    0 1px 0 rgba(255,255,255,0.22),
-    0 10px 28px rgba(0,0,0,0.38),
-    0 22px 48px rgba(0,0,0,0.22),
-    /* glass thickness — bright top rim, dark under-lip */
-    inset 0 1px 0 rgba(255,255,255,0.72),
-    inset 0 0 0 1px rgba(255,255,255,0.10),
-    inset 0 -10px 22px -8px rgba(0,0,0,0.42),
-    inset 0 12px 18px -14px rgba(255,255,255,0.35),
-    inset 2px 0 4px rgba(255,255,255,0.08),
-    inset -3px 0 8px rgba(0,0,0,0.18) !important;
+    0 1px 0 rgba(255,255,255,0.35),
+    0 12px 32px rgba(0,0,0,0.45),
+    0 28px 56px rgba(0,0,0,0.28),
+    /* thick glass bevel */
+    inset 0 1.5px 0 rgba(255,255,255,0.85),
+    inset 0 -1px 0 rgba(255,255,255,0.12),
+    inset 0 0 0 1px rgba(255,255,255,0.14),
+    inset 0 -14px 28px -10px rgba(0,0,0,0.55),
+    inset 0 18px 24px -12px rgba(255,255,255,0.28),
+    inset 3px 0 10px rgba(120,220,255,0.12),
+    inset -4px 0 12px rgba(230,140,255,0.10) !important;
   transition:
     transform .22s cubic-bezier(.2,.7,.3,1),
     box-shadow .28s ease,
@@ -2769,21 +2767,53 @@ body.perf-lite #starfield{display:none !important;}
     background .28s ease !important;
 }
 
-.level-card.liquid-glass{
-  -webkit-backdrop-filter: blur(10px) saturate(1.75) brightness(1.08) !important;
-  backdrop-filter: blur(10px) saturate(1.75) brightness(1.08) !important;
-  -webkit-backdrop-filter: blur(8px) saturate(1.85) brightness(1.10) url(#solar-liquid-glass-card) !important;
-  backdrop-filter: blur(8px) saturate(1.85) brightness(1.10) url(#solar-liquid-glass-card) !important;
+.launch-btn.liquid-glass,
+.launch-another.liquid-glass,
+.bedrock-launch.liquid-glass,
+.chip.liquid-glass,
+.level-card.liquid-glass,
+.edition-switch.liquid-glass{
+  color:#fff !important;
 }
 
-/* Convex specular sheet + soft caustic (STATIC — matches refs, no loop) */
+.level-card.liquid-glass,
+.dock-card.liquid-glass,
+.settings-group.liquid-glass,
+.sidebar.liquid-glass,
+.skins-preview.liquid-glass,
+.skins-library.liquid-glass,
+.fr-main.liquid-glass,
+.se-card.liquid-glass{
+  -webkit-backdrop-filter: blur(6px) saturate(1.9) brightness(1.12) !important;
+  backdrop-filter: blur(6px) saturate(1.9) brightness(1.12) !important;
+  -webkit-backdrop-filter: blur(4px) saturate(2.05) brightness(1.16) contrast(1.08) url(#solar-liquid-glass-card) !important;
+  backdrop-filter: blur(4px) saturate(2.05) brightness(1.16) contrast(1.08) url(#solar-liquid-glass-card) !important;
+}
+
+/* Dual crescent speculars — Analytics / Play Now reference look */
 .liquid-glass::before,
 .launch-btn.liquid-glass::before,
 .launch-another.liquid-glass::before,
 .bedrock-launch.liquid-glass::before,
 .chip.liquid-glass::before,
 .level-card.liquid-glass::before,
-.edition-switch.liquid-glass::before{
+.edition-switch.liquid-glass::before,
+.dock-card.liquid-glass::before,
+.sidebar.liquid-glass::before,
+.settings-group.liquid-glass::before,
+.version-popover.liquid-glass::before,
+.applied-details.liquid-glass::before,
+.content-bar.liquid-glass::before,
+.fr-sidebar.liquid-glass::before,
+.fr-main.liquid-glass::before,
+.skins-preview.liquid-glass::before,
+.skins-library.liquid-glass::before,
+.se-card.liquid-glass::before,
+.sync-card.liquid-glass::before,
+.confirm-panel.liquid-glass::before,
+.palette-box.liquid-glass::before,
+.discord-link-banner.liquid-glass::before,
+.ad-column.liquid-glass::before{
   content:'' !important;
   position:absolute !important;
   inset:1px !important;
@@ -2793,49 +2823,72 @@ body.perf-lite #starfield{display:none !important;}
   transform:none !important;
   animation:none !important;
   background:
-    /* primary top-left specular (wet lens highlight) */
-    radial-gradient(120% 85% at 18% -8%,
-      rgba(255,255,255,0.72) 0%,
-      rgba(255,255,255,0.18) 28%,
+    /* top crescent highlight */
+    radial-gradient(140% 70% at 50% -20%,
+      rgba(255,255,255,0.95) 0%,
+      rgba(255,255,255,0.35) 22%,
+      transparent 52%),
+    /* bottom crescent */
+    radial-gradient(120% 65% at 50% 120%,
+      rgba(255,255,255,0.55) 0%,
+      rgba(160,220,255,0.18) 30%,
       transparent 55%),
-    /* secondary bottom caustic wash */
-    radial-gradient(90% 70% at 88% 118%,
-      rgba(160,210,255,0.18) 0%,
-      rgba(200,160,255,0.08) 40%,
-      transparent 62%),
-    /* soft diagonal gloss plane */
-    linear-gradient(115deg,
-      transparent 34%,
-      rgba(255,255,255,0.16) 48%,
+    /* left wet streak (Play Now) */
+    radial-gradient(80% 120% at -5% 40%,
+      rgba(255,255,255,0.55) 0%,
+      rgba(255,200,140,0.12) 35%,
+      transparent 60%),
+    /* diagonal gloss */
+    linear-gradient(118deg,
+      transparent 38%,
+      rgba(255,255,255,0.22) 49%,
       transparent 58%) !important;
   mix-blend-mode:soft-light;
-  opacity:0.95 !important;
+  opacity:1 !important;
 }
 
-/* Prism / oil-slick rim — chromatic edge like the references */
+/* Prism / oil-slick chromatic rim — matches reference edges */
 .liquid-glass::after,
 .launch-btn.liquid-glass::after,
 .launch-another.liquid-glass::after,
 .bedrock-launch.liquid-glass::after,
 .chip.liquid-glass::after,
 .level-card.liquid-glass::after,
-.edition-switch.liquid-glass::after{
+.edition-switch.liquid-glass::after,
+.dock-card.liquid-glass::after,
+.sidebar.liquid-glass::after,
+.settings-group.liquid-glass::after,
+.version-popover.liquid-glass::after,
+.applied-details.liquid-glass::after,
+.content-bar.liquid-glass::after,
+.fr-sidebar.liquid-glass::after,
+.fr-main.liquid-glass::after,
+.skins-preview.liquid-glass::after,
+.skins-library.liquid-glass::after,
+.se-card.liquid-glass::after,
+.sync-card.liquid-glass::after,
+.confirm-panel.liquid-glass::after,
+.palette-box.liquid-glass::after,
+.discord-link-banner.liquid-glass::after,
+.ad-column.liquid-glass::after{
   content:'' !important;
   position:absolute !important;
   inset:0 !important;
   border-radius:inherit !important;
-  padding:1.5px !important;
+  padding:2px !important;
   pointer-events:none !important;
   z-index:1 !important;
   transform:none !important;
-  background:linear-gradient(135deg,
-    rgba(255,255,255,0.95) 0%,
-    rgba(120,255,230,0.70) 14%,
-    rgba(120,190,255,0.55) 28%,
-    rgba(230,150,255,0.55) 46%,
-    rgba(255,200,140,0.35) 62%,
-    rgba(255,255,255,0.18) 76%,
-    rgba(160,220,255,0.50) 100%) !important;
+  animation:none !important;
+  background:conic-gradient(from 210deg,
+    rgba(255,255,255,0.95),
+    rgba(80,255,230,0.85),
+    rgba(100,190,255,0.75),
+    rgba(230,130,255,0.80),
+    rgba(255,180,100,0.55),
+    rgba(255,255,255,0.35),
+    rgba(140,230,255,0.70),
+    rgba(255,255,255,0.95)) !important;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0) !important;
   -webkit-mask-composite:xor !important;
   mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0) !important;
@@ -2843,80 +2896,37 @@ body.perf-lite #starfield{display:none !important;}
   opacity:1 !important;
 }
 
-.liquid-glass > *,
-.launch-btn.liquid-glass > *,
-.launch-another.liquid-glass > *,
-.bedrock-launch.liquid-glass > *,
-.chip.liquid-glass > *,
-.level-card.liquid-glass > *,
-.edition-switch.liquid-glass > *{
+.liquid-glass > *{
   position:relative !important;
   z-index:2 !important;
 }
 
-.liquid-glass:hover:not(:disabled),
 .launch-btn.liquid-glass:hover:not(:disabled),
 .launch-another.liquid-glass:hover:not(:disabled),
 .bedrock-launch.liquid-glass:hover:not(:disabled),
 .chip.liquid-glass:hover:not(:disabled){
   transform:translateY(-2px) !important;
-  border-color:rgba(255,255,255,0.48) !important;
-  background:
-    linear-gradient(165deg,
-      rgba(255,255,255,0.30) 0%,
-      rgba(255,255,255,0.10) 40%,
-      rgba(255,255,255,0.03) 70%,
-      rgba(22, 26, 48, 0.22) 100%) !important;
+  border-color:rgba(255,255,255,0.55) !important;
   box-shadow:
-    0 1px 0 rgba(255,255,255,0.30),
-    0 14px 34px rgba(0,0,0,0.42),
-    0 28px 60px rgba(0,0,0,0.28),
-    0 0 32px color-mix(in srgb, var(--accent) 35%, transparent),
-    inset 0 1.5px 0 rgba(255,255,255,0.85),
-    inset 0 0 0 1px rgba(255,255,255,0.16),
-    inset 0 -10px 22px -8px rgba(0,0,0,0.38),
-    inset 0 14px 20px -12px rgba(255,255,255,0.42),
-    inset 2px 0 4px rgba(255,255,255,0.12),
-    inset -3px 0 8px rgba(0,0,0,0.16) !important;
+    0 1px 0 rgba(255,255,255,0.40),
+    0 16px 40px rgba(0,0,0,0.48),
+    0 0 36px color-mix(in srgb, var(--accent) 40%, transparent),
+    inset 0 1.5px 0 rgba(255,255,255,0.95),
+    inset 0 -14px 28px -10px rgba(0,0,0,0.50),
+    inset 0 18px 24px -10px rgba(255,255,255,0.35) !important;
 }
-.liquid-glass:hover:not(:disabled)::before{
-  opacity:1 !important;
-  background:
-    radial-gradient(130% 90% at 20% -12%,
-      rgba(255,255,255,0.85) 0%,
-      rgba(255,255,255,0.22) 30%,
-      transparent 56%),
-    radial-gradient(90% 70% at 90% 120%,
-      rgba(170,220,255,0.22) 0%,
-      transparent 55%),
-    linear-gradient(115deg,
-      transparent 32%,
-      rgba(255,255,255,0.24) 48%,
-      transparent 60%) !important;
-}
-.liquid-glass:active:not(:disabled),
 .launch-btn.liquid-glass:active:not(:disabled),
-.launch-another.liquid-glass:active:not(:disabled),
-.bedrock-launch.liquid-glass:active:not(:disabled),
 .chip.liquid-glass:active:not(:disabled){
   transform:translateY(0) scale(0.990) !important;
-  box-shadow:
-    0 1px 0 rgba(255,255,255,0.14),
-    0 6px 16px rgba(0,0,0,0.34),
-    inset 0 2px 8px rgba(0,0,0,0.32),
-    inset 0 1px 0 rgba(255,255,255,0.40) !important;
   transition-duration:.08s !important;
 }
-.liquid-glass:disabled,
 .launch-btn.liquid-glass:disabled,
 .bedrock-launch.liquid-glass:disabled{
   opacity:0.50 !important;
   cursor:not-allowed !important;
   transform:none !important;
-  filter:saturate(0.7) !important;
 }
 
-/* Edition inner toggles — glass lives on the shell only */
 .edition-switch.liquid-glass .edition-btn{
   background:transparent !important;
   border:none !important;
@@ -2925,29 +2935,22 @@ body.perf-lite #starfield{display:none !important;}
   backdrop-filter:none !important;
 }
 .edition-switch.liquid-glass .edition-btn.active{
-  background:rgba(255,255,255,0.14) !important;
+  background:rgba(255,255,255,0.16) !important;
   color:#fff !important;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.45),
-    inset 0 -1px 0 rgba(0,0,0,0.18),
-    0 4px 14px rgba(0,0,0,0.16) !important;
+    inset 0 1px 0 rgba(255,255,255,0.50),
+    inset 0 -1px 0 rgba(0,0,0,0.20),
+    0 4px 14px rgba(0,0,0,0.18) !important;
   border-radius:inherit;
 }
 
-/* Stop state — same glass recipe, warm red tint only */
 .launch-btn.liquid-glass.stopping{
-  --lg-fill-top: rgba(255,190,190,0.28);
-  --lg-fill-mid: rgba(255,120,120,0.10);
-  --lg-fill-bot: rgba(255,80,80,0.04);
-  --lg-tint: rgba(70, 12, 18, 0.28);
-  border-color:rgba(255,190,190,0.42) !important;
-}
-.launch-btn.liquid-glass.stopping::after{
-  background:linear-gradient(135deg,
-    rgba(255,240,240,0.95) 0%,
-    rgba(255,160,160,0.55) 30%,
-    rgba(255,255,255,0.14) 65%,
-    rgba(255,180,180,0.45) 100%) !important;
+  background:
+    linear-gradient(165deg,
+      rgba(255,200,200,0.32) 0%,
+      rgba(255,100,100,0.10) 40%,
+      rgba(60,10,16,0.40) 100%) !important;
+  border-color:rgba(255,190,190,0.45) !important;
 }
 
 .bedrock-launch.liquid-glass,
@@ -2956,21 +2959,17 @@ body.perf-lite #starfield{display:none !important;}
   color:#fff !important;
 }
 
-/* Lightweight graphics: keep the glass read without blur/lens cost */
 body.perf-lite .liquid-glass{
   -webkit-backdrop-filter:none !important;
   backdrop-filter:none !important;
   background:
     linear-gradient(165deg,
-      rgba(255,255,255,0.20) 0%,
-      rgba(48, 40, 78, 0.72) 48%,
-      rgba(22, 18, 42, 0.88) 100%) !important;
-  filter:none !important;
+      rgba(255,255,255,0.22) 0%,
+      rgba(40, 34, 64, 0.70) 48%,
+      rgba(16, 12, 32, 0.88) 100%) !important;
 }
-body.perf-lite .liquid-glass::before{
-  animation:none !important;
-  opacity:0.60 !important;
-}
+body.perf-lite .liquid-glass::before{ opacity:0.70 !important; }
+
 
 /* Panels tagged .liquid-glass share the SAME surface recipe as launch
    controls (fills/rim/specular/lens). No padding/font/alignment changes. */
