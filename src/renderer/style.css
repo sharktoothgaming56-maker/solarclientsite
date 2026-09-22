@@ -286,13 +286,10 @@ h1{margin:0 0 4px; font-size:22px; letter-spacing:0.2px;}
   transition:transform .12s, box-shadow .15s; display:flex; flex-direction:column; gap:5px;
   overflow:hidden;
 }
-.launch-btn::after{ /* liquid shine sweep */
-  content:''; position:absolute; inset:0;
-  background:linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.35) 50%, transparent 65%);
-  transform:translateX(-120%);
-  transition:transform .5s ease;
+.launch-btn::after{ /* overridden by .liquid-glass::after prism rim */
+  content:none;
 }
-.launch-btn:hover:not(:disabled)::after{transform:translateX(120%);}
+.launch-btn:hover:not(:disabled)::after{transform:none;}
 .launch-btn:hover:not(:disabled){transform:translateY(-3px) scale(1.02); box-shadow:0 20px 52px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.4);}
 .launch-btn:active:not(:disabled){transform:translateY(0) scale(0.99);}
 .launch-btn:disabled{opacity:0.4; cursor:not-allowed; box-shadow:none;}
@@ -2272,139 +2269,12 @@ body.dropdown-open .instance-grid {
 }
 
 /* =====================================================================
-   LIQUID GLASS — buttons only
-   =====================================================================
-   Touches ONLY the surface look of the interactive panels:
-   background, backdrop-blur, border rim, box-shadow, and the hover lift.
-
-   Does NOT set: font, font-size, letter-spacing, padding, width, gap,
-   margin, or position on anything. The layout, fonts, watermark, and
-   spacing are left exactly as the base design has them.
-
-   Glass recipe from reference pixel analysis:
-     - fill 2% white (background shows through, measured ~1pt diff)
-     - backdrop blur 24px + saturate (the smear behind = real glass)
-     - iridescent refracted rim: green→blue→violet on the edge only
-     - 3D bevel: bright top-left inset, dark bottom-right inset
-     - drop shadow so it floats
+   LIQUID GLASS — surface recipes live in the FINAL block at file end.
+   Earlier drafts removed so they cannot fight the real SDF lens look.
+   Layout / font / watermark rules below this comment stay intact.
    ===================================================================== */
 
-.launch-btn, .chip, .level-card, .edition-switch, .launch-another, .bedrock-launch{
-  /* transparent — the blurred background is the colour */
-  background:rgba(255,255,255,0.02) !important;
-  -webkit-backdrop-filter:blur(24px) saturate(1.8) !important;
-  backdrop-filter:blur(24px) saturate(1.8) !important;
-
-  /* 3D bevelled thickness: light top-left, dark bottom-right + shadow */
-  border:1px solid transparent !important;
-  box-shadow:
-    inset 0 1.5px 0.5px rgba(255,255,255,0.5),
-    inset 1.5px 0 0.5px rgba(255,255,255,0.18),
-    inset 0 -1.5px 0.5px rgba(0,0,0,0.25),
-    inset -1.5px 0 0.5px rgba(0,0,0,0.14),
-    0 14px 40px rgba(0,0,0,0.3) !important;
-
-  position:relative;
-  isolation:isolate;
-  transition:box-shadow .25s ease, background .25s ease,
-             transform .22s cubic-bezier(.2,.7,.3,1) !important;
-}
-
-/* iridescent refracted RIM — a masked gradient ring on the border only.
-   Carries the soft chromatic aberration measured from the references. */
-.launch-btn::after, .chip::after, .level-card::after, .launch-another::after, .bedrock-launch::after{
-  content:'' !important;
-  position:absolute; inset:0;
-  border-radius:inherit;
-  padding:1.5px;
-  background:linear-gradient(135deg,
-    rgba(255,255,255,0.85) 0%,
-    rgba(180,235,215,0.55) 14%,
-    rgba(150,200,255,0.45) 30%,
-    rgba(210,180,255,0.35) 46%,
-    rgba(255,255,255,0.10) 62%,
-    rgba(190,210,255,0.35) 100%) !important;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite:exclude;
-  pointer-events:none;
-  z-index:1;
-}
-
-/* keep the button's own text/icons above the rim */
-.launch-btn > *, .chip > *, .level-card > *, .launch-another > *, .bedrock-launch > *{
-  position:relative; z-index:2;
-}
-
-/* level card: drop its own solid background so the glass shows */
-.level-card{ background:rgba(255,255,255,0.02) !important; }
-
-/* hover: brighter rim + lift = 3D response */
-.launch-btn:hover, .chip:hover, .launch-another:hover, .bedrock-launch:hover{
-  background:rgba(255,255,255,0.045) !important;
-  box-shadow:
-    inset 0 1.5px 0.5px rgba(255,255,255,0.65),
-    inset 1.5px 0 0.5px rgba(255,255,255,0.24),
-    inset 0 -1.5px 0.5px rgba(0,0,0,0.26),
-    0 20px 50px rgba(0,0,0,0.4),
-    0 0 26px var(--accent-glow) !important;
-  transform:translateY(-2px) !important;
-}
-.launch-btn:hover::after, .chip:hover::after, .launch-another:hover::after, .bedrock-launch:hover::after{
-  background:linear-gradient(135deg,
-    rgba(255,255,255,1) 0%,
-    rgba(180,235,215,0.7) 14%,
-    rgba(150,200,255,0.6) 30%,
-    rgba(210,180,255,0.5) 46%,
-    rgba(255,255,255,0.15) 64%,
-    rgba(190,210,255,0.5) 100%) !important;
-}
-.launch-btn:active, .chip:active{
-  transform:translateY(0) scale(0.996) !important;
-  transition-duration:.08s !important;
-}
-
-/* =====================================================================
-   BUTTONS: match, center, stronger 3D glass (surface only)
-   No fonts, no watermark, no layout containers touched.
-   ===================================================================== */
-
-/* STRONGER 3D GLASS — deeper bevel so it clearly reads as a raised
-   dimensional button, plus more pronounced transparency. */
-.launch-btn, .chip, .level-card, .edition-switch, .launch-another, .bedrock-launch{
-  background:linear-gradient(160deg,
-    rgba(255,255,255,0.10) 0%,
-    rgba(255,255,255,0.04) 40%,
-    rgba(255,255,255,0.015) 100%) !important;
-  -webkit-backdrop-filter:blur(20px) saturate(1.6) !important;
-  backdrop-filter:blur(20px) saturate(1.6) !important;
-  border:1px solid rgba(255,255,255,0.16) !important;
-  /* deep 3D: strong top highlight, dark base, big soft shadow = raised */
-  box-shadow:
-    inset 0 2px 1px rgba(255,255,255,0.55),
-    inset 0 -3px 6px rgba(0,0,0,0.35),
-    inset 2px 0 2px rgba(255,255,255,0.12),
-    inset -2px 0 2px rgba(0,0,0,0.20),
-    0 8px 16px rgba(0,0,0,0.28),
-    0 18px 44px rgba(0,0,0,0.34) !important;
-}
-
-/* iridescent rim already added above stays; strengthen its opacity */
-.launch-btn::after, .chip::after, .level-card::after, .launch-another::after, .bedrock-launch::after{
-  opacity:0.95 !important;
-}
-
-/* hover: rise higher for clear 3D pop */
-.launch-btn:hover, .chip:hover, .launch-another:hover, .bedrock-launch:hover{
-  transform:translateY(-3px) !important;
-  box-shadow:
-    inset 0 2px 1px rgba(255,255,255,0.7),
-    inset 0 -3px 6px rgba(0,0,0,0.36),
-    0 12px 22px rgba(0,0,0,0.34),
-    0 26px 56px rgba(0,0,0,0.42),
-    0 0 30px var(--accent-glow) !important;
-}
+/* (surface rules intentionally empty — see LIQUID GLASS FINAL) */
 
 /* =====================================================================
    PERF CHIP: OFF pill perfectly centered with the label as one group.
@@ -2616,10 +2486,18 @@ body.dropdown-open .instance-grid {
 .version-popover:not(#_):not(#__),
 .version-picker-panel:not(#_):not(#__),
 .toast:not(#_):not(#__),
-/* Launchpad liquid-glass controls — only a handful on screen. */
+/* Launchpad liquid-glass — light frost + SDF lens (heavy blur kills refraction). */
 .liquid-glass:not(#_):not(#__){
-  -webkit-backdrop-filter:blur(18px) saturate(1.4) !important;
-  backdrop-filter:blur(18px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(1.75) brightness(1.08) !important;
+  backdrop-filter: blur(10px) saturate(1.75) brightness(1.08) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(1.85) brightness(1.10) url(#solar-liquid-glass) !important;
+  backdrop-filter: blur(8px) saturate(1.85) brightness(1.10) url(#solar-liquid-glass) !important;
+}
+.level-card.liquid-glass:not(#_):not(#__){
+  -webkit-backdrop-filter: blur(10px) saturate(1.75) brightness(1.08) !important;
+  backdrop-filter: blur(10px) saturate(1.75) brightness(1.08) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(1.85) brightness(1.10) url(#solar-liquid-glass-card) !important;
+  backdrop-filter: blur(8px) saturate(1.85) brightness(1.10) url(#solar-liquid-glass-card) !important;
 }
 
 /* ---- 3. fake glass for everything that lost its blur ------------------
@@ -2833,17 +2711,17 @@ body.perf-lite #starfield{display:none !important;}
 .about-version.dim{ color:var(--text-dim); font-weight:600; }
 
 /* =====================================================================
-   LIQUID GLASS 3D — launchpad controls (FINAL)
-   Shared surface recipe only. No padding / size / gap / alignment
-   overrides — layout stays exactly as the rules above define it.
+   LIQUID GLASS — launchpad controls (reference-matched)
+   Real liquid glass (SDF edge refraction + chromatic aberration):
+     1. Clear low-alpha fill so the world shows through
+     2. Light frost + url(#solar-liquid-glass) SDF lens (not flat blur)
+     3. Convex specular (static — no looping sheen)
+     4. Iridescent prism rim + deep inset bevel for thickness
+     5. Level card uses url(#solar-liquid-glass-card) map
+   Same surface on Launch / another / Bedrock / chips / level / edition.
+   Does NOT change padding, width, gap, or fonts — layout stays put.
    ===================================================================== */
 
-@keyframes liquid-sheen{
-  0%, 55%{ background-position: 0% 0%, 100% 100%, 140% 0%; }
-  80%, 100%{ background-position: 0% 0%, 100% 100%, -40% 0%; }
-}
-
-/* One recipe for every launchpad control (incl. Launch another + Bedrock). */
 .liquid-glass,
 .launch-btn.liquid-glass,
 .launch-another.liquid-glass,
@@ -2851,32 +2729,54 @@ body.perf-lite #starfield{display:none !important;}
 .chip.liquid-glass,
 .level-card.liquid-glass,
 .edition-switch.liquid-glass{
+  --lg-fill-top: rgba(255,255,255,0.22);
+  --lg-fill-mid: rgba(255,255,255,0.06);
+  --lg-fill-bot: rgba(255,255,255,0.02);
+  --lg-tint: rgba(18, 22, 40, 0.18);
   position:relative !important;
   isolation:isolate !important;
   overflow:hidden !important;
-  color:var(--text) !important;
-  border:1px solid rgba(255,255,255,0.34) !important;
+  color:#fff !important;
+  border:1px solid rgba(255,255,255,0.28) !important;
   background:
-    linear-gradient(155deg,
-      rgba(255,255,255,0.26) 0%,
-      rgba(255,255,255,0.08) 26%,
-      rgba(255,255,255,0.03) 52%,
-      rgba(18,14,36,0.28) 100%) !important;
+    linear-gradient(165deg,
+      var(--lg-fill-top) 0%,
+      var(--lg-fill-mid) 38%,
+      var(--lg-fill-bot) 72%,
+      var(--lg-tint) 100%) !important;
   background-color:transparent !important;
-  -webkit-backdrop-filter:blur(18px) saturate(1.85) !important;
-  backdrop-filter:blur(18px) saturate(1.85) !important;
+  /* Light frost + SDF lens. Heavy blur kills refraction — keep ≤10px. */
+  -webkit-backdrop-filter: blur(10px) saturate(1.75) brightness(1.08) !important;
+  backdrop-filter: blur(10px) saturate(1.75) brightness(1.08) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(1.85) brightness(1.10) url(#solar-liquid-glass) !important;
+  backdrop-filter: blur(8px) saturate(1.85) brightness(1.10) url(#solar-liquid-glass) !important;
   box-shadow:
-    0 1px 0 rgba(255,255,255,0.18),
-    0 8px 22px rgba(0,0,0,0.32),
-    0 18px 40px rgba(0,0,0,0.22),
-    inset 0 1.5px 0 rgba(255,255,255,0.62),
-    inset 0 -2.5px 8px rgba(0,0,0,0.32),
-    inset 2px 0 3px rgba(255,255,255,0.10),
-    inset -2px 0 5px rgba(0,0,0,0.20) !important;
-  transition:transform .2s cubic-bezier(.2,.7,.3,1), box-shadow .25s ease, background .25s ease, border-color .2s ease !important;
+    /* outer lift */
+    0 1px 0 rgba(255,255,255,0.22),
+    0 10px 28px rgba(0,0,0,0.38),
+    0 22px 48px rgba(0,0,0,0.22),
+    /* glass thickness — bright top rim, dark under-lip */
+    inset 0 1px 0 rgba(255,255,255,0.72),
+    inset 0 0 0 1px rgba(255,255,255,0.10),
+    inset 0 -10px 22px -8px rgba(0,0,0,0.42),
+    inset 0 12px 18px -14px rgba(255,255,255,0.35),
+    inset 2px 0 4px rgba(255,255,255,0.08),
+    inset -3px 0 8px rgba(0,0,0,0.18) !important;
+  transition:
+    transform .22s cubic-bezier(.2,.7,.3,1),
+    box-shadow .28s ease,
+    border-color .2s ease,
+    background .28s ease !important;
 }
 
-/* Specular sheet + drifting liquid caustic */
+.level-card.liquid-glass{
+  -webkit-backdrop-filter: blur(10px) saturate(1.75) brightness(1.08) !important;
+  backdrop-filter: blur(10px) saturate(1.75) brightness(1.08) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(1.85) brightness(1.10) url(#solar-liquid-glass-card) !important;
+  backdrop-filter: blur(8px) saturate(1.85) brightness(1.10) url(#solar-liquid-glass-card) !important;
+}
+
+/* Convex specular sheet + soft caustic (STATIC — matches refs, no loop) */
 .liquid-glass::before,
 .launch-btn.liquid-glass::before,
 .launch-another.liquid-glass::before,
@@ -2891,18 +2791,28 @@ body.perf-lite #starfield{display:none !important;}
   pointer-events:none !important;
   z-index:0 !important;
   transform:none !important;
+  animation:none !important;
   background:
-    radial-gradient(125% 90% at 16% -10%, rgba(255,255,255,0.55) 0%, transparent 42%),
-    radial-gradient(90% 70% at 92% 120%, rgba(170,150,255,0.16) 0%, transparent 48%),
-    linear-gradient(112deg, transparent 38%, rgba(255,255,255,0.28) 49%, transparent 60%) !important;
-  background-size:100% 100%, 100% 100%, 240% 100% !important;
-  background-repeat:no-repeat !important;
-  animation:liquid-sheen 5.8s ease-in-out infinite !important;
+    /* primary top-left specular (wet lens highlight) */
+    radial-gradient(120% 85% at 18% -8%,
+      rgba(255,255,255,0.72) 0%,
+      rgba(255,255,255,0.18) 28%,
+      transparent 55%),
+    /* secondary bottom caustic wash */
+    radial-gradient(90% 70% at 88% 118%,
+      rgba(160,210,255,0.18) 0%,
+      rgba(200,160,255,0.08) 40%,
+      transparent 62%),
+    /* soft diagonal gloss plane */
+    linear-gradient(115deg,
+      transparent 34%,
+      rgba(255,255,255,0.16) 48%,
+      transparent 58%) !important;
   mix-blend-mode:soft-light;
   opacity:0.95 !important;
 }
 
-/* Iridescent glass rim — replaces the old shine-sweep ::after on launch */
+/* Prism / oil-slick rim — chromatic edge like the references */
 .liquid-glass::after,
 .launch-btn.liquid-glass::after,
 .launch-another.liquid-glass::after,
@@ -2914,17 +2824,18 @@ body.perf-lite #starfield{display:none !important;}
   position:absolute !important;
   inset:0 !important;
   border-radius:inherit !important;
-  padding:1.4px !important;
+  padding:1.5px !important;
   pointer-events:none !important;
   z-index:1 !important;
   transform:none !important;
   background:linear-gradient(135deg,
     rgba(255,255,255,0.95) 0%,
-    rgba(170,240,220,0.55) 16%,
-    rgba(150,200,255,0.45) 34%,
-    rgba(210,175,255,0.40) 52%,
-    rgba(255,255,255,0.12) 68%,
-    rgba(180,210,255,0.42) 100%) !important;
+    rgba(120,255,230,0.70) 14%,
+    rgba(120,190,255,0.55) 28%,
+    rgba(230,150,255,0.55) 46%,
+    rgba(255,200,140,0.35) 62%,
+    rgba(255,255,255,0.18) 76%,
+    rgba(160,220,255,0.50) 100%) !important;
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0) !important;
   -webkit-mask-composite:xor !important;
   mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0) !important;
@@ -2951,51 +2862,61 @@ body.perf-lite #starfield{display:none !important;}
   transform:translateY(-2px) !important;
   border-color:rgba(255,255,255,0.48) !important;
   background:
-    linear-gradient(155deg,
-      rgba(255,255,255,0.32) 0%,
-      rgba(255,255,255,0.10) 30%,
-      rgba(255,255,255,0.04) 55%,
-      rgba(22,16,42,0.30) 100%) !important;
+    linear-gradient(165deg,
+      rgba(255,255,255,0.30) 0%,
+      rgba(255,255,255,0.10) 40%,
+      rgba(255,255,255,0.03) 70%,
+      rgba(22, 26, 48, 0.22) 100%) !important;
   box-shadow:
-    0 1px 0 rgba(255,255,255,0.24),
-    0 12px 28px rgba(0,0,0,0.36),
-    0 24px 52px rgba(0,0,0,0.28),
-    0 0 28px var(--accent-glow),
-    inset 0 1.5px 0 rgba(255,255,255,0.72),
-    inset 0 -2.5px 8px rgba(0,0,0,0.30),
-    inset 2px 0 3px rgba(255,255,255,0.14),
-    inset -2px 0 5px rgba(0,0,0,0.18) !important;
+    0 1px 0 rgba(255,255,255,0.30),
+    0 14px 34px rgba(0,0,0,0.42),
+    0 28px 60px rgba(0,0,0,0.28),
+    0 0 32px color-mix(in srgb, var(--accent) 35%, transparent),
+    inset 0 1.5px 0 rgba(255,255,255,0.85),
+    inset 0 0 0 1px rgba(255,255,255,0.16),
+    inset 0 -10px 22px -8px rgba(0,0,0,0.38),
+    inset 0 14px 20px -12px rgba(255,255,255,0.42),
+    inset 2px 0 4px rgba(255,255,255,0.12),
+    inset -3px 0 8px rgba(0,0,0,0.16) !important;
 }
 .liquid-glass:hover:not(:disabled)::before{
   opacity:1 !important;
-  animation-duration:3.6s !important;
+  background:
+    radial-gradient(130% 90% at 20% -12%,
+      rgba(255,255,255,0.85) 0%,
+      rgba(255,255,255,0.22) 30%,
+      transparent 56%),
+    radial-gradient(90% 70% at 90% 120%,
+      rgba(170,220,255,0.22) 0%,
+      transparent 55%),
+    linear-gradient(115deg,
+      transparent 32%,
+      rgba(255,255,255,0.24) 48%,
+      transparent 60%) !important;
 }
 .liquid-glass:active:not(:disabled),
 .launch-btn.liquid-glass:active:not(:disabled),
 .launch-another.liquid-glass:active:not(:disabled),
 .bedrock-launch.liquid-glass:active:not(:disabled),
 .chip.liquid-glass:active:not(:disabled){
-  transform:translateY(0) scale(0.992) !important;
+  transform:translateY(0) scale(0.990) !important;
   box-shadow:
-    0 1px 0 rgba(255,255,255,0.12),
-    0 6px 16px rgba(0,0,0,0.30),
-    inset 0 2px 6px rgba(0,0,0,0.28),
-    inset 0 1px 0 rgba(255,255,255,0.35) !important;
+    0 1px 0 rgba(255,255,255,0.14),
+    0 6px 16px rgba(0,0,0,0.34),
+    inset 0 2px 8px rgba(0,0,0,0.32),
+    inset 0 1px 0 rgba(255,255,255,0.40) !important;
   transition-duration:.08s !important;
 }
 .liquid-glass:disabled,
 .launch-btn.liquid-glass:disabled,
 .bedrock-launch.liquid-glass:disabled{
-  opacity:0.48 !important;
+  opacity:0.50 !important;
   cursor:not-allowed !important;
   transform:none !important;
-  box-shadow:
-    0 6px 16px rgba(0,0,0,0.22),
-    inset 0 1px 0 rgba(255,255,255,0.28),
-    inset 0 -2px 6px rgba(0,0,0,0.22) !important;
+  filter:saturate(0.7) !important;
 }
 
-/* Inner edition toggles stay clear of the shared glass fill */
+/* Edition inner toggles — glass lives on the shell only */
 .edition-switch.liquid-glass .edition-btn{
   background:transparent !important;
   border:none !important;
@@ -3004,49 +2925,50 @@ body.perf-lite #starfield{display:none !important;}
   backdrop-filter:none !important;
 }
 .edition-switch.liquid-glass .edition-btn.active{
-  background:rgba(255,255,255,0.12) !important;
+  background:rgba(255,255,255,0.14) !important;
   color:#fff !important;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.35),
-    0 4px 12px rgba(0,0,0,0.18) !important;
+    inset 0 1px 0 rgba(255,255,255,0.45),
+    inset 0 -1px 0 rgba(0,0,0,0.18),
+    0 4px 14px rgba(0,0,0,0.16) !important;
+  border-radius:inherit;
 }
 
-/* Stop / kill state — same glass, red tint */
+/* Stop state — same glass recipe, warm red tint only */
 .launch-btn.liquid-glass.stopping{
-  background:
-    linear-gradient(155deg,
-      rgba(255,160,160,0.28) 0%,
-      rgba(220,60,70,0.22) 40%,
-      rgba(90,16,24,0.35) 100%) !important;
-  border-color:rgba(255,180,180,0.45) !important;
+  --lg-fill-top: rgba(255,190,190,0.28);
+  --lg-fill-mid: rgba(255,120,120,0.10);
+  --lg-fill-bot: rgba(255,80,80,0.04);
+  --lg-tint: rgba(70, 12, 18, 0.28);
+  border-color:rgba(255,190,190,0.42) !important;
 }
 .launch-btn.liquid-glass.stopping::after{
   background:linear-gradient(135deg,
-    rgba(255,220,220,0.9) 0%,
-    rgba(255,140,140,0.45) 35%,
-    rgba(255,255,255,0.12) 70%,
-    rgba(255,170,170,0.4) 100%) !important;
+    rgba(255,240,240,0.95) 0%,
+    rgba(255,160,160,0.55) 30%,
+    rgba(255,255,255,0.14) 65%,
+    rgba(255,180,180,0.45) 100%) !important;
 }
 
-/* Bedrock: same glass as Java — no solid green slab */
 .bedrock-launch.liquid-glass,
 .bedrock-launch.liquid-glass .bl-label,
 .bedrock-launch.liquid-glass .bl-sub{
   color:#fff !important;
 }
 
-/* Lightweight mode: glassy without the blur cost */
+/* Lightweight graphics: keep the glass read without blur/lens cost */
 body.perf-lite .liquid-glass{
   -webkit-backdrop-filter:none !important;
   backdrop-filter:none !important;
   background:
-    linear-gradient(155deg,
-      rgba(255,255,255,0.16) 0%,
-      rgba(40,32,68,0.72) 48%,
-      rgba(22,16,40,0.82) 100%) !important;
+    linear-gradient(165deg,
+      rgba(255,255,255,0.20) 0%,
+      rgba(48, 40, 78, 0.72) 48%,
+      rgba(22, 18, 42, 0.88) 100%) !important;
+  filter:none !important;
 }
 body.perf-lite .liquid-glass::before{
   animation:none !important;
-  opacity:0.55 !important;
+  opacity:0.60 !important;
 }
 
