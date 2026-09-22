@@ -2289,7 +2289,7 @@ body.dropdown-open .instance-grid {
      - drop shadow so it floats
    ===================================================================== */
 
-.launch-btn, .chip, .level-card, .edition-switch, .another-btn{
+.launch-btn, .chip, .level-card, .edition-switch, .launch-another, .bedrock-launch{
   /* transparent — the blurred background is the colour */
   background:rgba(255,255,255,0.02) !important;
   -webkit-backdrop-filter:blur(24px) saturate(1.8) !important;
@@ -2312,7 +2312,7 @@ body.dropdown-open .instance-grid {
 
 /* iridescent refracted RIM — a masked gradient ring on the border only.
    Carries the soft chromatic aberration measured from the references. */
-.launch-btn::after, .chip::after, .level-card::after, .another-btn::after{
+.launch-btn::after, .chip::after, .level-card::after, .launch-another::after, .bedrock-launch::after{
   content:'' !important;
   position:absolute; inset:0;
   border-radius:inherit;
@@ -2333,7 +2333,7 @@ body.dropdown-open .instance-grid {
 }
 
 /* keep the button's own text/icons above the rim */
-.launch-btn > *, .chip > *, .level-card > *, .another-btn > *{
+.launch-btn > *, .chip > *, .level-card > *, .launch-another > *, .bedrock-launch > *{
   position:relative; z-index:2;
 }
 
@@ -2341,7 +2341,7 @@ body.dropdown-open .instance-grid {
 .level-card{ background:rgba(255,255,255,0.02) !important; }
 
 /* hover: brighter rim + lift = 3D response */
-.launch-btn:hover, .chip:hover, .another-btn:hover{
+.launch-btn:hover, .chip:hover, .launch-another:hover, .bedrock-launch:hover{
   background:rgba(255,255,255,0.045) !important;
   box-shadow:
     inset 0 1.5px 0.5px rgba(255,255,255,0.65),
@@ -2351,7 +2351,7 @@ body.dropdown-open .instance-grid {
     0 0 26px var(--accent-glow) !important;
   transform:translateY(-2px) !important;
 }
-.launch-btn:hover::after, .chip:hover::after, .another-btn:hover::after{
+.launch-btn:hover::after, .chip:hover::after, .launch-another:hover::after, .bedrock-launch:hover::after{
   background:linear-gradient(135deg,
     rgba(255,255,255,1) 0%,
     rgba(180,235,215,0.7) 14%,
@@ -2372,7 +2372,7 @@ body.dropdown-open .instance-grid {
 
 /* STRONGER 3D GLASS — deeper bevel so it clearly reads as a raised
    dimensional button, plus more pronounced transparency. */
-.launch-btn, .chip, .level-card, .edition-switch, .another-btn{
+.launch-btn, .chip, .level-card, .edition-switch, .launch-another, .bedrock-launch{
   background:linear-gradient(160deg,
     rgba(255,255,255,0.10) 0%,
     rgba(255,255,255,0.04) 40%,
@@ -2391,12 +2391,12 @@ body.dropdown-open .instance-grid {
 }
 
 /* iridescent rim already added above stays; strengthen its opacity */
-.launch-btn::after, .chip::after, .level-card::after, .another-btn::after{
+.launch-btn::after, .chip::after, .level-card::after, .launch-another::after, .bedrock-launch::after{
   opacity:0.95 !important;
 }
 
 /* hover: rise higher for clear 3D pop */
-.launch-btn:hover, .chip:hover, .another-btn:hover{
+.launch-btn:hover, .chip:hover, .launch-another:hover, .bedrock-launch:hover{
   transform:translateY(-3px) !important;
   box-shadow:
     inset 0 2px 1px rgba(255,255,255,0.7),
@@ -2638,7 +2638,7 @@ body.dropdown-open .instance-grid {
     rgba(255,255,255,0.006) 100%);
 }
 
-.launch-btn, .chip, .level-card, .edition-switch, .another-btn, .monitor-chip{
+.launch-btn, .chip, .level-card, .edition-switch, .launch-another, .bedrock-launch, .monitor-chip{
   background-color:rgba(30,24,56,0.46) !important;
   background-image:linear-gradient(
     180deg,
@@ -2834,8 +2834,8 @@ body.perf-lite #starfield{display:none !important;}
 
 /* =====================================================================
    LIQUID GLASS 3D — launchpad controls (FINAL)
-   Shared recipe for every launch-pad action surface so they match.
-   Compact sizing so the big launch control sits even with the pad.
+   Shared surface recipe only. No padding / size / gap / alignment
+   overrides — layout stays exactly as the rules above define it.
    ===================================================================== */
 
 @keyframes liquid-sheen{
@@ -2843,7 +2843,14 @@ body.perf-lite #starfield{display:none !important;}
   80%, 100%{ background-position: 0% 0%, 100% 100%, -40% 0%; }
 }
 
-.liquid-glass{
+/* One recipe for every launchpad control (incl. Launch another + Bedrock). */
+.liquid-glass,
+.launch-btn.liquid-glass,
+.launch-another.liquid-glass,
+.bedrock-launch.liquid-glass,
+.chip.liquid-glass,
+.level-card.liquid-glass,
+.edition-switch.liquid-glass{
   position:relative !important;
   isolation:isolate !important;
   overflow:hidden !important;
@@ -2855,6 +2862,7 @@ body.perf-lite #starfield{display:none !important;}
       rgba(255,255,255,0.08) 26%,
       rgba(255,255,255,0.03) 52%,
       rgba(18,14,36,0.28) 100%) !important;
+  background-color:transparent !important;
   -webkit-backdrop-filter:blur(18px) saturate(1.85) !important;
   backdrop-filter:blur(18px) saturate(1.85) !important;
   box-shadow:
@@ -2869,13 +2877,20 @@ body.perf-lite #starfield{display:none !important;}
 }
 
 /* Specular sheet + drifting liquid caustic */
-.liquid-glass::before{
+.liquid-glass::before,
+.launch-btn.liquid-glass::before,
+.launch-another.liquid-glass::before,
+.bedrock-launch.liquid-glass::before,
+.chip.liquid-glass::before,
+.level-card.liquid-glass::before,
+.edition-switch.liquid-glass::before{
   content:'' !important;
   position:absolute !important;
   inset:1px !important;
   border-radius:inherit !important;
   pointer-events:none !important;
   z-index:0 !important;
+  transform:none !important;
   background:
     radial-gradient(125% 90% at 16% -10%, rgba(255,255,255,0.55) 0%, transparent 42%),
     radial-gradient(90% 70% at 92% 120%, rgba(170,150,255,0.16) 0%, transparent 48%),
@@ -2887,8 +2902,14 @@ body.perf-lite #starfield{display:none !important;}
   opacity:0.95 !important;
 }
 
-/* Iridescent glass rim (chromatic edge) */
-.liquid-glass::after{
+/* Iridescent glass rim — replaces the old shine-sweep ::after on launch */
+.liquid-glass::after,
+.launch-btn.liquid-glass::after,
+.launch-another.liquid-glass::after,
+.bedrock-launch.liquid-glass::after,
+.chip.liquid-glass::after,
+.level-card.liquid-glass::after,
+.edition-switch.liquid-glass::after{
   content:'' !important;
   position:absolute !important;
   inset:0 !important;
@@ -2896,6 +2917,7 @@ body.perf-lite #starfield{display:none !important;}
   padding:1.4px !important;
   pointer-events:none !important;
   z-index:1 !important;
+  transform:none !important;
   background:linear-gradient(135deg,
     rgba(255,255,255,0.95) 0%,
     rgba(170,240,220,0.55) 16%,
@@ -2910,12 +2932,22 @@ body.perf-lite #starfield{display:none !important;}
   opacity:1 !important;
 }
 
-.liquid-glass > *{
+.liquid-glass > *,
+.launch-btn.liquid-glass > *,
+.launch-another.liquid-glass > *,
+.bedrock-launch.liquid-glass > *,
+.chip.liquid-glass > *,
+.level-card.liquid-glass > *,
+.edition-switch.liquid-glass > *{
   position:relative !important;
   z-index:2 !important;
 }
 
-.liquid-glass:hover:not(:disabled){
+.liquid-glass:hover:not(:disabled),
+.launch-btn.liquid-glass:hover:not(:disabled),
+.launch-another.liquid-glass:hover:not(:disabled),
+.bedrock-launch.liquid-glass:hover:not(:disabled),
+.chip.liquid-glass:hover:not(:disabled){
   transform:translateY(-2px) !important;
   border-color:rgba(255,255,255,0.48) !important;
   background:
@@ -2938,7 +2970,11 @@ body.perf-lite #starfield{display:none !important;}
   opacity:1 !important;
   animation-duration:3.6s !important;
 }
-.liquid-glass:active:not(:disabled){
+.liquid-glass:active:not(:disabled),
+.launch-btn.liquid-glass:active:not(:disabled),
+.launch-another.liquid-glass:active:not(:disabled),
+.bedrock-launch.liquid-glass:active:not(:disabled),
+.chip.liquid-glass:active:not(:disabled){
   transform:translateY(0) scale(0.992) !important;
   box-shadow:
     0 1px 0 rgba(255,255,255,0.12),
@@ -2947,7 +2983,9 @@ body.perf-lite #starfield{display:none !important;}
     inset 0 1px 0 rgba(255,255,255,0.35) !important;
   transition-duration:.08s !important;
 }
-.liquid-glass:disabled{
+.liquid-glass:disabled,
+.launch-btn.liquid-glass:disabled,
+.bedrock-launch.liquid-glass:disabled{
   opacity:0.48 !important;
   cursor:not-allowed !important;
   transform:none !important;
@@ -2957,96 +2995,15 @@ body.perf-lite #starfield{display:none !important;}
     inset 0 -2px 6px rgba(0,0,0,0.22) !important;
 }
 
-/* ---- Compact shared sizing (even with the pad) ---- */
-.launchpad-hero .launch-btn.liquid-glass,
-.launchpad-hero .bedrock-launch.liquid-glass{
-  width:100% !important;
-  min-height:52px !important;
-  padding:12px 18px !important;
-  border-radius:16px !important;
-  gap:2px !important;
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:flex-start !important;
-  justify-content:center !important;
-  text-align:left !important;
-}
-
-.launchpad-hero .launch-btn .launch-label,
-.launchpad-hero .bedrock-launch .bl-label{
-  font-size:15px !important;
-  font-weight:900 !important;
-  letter-spacing:1.1px !important;
-  line-height:1.15 !important;
-  color:#fff !important;
-  -webkit-text-fill-color:#fff !important;
-  -webkit-text-stroke:0 !important;
-  text-shadow:
-    0 1px 0 rgba(255,255,255,0.25),
-    0 2px 10px rgba(0,0,0,0.35) !important;
-}
-
-.launchpad-hero .launch-btn .launch-sub,
-.launchpad-hero .bedrock-launch .bl-sub{
-  font-size:11px !important;
-  font-weight:650 !important;
-  opacity:0.82 !important;
-  letter-spacing:0.2px !important;
-  text-shadow:0 1px 4px rgba(0,0,0,0.35) !important;
-}
-
-.launchpad-hero .launch-another.liquid-glass{
-  min-width:76px !important;
-  min-height:52px !important;
-  padding:8px 12px !important;
-  border-radius:16px !important;
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:center !important;
-  justify-content:center !important;
-  gap:1px !important;
-  font-size:10.5px !important;
-  font-weight:750 !important;
-  line-height:1.2 !important;
-  color:var(--text) !important;
-}
-.launchpad-hero .launch-another .plus{
-  font-size:15px !important;
-  color:#fff !important;
-  text-shadow:0 0 12px var(--accent-glow) !important;
-}
-
-.launchpad-hero .chip.liquid-glass{
-  min-height:40px !important;
-  padding:8px 14px !important;
-  border-radius:14px !important;
-  font-size:12.5px !important;
-}
-
-.launchpad-hero .level-card.liquid-glass{
-  border-radius:16px !important;
-  min-height:52px !important;
-  padding:10px 14px !important;
-}
-
-.launchpad-hero .edition-switch.liquid-glass{
-  border-radius:16px !important;
-  padding:5px !important;
-  min-height:44px !important;
-  background:
-    linear-gradient(155deg,
-      rgba(255,255,255,0.14) 0%,
-      rgba(255,255,255,0.04) 45%,
-      rgba(18,14,36,0.22) 100%) !important;
-}
-.launchpad-hero .edition-switch.liquid-glass .edition-btn{
-  border-radius:12px !important;
+/* Inner edition toggles stay clear of the shared glass fill */
+.edition-switch.liquid-glass .edition-btn{
   background:transparent !important;
   border:none !important;
   box-shadow:none !important;
-  color:rgba(255,255,255,0.62) !important;
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
 }
-.launchpad-hero .edition-switch.liquid-glass .edition-btn.active{
+.edition-switch.liquid-glass .edition-btn.active{
   background:rgba(255,255,255,0.12) !important;
   color:#fff !important;
   box-shadow:
@@ -3054,7 +3011,7 @@ body.perf-lite #starfield{display:none !important;}
     0 4px 12px rgba(0,0,0,0.18) !important;
 }
 
-/* Stop / kill state keeps red liquid glass, not a flat solid */
+/* Stop / kill state — same glass, red tint */
 .launch-btn.liquid-glass.stopping{
   background:
     linear-gradient(155deg,
@@ -3071,28 +3028,14 @@ body.perf-lite #starfield{display:none !important;}
     rgba(255,170,170,0.4) 100%) !important;
 }
 
-/* Bedrock uses the same glass — no solid green slab */
-.launchpad-hero .bedrock-launch.liquid-glass{
-  color:#fff !important;
-}
-.launchpad-hero .bedrock-launch.liquid-glass .bl-label,
-.launchpad-hero .bedrock-launch.liquid-glass .bl-sub{
+/* Bedrock: same glass as Java — no solid green slab */
+.bedrock-launch.liquid-glass,
+.bedrock-launch.liquid-glass .bl-label,
+.bedrock-launch.liquid-glass .bl-sub{
   color:#fff !important;
 }
 
-/* Keep the cluster tight and even */
-.launchpad-hero .launch-col{
-  gap:10px !important;
-}
-.launchpad-hero .launch-cluster{
-  gap:10px !important;
-}
-.launchpad-hero .launch-btn-row{
-  gap:10px !important;
-  align-items:stretch !important;
-}
-
-/* Lightweight mode: still look glassy without the blur cost */
+/* Lightweight mode: glassy without the blur cost */
 body.perf-lite .liquid-glass{
   -webkit-backdrop-filter:none !important;
   backdrop-filter:none !important;
