@@ -1,5 +1,6 @@
-frames=106
-fps=12
-frame_size=960x540
+frames=102
+fps=15
+trim_start_sec=2.0
+frame_size=1280x720
 logo_src=942x258
-endcard_logo_box=229,143,763,343
+endcard_logo_box=315,271,968,447
