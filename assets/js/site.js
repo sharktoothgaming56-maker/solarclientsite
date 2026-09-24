@@ -148,13 +148,154 @@
   }
 
   /* ──────────────────────────────────────────
-     Download click feedback
+     Download with on-page progress (real .exe)
      ────────────────────────────────────────── */
+  var latestExe = { url: '', name: 'SolarClient-Setup.exe', size: 0 };
+  var downloadBusy = false;
+
+  function ensureDlProgressUi() {
+    if (document.getElementById('scDlProgress')) return;
+    if (!document.getElementById('scDlProgressStyle')) {
+      var style = document.createElement('style');
+      style.id = 'scDlProgressStyle';
+      style.textContent = [
+        '#scDlProgress{width:min(420px,92vw);margin:16px auto 0;display:none}',
+        '#scDlProgress.show{display:block}',
+        '#scDlProgress .sc-dl-label{font-size:13px;opacity:.9;margin-bottom:8px;text-align:center}',
+        '#scDlProgress .sc-dl-track{height:10px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}',
+        '#scDlProgress .sc-dl-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#a855f7,#c084fc);transition:width .15s linear}',
+        '#scDlProgress .sc-dl-pct{margin-top:8px;font-size:12px;opacity:.75;text-align:center}',
+        '.btn-main.sc-dl-busy{pointer-events:none;opacity:.75;cursor:wait}'
+      ].join('');
+      document.head.appendChild(style);
+    }
+    var zone = document.querySelector('.download-zone') || document.getElementById('primaryDownloadBtn')?.parentElement;
+    if (!zone) return;
+    var box = document.createElement('div');
+    box.id = 'scDlProgress';
+    box.setAttribute('role', 'progressbar');
+    box.setAttribute('aria-valuemin', '0');
+    box.setAttribute('aria-valuemax', '100');
+    box.innerHTML = '<div class="sc-dl-label">Downloading SolarClient Setup.exe…</div>'
+      + '<div class="sc-dl-track"><div class="sc-dl-fill"></div></div>'
+      + '<div class="sc-dl-pct">0%</div>';
+    zone.appendChild(box);
+  }
+
+  function setDlProgress(pct, label) {
+    ensureDlProgressUi();
+    var box = document.getElementById('scDlProgress');
+    if (!box) return;
+    box.classList.add('show');
+    var n = Math.max(0, Math.min(100, Math.round(Number(pct) || 0)));
+    box.setAttribute('aria-valuenow', String(n));
+    var fill = box.querySelector('.sc-dl-fill');
+    var pctEl = box.querySelector('.sc-dl-pct');
+    var lab = box.querySelector('.sc-dl-label');
+    if (fill) fill.style.width = n + '%';
+    if (pctEl) pctEl.textContent = n + '%';
+    if (lab && label) lab.textContent = label;
+  }
+
+  function hideDlProgressSoon() {
+    setTimeout(function () {
+      var box = document.getElementById('scDlProgress');
+      if (box) box.classList.remove('show');
+    }, 2500);
+  }
+
+  function saveBlobAsFile(blob, fileName) {
+    var objUrl = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = objUrl;
+    a.download = fileName || 'SolarClient-Setup.exe';
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(objUrl); }, 4000);
+  }
+
+  function downloadExeWithProgress(url, fileName, knownSize) {
+    if (downloadBusy) return Promise.resolve();
+    downloadBusy = true;
+    var buttons = document.querySelectorAll('[data-download-btn]');
+    for (var i = 0; i < buttons.length; i++) buttons[i].classList.add('sc-dl-busy');
+    ensureDlProgressUi();
+    setDlProgress(0, 'Starting SolarClient Setup.exe download…');
+    showToast('Downloading Setup.exe…');
+
+    return fetch(url, { redirect: 'follow', credentials: 'omit', cache: 'no-store' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('Download failed (HTTP ' + res.status + ')');
+        var total = Number(res.headers.get('content-length') || 0) || Number(knownSize) || 0;
+        if (!res.body || !res.body.getReader) {
+          return res.blob().then(function (blob) {
+            setDlProgress(100, 'Saving SolarClient Setup.exe…');
+            return blob;
+          });
+        }
+        var reader = res.body.getReader();
+        var chunks = [];
+        var got = 0;
+        var lastPct = -1;
+        function pump() {
+          return reader.read().then(function (result) {
+            if (result.done) {
+              setDlProgress(100, 'Saving SolarClient Setup.exe…');
+              return new Blob(chunks, { type: 'application/octet-stream' });
+            }
+            chunks.push(result.value);
+            got += result.value.byteLength || result.value.length || 0;
+            var pct = total > 0
+              ? Math.min(99, Math.round((got / total) * 100))
+              : Math.min(99, Math.round(got / (1024 * 1024)));
+            if (pct !== lastPct) {
+              lastPct = pct;
+              var mb = (got / (1024 * 1024)).toFixed(1);
+              var label = total > 0
+                ? ('Downloading Setup.exe… ' + mb + ' / ' + (total / (1024 * 1024)).toFixed(1) + ' MB')
+                : ('Downloading Setup.exe… ' + mb + ' MB');
+              setDlProgress(pct, label);
+            }
+            return pump();
+          });
+        }
+        return pump();
+      })
+      .then(function (blob) {
+        if (!blob || blob.size < 1024 * 1024) throw new Error('Downloaded file is too small');
+        saveBlobAsFile(blob, fileName || 'SolarClient-Setup.exe');
+        setDlProgress(100, 'Download complete — check your Downloads folder');
+        showToast('Setup.exe saved — open it to install');
+        hideDlProgressSoon();
+      })
+      .catch(function (err) {
+        setDlProgress(0, 'Download failed — opening GitHub instead…');
+        showToast('Download failed — opening GitHub release…');
+        // Fallback: let the browser handle a normal navigation download
+        window.location.href = url;
+        hideDlProgressSoon();
+        console.warn('[SolarClient] download error', err);
+      })
+      .finally(function () {
+        downloadBusy = false;
+        for (var j = 0; j < buttons.length; j++) buttons[j].classList.remove('sc-dl-busy');
+      });
+  }
+
   function initDownload() {
     var buttons = document.querySelectorAll('[data-download-btn]');
     for (var i = 0; i < buttons.length; i++) {
-      buttons[i].addEventListener('click', function () {
-        showToast('Starting download…');
+      buttons[i].addEventListener('click', function (e) {
+        var url = latestExe.url || this.getAttribute('href') || '';
+        if (!url || /\/releases\/latest\/?$/i.test(url)) {
+          showToast('Looking up latest Setup.exe…');
+          return; // allow default once loadLatestRelease finishes
+        }
+        e.preventDefault();
+        e.stopPropagation();
+        downloadExeWithProgress(url, latestExe.name, latestExe.size);
       });
     }
   }
@@ -202,12 +343,30 @@
       var assets = data.assets || [];
       var exe = null;
       for (var a = 0; a < assets.length; a++) {
-        if (/\.exe$/i.test(assets[a].name)) { exe = assets[a]; break; }
+        if (/Setup-.*\.exe$/i.test(assets[a].name) || /Setup\.exe$/i.test(assets[a].name)) {
+          exe = assets[a];
+          break;
+        }
+      }
+      if (!exe) {
+        for (var b = 0; b < assets.length; b++) {
+          if (/\.exe$/i.test(assets[b].name) && !/portable/i.test(assets[b].name)) {
+            exe = assets[b];
+            break;
+          }
+        }
       }
       if (!exe) return;
 
+      latestExe.url = exe.browser_download_url;
+      latestExe.name = exe.name || ('SolarClient-Setup-' + (version || 'latest') + '.exe');
+      latestExe.size = exe.size || 0;
+
       var btn = document.getElementById('primaryDownloadBtn');
-      if (btn) btn.href = exe.browser_download_url;
+      if (btn) {
+        btn.href = exe.browser_download_url;
+        btn.setAttribute('download', latestExe.name);
+      }
       var allBtns = document.querySelectorAll('[data-download-btn]');
       for (var bi = 0; bi < allBtns.length; bi++) {
         if (allBtns[bi].tagName === 'A') allBtns[bi].href = exe.browser_download_url;
