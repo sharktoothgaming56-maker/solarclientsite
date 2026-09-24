@@ -166,7 +166,6 @@
      page is complete without JavaScript.
      ────────────────────────────────────────── */
   var RELEASES_REPO = 'sharktoothgaming56-maker/solarclientsite';
-  var UPDATE_DOWNLOAD = 'http://130.12.156.98:8090/update/download/stable';
 
   function loadLatestRelease() {
     if (!document.getElementById('versionTag') && !document.getElementById('primaryDownloadBtn')) return;
@@ -205,17 +204,13 @@
       for (var a = 0; a < assets.length; a++) {
         if (/\.exe$/i.test(assets[a].name)) { exe = assets[a]; break; }
       }
-      if (!exe) {
-        var b0 = document.getElementById('primaryDownloadBtn');
-        if (b0) b0.href = UPDATE_DOWNLOAD;
-        return;
-      }
+      if (!exe) return;
 
       var btn = document.getElementById('primaryDownloadBtn');
-      if (btn) btn.href = UPDATE_DOWNLOAD;
+      if (btn) btn.href = exe.browser_download_url;
       var allBtns = document.querySelectorAll('[data-download-btn]');
       for (var bi = 0; bi < allBtns.length; bi++) {
-        if (allBtns[bi].tagName === 'A') allBtns[bi].href = UPDATE_DOWNLOAD;
+        if (allBtns[bi].tagName === 'A') allBtns[bi].href = exe.browser_download_url;
       }
 
       var sizeEl = document.getElementById('dlSize');
