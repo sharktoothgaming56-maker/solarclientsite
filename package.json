@@ -1,8 +1,8 @@
 {
   "name": "solarclient",
   "productName": "SolarClient",
-  "version": "3.22.16",
-  "description": "SolarClient 3.22.15 ? a fast Minecraft launcher",
+  "version": "3.22.49",
+  "description": "SolarClient 3.22.49 — a fast Minecraft launcher",
   "main": "src/main/main.js",
   "scripts": {
     "start": "node scripts/brand-dev.js && electron .",
@@ -43,7 +43,7 @@
       "releaseType": "release"
     },
     "directories": {
-      "output": "dist14"
+      "output": "dist54"
     },
     "files": [
       "src/**/*",
@@ -109,9 +109,6 @@
     "asarUnpack": [
       "node_modules/electron-updater/**/*",
       "node_modules/electron-squirrel-startup/**/*"
-    ],
-    "extraMetadata": {
-      "version": "3.22.16"
-    }
+    ]
   }
 }

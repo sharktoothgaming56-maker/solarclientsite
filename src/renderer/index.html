@@ -21,27 +21,8 @@
 
 <div class="titlebar">
   <div class="titlebar-drag">
-    <div class="logo-orbit">
-      <svg class="logo-planet" viewBox="0 0 40 40">
-        <defs>
-          <radialGradient id="lg-core" cx="35%" cy="32%" r="75%">
-            <stop offset="0%" stop-color="#ffffff"/>
-            <stop offset="35%" stop-color="var(--accent)"/>
-            <stop offset="100%" stop-color="var(--accent2)"/>
-          </radialGradient>
-          <linearGradient id="lg-ring" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.9"/>
-            <stop offset="100%" stop-color="var(--accent2)" stop-opacity="0.35"/>
-          </linearGradient>
-        </defs>
-        <ellipse class="logo-ring-back" cx="20" cy="20" rx="17" ry="6.5" fill="none" stroke="url(#lg-ring)" stroke-width="2"/>
-        <circle cx="20" cy="20" r="10" fill="url(#lg-core)"/>
-        <ellipse class="logo-ring-front" cx="20" cy="20" rx="17" ry="6.5" fill="none" stroke="url(#lg-ring)" stroke-width="2"/>
-      </svg>
-      <span class="logo-spark s1"></span>
-      <span class="logo-spark s2"></span>
-    </div>
-    <span class="titlebar-title">SolarClient<span class="titlebar-version" id="titlebar-version"></span></span>
+    <img class="titlebar-brand" src="assets/solar-client-logo.png" alt="Solar Client" draggable="false">
+    <span class="titlebar-version" id="titlebar-version"></span>
   </div>
   <div class="window-controls">
     <button id="win-min" title="Minimize">–</button>
@@ -52,51 +33,66 @@
 
 <div class="app">
   <aside class="sidebar glass liquid-glass">
-    <div class="lg-backboard" aria-hidden="true"></div>
     <button class="nav-btn active" data-view="launchpad" title="Launchpad">
-      <!-- launchpad: a rocket over a planet ring, drawn on the voxel grid -->
-      <svg viewBox="0 0 24 24"><path d="M12 2.5c2.6 2 4 5 4 8.1v3.1l1.7 1.7v2.3l-3-1.2h-5.4l-3 1.2v-2.3L8 13.7v-3.1c0-3.1 1.4-6.1 4-8.1z"/><rect x="10.8" y="7.6" width="2.4" height="2.4" rx="0.4" opacity="0.45"/><path d="M9.6 19.1h4.8l-2.4 3.2-2.4-3.2z" opacity="0.75"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
     </button>
     <button class="nav-btn" data-view="instances" title="Versions">
-      <!-- versions: stacked blocks, like a column of worlds -->
-      <svg viewBox="0 0 24 24"><path d="M12 2.2l8 4.1-8 4.1-8-4.1 8-4.1z"/><path d="M4 9.3l8 4.1 8-4.1v2.3l-8 4.1-8-4.1V9.3z" opacity="0.72"/><path d="M4 14.6l8 4.1 8-4.1v2.3l-8 4.1-8-4.1v-2.3z" opacity="0.45"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M11.99 18.54l-7.37-5.73L3 14.07l9 7 9-7-1.63-1.27-7.38 5.74zM12 16l7.36-5.73L21 9l-9-7-9 7 1.63 1.27L12 16z"/></svg>
     </button>
     <button class="nav-btn" data-view="mods" title="Content">
-      <!-- content: a chest / crate, the thing that actually holds your stuff -->
-      <svg viewBox="0 0 24 24"><path d="M3.2 7.4h17.6v3.4H3.2V7.4z"/><path d="M4.4 12h15.2v8.4H4.4V12z" opacity="0.72"/><rect x="10.6" y="9.2" width="2.8" height="5.4" rx="0.5"/><path d="M5.6 3.6h12.8l2.4 3.2H3.2l2.4-3.2z" opacity="0.5"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M20 2H4c-1 0-2 .9-2 2v3.01c0 .72.43 1.34 1 1.69V20c0 1.1 1.1 2 2 2h14c.9 0 2-.9 2-2V8.7c.57-.35 1-.97 1-1.69V4c0-1.1-1-2-2-2zm-5 12H9v-2h6v2zm5-7H4V4l16-.02V7z"/></svg>
     </button>
     <button class="nav-btn" data-view="customize" title="Customize">
-      <!-- customize: a star cluster / constellation -->
-      <svg viewBox="0 0 24 24"><path d="M12 3.2l1.5 3.9 3.9 1.5-3.9 1.5L12 14l-1.5-3.9L6.6 8.6l3.9-1.5L12 3.2z"/><path d="M18 13.4l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8.8-2z" opacity="0.62"/><path d="M6.4 15.2l.6 1.5 1.5.6-1.5.6-.6 1.5-.6-1.5-1.5-.6 1.5-.6.6-1.5z" opacity="0.42"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
     </button>
     <button class="nav-btn" data-view="friends" title="Friends">
-      <!-- friends: two overlapping blocky figures -->
-      <svg viewBox="0 0 24 24"><path d="M8.6 3.6h5.4v5.4H8.6V3.6z"/><path d="M5.6 10.4h11.4v8.2H5.6v-8.2z" opacity="0.72"/><path d="M15.4 6.2h4.2v4.2h-4.2V6.2z" opacity="0.55"/><path d="M13.8 11.6h6.4v6.2h-6.4v-6.2z" opacity="0.4"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
       <span class="nav-badge hidden" id="friends-nav-badge">0</span>
     </button>
     <button class="nav-btn" data-view="servers" title="Servers">
-      <!-- servers: stacked rack units -->
-      <svg viewBox="0 0 24 24"><path d="M3.4 4.2h17.2v5.2H3.4V4.2z"/><path d="M3.4 11.2h17.2v5.2H3.4v-5.2z" opacity="0.72"/><path d="M3.4 18.2h17.2v2.2H3.4v-2.2z" opacity="0.45"/><circle cx="6.6" cy="6.8" r="1.1" fill="#0a0714"/><circle cx="6.6" cy="13.8" r="1.1" fill="#0a0714"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M20 13H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-6c0-.55-.45-1-1-1zM7 19c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM20 3H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1zM7 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
     </button>
     <button class="nav-btn" data-view="skins" title="Skins">
-      <!-- skins: a player bust on a hanger, blocky -->
-      <svg viewBox="0 0 24 24"><path d="M8.4 3.2h7.2v7.2H8.4V3.2z"/><path d="M4.8 11.6h14.4v9.2H4.8v-9.2z" opacity="0.7"/><rect x="10.1" y="5.4" width="1.5" height="1.5" rx="0.3" fill="#0a0714"/><rect x="12.4" y="5.4" width="1.5" height="1.5" rx="0.3" fill="#0a0714"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
     </button>
     <div class="sidebar-spacer"></div>
     <button class="nav-btn" data-view="settings" title="Settings">
-      <!-- settings: a blocky gear rather than the thin outline one -->
-      <svg viewBox="0 0 24 24"><path d="M10.2 2.4h3.6l.5 2.5 2.1 1.2 2.3-1 1.8 3.1-1.8 1.8v2.4l1.8 1.8-1.8 3.1-2.3-1-2.1 1.2-.5 2.5h-3.6l-.5-2.5-2.1-1.2-2.3 1-1.8-3.1L5.3 12V9.6L3.5 7.8l1.8-3.1 2.3 1 2.1-1.2.5-2.5z"/><circle cx="12" cy="12" r="2.9" fill="#0a0714"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
     </button>
   </aside>
 
   <div class="main glass liquid-glass">
-    <div class="lg-backboard" aria-hidden="true"></div>
     <header class="topbar">
       <div class="instance-select-wrap">
         <select id="launch-instance-select"></select>
       </div>
+      <div class="topbar-channel-chips">
+        <div class="updates-menu-wrap" id="updates-menu-wrap">
+          <button type="button" class="topbar-chip" id="update-chip" title="Updates">Updates</button>
+          <div class="updates-menu hidden" id="updates-menu">
+            <button type="button" class="updates-menu-item" id="updates-check">Check for updates</button>
+            <div class="updates-menu-sep"></div>
+            <div class="updates-menu-section-label">Updates</div>
+            <div class="updates-menu-row" id="updates-stable-row">
+              <span class="updates-menu-meta" id="updates-stable-meta">You're up to date</span>
+              <button type="button" class="updates-menu-action hidden" id="updates-stable-go">Install</button>
+            </div>
+            <div class="updates-menu-section-label">Beta updates</div>
+            <div class="updates-menu-row" id="updates-beta-row">
+              <span class="updates-menu-meta" id="updates-beta-meta">No beta available</span>
+              <button type="button" class="updates-menu-action hidden" id="updates-beta-go">Install beta</button>
+            </div>
+            <div class="updates-menu-sep" id="updates-beta-switch-sep"></div>
+            <button type="button" class="updates-menu-item hidden" id="updates-switch-stable">Switch back to stable</button>
+          </div>
+        </div>
+        <button type="button" class="topbar-chip beta hidden" id="beta-chip" title="You're on a beta build">Beta</button>
+        <div id="online-indicator" class="online-indicator offline" title="Launchers connected to SolarClient online">
+          <span class="online-dot"></span>
+          <span id="online-indicator-label">Online —</span>
+        </div>
+      </div>
       <div class="topbar-right">
-        <div id="running-indicator" class="running-indicator hidden"></div>
         <div class="account" id="account-box"></div>
       </div>
     </header>
@@ -146,7 +142,7 @@
               </div>
             <div class="launch-chips">
               <button id="version-chip" class="chip liquid-glass" title="Switch instance or grab a new version">
-                <span class="chip-icon">◆</span><span id="version-chip-label">No instance</span><span class="chip-caret">▾</span>
+                <span class="chip-icon">◆</span><span id="version-chip-label">No instance</span><span class="chip-caret" aria-hidden="true"></span>
               </button>
               <button id="perf-chip" class="chip chip-toggle liquid-glass" title="Tuned Java flags for smoother frame times">
                 <span class="chip-icon">⚡</span><span class="chip-label">Performance</span><span class="chip-state" id="perf-chip-state">ON</span>
@@ -199,8 +195,8 @@
 
         <!-- version switcher popover -->
         <div id="version-popover" class="version-popover glass liquid-glass hidden">
-          <div class="pop-section-title">Instances</div>
-          <div id="pop-instance-list" class="pop-list"></div>
+          <div class="pop-section-title">Recent <span class="dim" style="font-weight:600;text-transform:none;letter-spacing:0;">· last 3</span></div>
+          <div id="pop-recent-list" class="pop-list"></div>
           <div class="pop-divider"></div>
           <div class="pop-section-title">New instance </div>
           <div class="pop-loader-row">
@@ -314,7 +310,12 @@
 
     <!-- MODS -->
     <section class="view" id="view-mods">
-      <div class="view-header"><h1>Content</h1></div>
+      <div class="view-header content-switch-header">
+        <div class="mode-tabs liquid-glass" id="mode-tabs">
+          <button class="mode-tab active" data-mode="content">Content</button>
+          <button class="mode-tab" data-mode="library">Library</button>
+        </div>
+      </div>
 
       <div class="content-bar glass liquid-glass">
         <div class="cb-row">
@@ -326,13 +327,8 @@
           <button id="import-respack-btn" class="pill-btn">+ Add resource pack</button>
         </div>
         <!-- Content = things you can install, Library = what this instance
-             already has. The installed panels used to sit permanently above
-             the browser, so the page was half yours and half the store. -->
+             already has. Top Content/Library switchers replace the old h1. -->
         <div class="cb-row mode-row">
-          <div class="mode-tabs" id="mode-tabs">
-            <button class="mode-tab active" data-mode="content">Content</button>
-            <button class="mode-tab" data-mode="library">Library</button>
-          </div>
           <div class="cb-spacer"></div>
           <button id="sync-content-btn" class="pill-btn">⇄ Sync from another instance</button>
         </div>
@@ -601,24 +597,74 @@
       </div>
 
       <div class="settings-group glass liquid-glass">
+        <h3>Monitor background</h3>
+        <p class="hint" style="margin:0 0 10px;opacity:.75">Wallpaper for the Game Monitor window. Sync uses your launcher background.</p>
+        <div class="setting-toggle-row" style="margin-bottom:10px;">
+          <span>Sync with launcher background</span>
+          <label class="toggle"><input type="checkbox" id="mon-bg-sync" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
+        </div>
+        <div id="mon-bg-preset-grid" class="bg-preset-grid"></div>
+      </div>
+
+      <div class="settings-group glass liquid-glass">
         <h3>Accent color</h3>
         <div id="accent-row" class="accent-row"></div>
       </div>
 
       <div class="settings-group glass liquid-glass">
         <h3>Liquid glass</h3>
+        <p class="hint" style="margin:0 0 10px;opacity:.75">Same dials as liqui.design — refraction lens (not a blur overlay). Chromium only; frost fallback elsewhere.</p>
         <label class="slider-row">
-          <span>Blur <b id="glass-blur-label">18</b> px</span>
-          <input type="range" id="glass-blur" min="0" max="40" value="18">
+          <span>Refraction <b id="lq-refraction-label">250</b> px</span>
+          <input type="range" id="lq-refraction" min="0" max="250" value="250">
         </label>
         <label class="slider-row">
-          <span>Glass opacity <b id="glass-alpha-label">55</b>%</span>
-          <input type="range" id="glass-alpha" min="20" max="90" value="55">
+          <span>Bezel <b id="lq-bezel-label">19</b> px</span>
+          <input type="range" id="lq-bezel" min="4" max="60" value="19">
         </label>
         <label class="slider-row">
-          <span>Background dim <b id="scene-dim-label">55</b>%</span>
-          <input type="range" id="scene-dim" min="0" max="85" value="55">
+          <span>Frost <b id="lq-frost-label">0.13</b></span>
+          <input type="range" id="lq-frost" min="0" max="100" value="13">
         </label>
+        <label class="slider-row">
+          <span>Blur <b id="lq-blur-label">1</b> px</span>
+          <input type="range" id="lq-blur" min="0" max="20" step="0.5" value="1">
+        </label>
+        <label class="slider-row">
+          <span>Specular <b id="lq-specular-label">0.25</b></span>
+          <input type="range" id="lq-specular" min="0" max="100" value="25">
+        </label>
+        <label class="slider-row">
+          <span>Dispersion <b id="lq-dispersion-label">0</b> <span class="hint">(3× cost)</span></span>
+          <input type="range" id="lq-dispersion" min="0" max="40" value="0">
+        </label>
+        <label class="slider-row">
+          <span>Profile</span>
+          <select id="lq-profile" style="flex:1;max-width:180px">
+            <option value="squircle" selected>Squircle (physical)</option>
+            <option value="convex">Convex</option>
+            <option value="rim">Rim (cheap)</option>
+          </select>
+        </label>
+        <label class="slider-row">
+          <span>Material</span>
+          <select id="lq-material" style="flex:1;max-width:180px">
+            <option value="auto" selected>Auto (refract → frost)</option>
+            <option value="frost">Frost only</option>
+            <option value="clear">Clear</option>
+          </select>
+        </label>
+        <label class="slider-row">
+          <span>Shell opacity <b id="glass-alpha-label">34</b>%</span>
+          <input type="range" id="glass-alpha" min="20" max="90" value="34">
+        </label>
+        <label class="slider-row">
+          <span>Background dim <b id="scene-dim-label">9</b>%</span>
+          <input type="range" id="scene-dim" min="0" max="85" value="9">
+        </label>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button type="button" class="pill-btn" id="lq-reset">Reset liquid glass</button>
+        </div>
       </div>
 
       <div class="settings-group glass liquid-glass">
@@ -698,7 +744,7 @@
           <label class="toggle"><input type="checkbox" id="discord-details-toggle" checked><span class="toggle-track"><span class="toggle-thumb"></span></span></label>
         </div>
         <div class="discord-preview" id="discord-preview">
-          <div class="dp-art"><img id="dp-art-img" src="img/nebula.png" alt=""><img class="dp-badge-img" id="dp-badge-img" src="img/nebula.png" alt=""></div>
+          <div class="dp-art"><img id="dp-art-img" src="img/nebula.png?v=3" alt=""><img class="dp-badge-img" id="dp-badge-img" src="img/nebula.png?v=3" alt=""></div>
           <div class="dp-text">
             <div class="dp-name">SolarClient</div>
             <div class="dp-line" id="dp-details">In the launcher</div>
@@ -723,20 +769,17 @@
   </div>
 </div>
 
-<!-- full-screen launch animation overlay -->
+<!-- full-screen launch overlay — liquid-glass card, no spinning portal -->
 <div id="launch-overlay" class="launch-overlay">
-  <div class="portal" id="portal">
-    <div class="portal-ring"></div>
-    <div class="portal-ring r2"></div>
-    <div class="portal-ring r3"></div>
-    <div class="portal-core"></div>
+  <div class="overlay-card glass liquid-glass" id="overlay-card">
+    <img class="overlay-brand" src="assets/solar-client-logo.png" alt="" draggable="false">
+    <div class="overlay-title" id="overlay-title">Launching…</div>
+    <div class="overlay-label" id="overlay-label">Preparing…</div>
+    <div class="overlay-track"><div class="overlay-fill" id="overlay-fill"></div></div>
+    <div class="overlay-meta"><span id="overlay-speed"></span><b id="overlay-pct"></b></div>
+    <div class="overlay-tip" id="overlay-tip"></div>
+    <button class="overlay-hide" id="overlay-hide">Hide</button>
   </div>
-  <div class="overlay-title" id="overlay-title">Launching…</div>
-  <div class="overlay-label" id="overlay-label">Preparing…</div>
-  <div class="overlay-track"><div class="overlay-fill" id="overlay-fill"></div></div>
-  <div class="overlay-meta"><span id="overlay-speed"></span><b id="overlay-pct"></b></div>
-  <div class="overlay-tip" id="overlay-tip"></div>
-  <button class="overlay-hide" id="overlay-hide">Hide</button>
 </div>
 
 <!-- command palette (Ctrl/Cmd+K) -->
@@ -760,6 +803,21 @@
   </div>
 </div>
 
+<!-- crash auto-fix dialog -->
+<div id="crash-modal" class="confirm-modal hidden">
+  <div class="confirm-panel crash-panel glass liquid-glass">
+    <div class="confirm-title" id="crash-title">Your game crashed</div>
+    <div class="confirm-message" id="crash-summary"></div>
+    <ul id="crash-fix-list" class="crash-fix-list"></ul>
+    <div id="crash-status" class="crash-status hidden"></div>
+    <div class="confirm-actions">
+      <button id="crash-report" class="pill-btn hidden">Crash report</button>
+      <button id="crash-dismiss" class="pill-btn">Not now</button>
+      <button id="crash-apply" class="pill-btn primary">Apply fixes</button>
+    </div>
+  </div>
+</div>
+
 <!-- background crop tool -->
 <div id="crop-modal" class="crop-modal hidden">
   <div class="crop-panel glass liquid-glass">
@@ -777,7 +835,7 @@
 <div id="download-bar-container" class="download-bar-container"></div>
 
 <!-- Persistent right-side ad column — always visible on every page -->
-<aside class="ad-column glass" id="ad-column">
+<aside class="ad-column glass liquid-glass" id="ad-column">
   <div class="ad-column-label">Ads</div>
   <!-- Two ads. renderer.js sizes them to the column: 160x300 each normally,
        160x600 when the window is tall enough to fit them. -->
@@ -785,10 +843,10 @@
   <div class="ad-box" id="ad-box-2"></div>
 </aside>
 
-<!-- Themed "update ready" modal — replaces the native Windows dialog.
-     Shown by renderer.js when the auto-updater reports a downloaded update. -->
+<!-- Update panel — beta / optional / mandatory / switch-to-stable / restart -->
 <div class="update-modal" id="update-modal">
-  <div class="update-card">
+  <div class="update-card glass liquid-glass" id="update-card">
+    <img class="update-brand" src="assets/solar-client-logo.png" alt="Solar Client" draggable="false">
     <div class="update-head">
       <div class="update-ico">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -797,21 +855,54 @@
           <line x1="12" y1="15" x2="12" y2="3"/>
         </svg>
       </div>
-      <div class="update-title">Update ready</div>
+      <div>
+        <div class="update-title" id="update-title">Update available</div>
+        <div class="update-badge-row">
+          <span class="update-channel-badge" id="update-channel-badge">stable</span>
+          <span class="update-policy-badge hidden" id="update-policy-badge">optional</span>
+        </div>
+      </div>
     </div>
-    <div class="update-sub">SolarClient <b id="update-version">3.19.2</b> has been downloaded and is ready to install.</div>
+    <div class="update-versions" id="update-versions">
+      <span id="update-from">—</span>
+      <span class="update-arrow">→</span>
+      <span id="update-to">—</span>
+    </div>
+    <div class="update-sub" id="update-sub">A new SolarClient build is ready.</div>
+    <div class="update-notes-wrap hidden" id="update-notes-wrap">
+      <div class="update-notes-title">What's in this update</div>
+      <ul class="update-notes" id="update-notes"></ul>
+    </div>
+    <div class="update-progress-wrap hidden" id="update-progress-wrap">
+      <div class="update-progress-row">
+        <span class="update-progress-label" id="update-progress-label">Downloading…</span>
+        <b class="update-progress-pct" id="update-progress-pct">0%</b>
+      </div>
+      <div class="update-progress-track"><div class="update-progress-fill" id="update-progress-fill"></div></div>
+      <div class="update-progress-stats">
+        <span id="update-progress-bytes"></span>
+        <span id="update-progress-eta"></span>
+      </div>
+    </div>
+    <div class="update-error hidden" id="update-error"></div>
     <div class="update-actions">
-      <button class="pill-btn primary" id="update-restart">Restart now</button>
-      <button class="pill-btn" id="update-later">Later</button>
+      <button class="pill-btn primary" id="update-primary">Download update</button>
+      <button class="pill-btn" id="update-secondary">Not now</button>
     </div>
-    <div class="update-foot">The update applies the next time the launcher starts.</div>
+    <div class="update-foot" id="update-foot">Optional updates can wait. Mandatory ones must be installed to keep using the launcher.</div>
   </div>
 </div>
 
-<script src="backgrounds.js"></script>
-<script src="skin2d.js"></script>
-<script src="skin3d.js"></script>
-  <script src="renderer.js"></script>
+<script>
+/* Minimal bg table so applyTheme() works before backgrounds.js loads. */
+window.NEBULA_BACKGROUNDS = {
+  nebula: { name: 'Solar', kind: 'nebula' },
+  void: { name: 'Pure Void', kind: 'void' },
+};
+</script>
+<script src="liquid-glass-engine.js"></script>
+<script src="renderer.js"></script>
+<!-- backgrounds.js / skin2d.js / skin3d.js load after first paint -->
 <!-- What's New modal -->
 <div class="whatsnew-modal" id="whatsnew-modal">
   <div class="whatsnew-card">
@@ -830,47 +921,6 @@
   </div>
 </div>
 
-<!-- Real liquid-glass lens: SDF edge refraction + chromatic aberration (Chromium backdrop-filter). -->
-<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true" focusable="false">
-  <defs>
-    <!-- Pill controls: Launch, chips, edition, Bedrock, another -->
-    <filter id="solar-liquid-glass" x="-20%" y="-30%" width="140%" height="160%" color-interpolation-filters="sRGB">
-      <feImage href="assets/liquid-lens-pill.png" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>
-      <feDisplacementMap in="SourceGraphic" in2="map" scale="-110" xChannelSelector="R" yChannelSelector="G" result="dispR"/>
-      <feColorMatrix in="dispR" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="red"/>
-      <feDisplacementMap in="SourceGraphic" in2="map" scale="-88" xChannelSelector="R" yChannelSelector="G" result="dispG"/>
-      <feColorMatrix in="dispG" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="green"/>
-      <feDisplacementMap in="SourceGraphic" in2="map" scale="-66" xChannelSelector="R" yChannelSelector="G" result="dispB"/>
-      <feColorMatrix in="dispB" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="blue"/>
-      <feBlend in="red" in2="green" mode="screen" result="rg"/>
-      <feBlend in="rg" in2="blue" mode="screen"/>
-    </filter>
-    <!-- Squircle cards / settings / dock -->
-    <filter id="solar-liquid-glass-card" x="-18%" y="-18%" width="136%" height="136%" color-interpolation-filters="sRGB">
-      <feImage href="assets/liquid-lens-card.png" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>
-      <feDisplacementMap in="SourceGraphic" in2="map" scale="-88" xChannelSelector="R" yChannelSelector="G" result="dispR"/>
-      <feColorMatrix in="dispR" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="red"/>
-      <feDisplacementMap in="SourceGraphic" in2="map" scale="-70" xChannelSelector="R" yChannelSelector="G" result="dispG"/>
-      <feColorMatrix in="dispG" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="green"/>
-      <feDisplacementMap in="SourceGraphic" in2="map" scale="-52" xChannelSelector="R" yChannelSelector="G" result="dispB"/>
-      <feColorMatrix in="dispB" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="blue"/>
-      <feBlend in="red" in2="green" mode="screen" result="rg"/>
-      <feBlend in="rg" in2="blue" mode="screen"/>
-    </filter>
-    <!-- Launch / sidebar backboards (wide panels) -->
-    <filter id="solar-liquid-glass-panel" x="-16%" y="-16%" width="132%" height="132%" color-interpolation-filters="sRGB">
-      <feImage href="assets/liquid-lens-panel.png" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>
-      <feDisplacementMap in="SourceGraphic" in2="map" scale="-84" xChannelSelector="R" yChannelSelector="G" result="dispR"/>
-      <feColorMatrix in="dispR" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="red"/>
-      <feDisplacementMap in="SourceGraphic" in2="map" scale="-66" xChannelSelector="R" yChannelSelector="G" result="dispG"/>
-      <feColorMatrix in="dispG" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="green"/>
-      <feDisplacementMap in="SourceGraphic" in2="map" scale="-48" xChannelSelector="R" yChannelSelector="G" result="dispB"/>
-      <feColorMatrix in="dispB" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="blue"/>
-      <feBlend in="red" in2="green" mode="screen" result="rg"/>
-      <feBlend in="rg" in2="blue" mode="screen"/>
-    </filter>
-  </defs>
-</svg>
 
 </body>
 </html>

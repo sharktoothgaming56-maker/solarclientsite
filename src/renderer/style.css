@@ -133,6 +133,12 @@ body[data-bg-kind="void"] #starfield{opacity:0.8;}
   border-bottom:1px solid var(--glass-line);
 }
 .titlebar-drag{display:flex; align-items:center; gap:9px;}
+.titlebar-brand{
+  /* SOLAR CLIENT wordmark — slightly larger than original 22px */
+  height:26px; width:auto; display:block; flex-shrink:0;
+  object-fit:contain; pointer-events:none; user-select:none;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,0.45));
+}
 .titlebar .logo-mark{
   width:15px;height:15px;border-radius:50%;
   background:radial-gradient(circle at 35% 35%, #fff, var(--accent) 55%, transparent 78%);
@@ -158,27 +164,108 @@ body[data-bg-kind="void"] #starfield{opacity:0.8;}
 }
 .nav-btn{
   width:42px;height:42px; border-radius:13px; border:1px solid transparent; background:transparent;
-  color:var(--text-faint); cursor:pointer; display:flex; align-items:center; justify-content:center;
+  /* Beat .liquid-glass { color:#fff !important } so inactive icons stay readable. */
+  color:rgba(255,255,255,0.62) !important; cursor:pointer; display:flex; align-items:center; justify-content:center;
   transition:background .15s, color .15s, border-color .15s, transform .15s;
   position:relative;
 }
-.nav-btn svg{width:19px;height:19px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linejoin:round;}
-.nav-btn[data-view="mods"] svg{fill:currentColor; stroke:none;}
-.nav-btn:hover{background:rgba(255,255,255,0.07); color:var(--text-dim); transform:translateY(-1px);}
+.nav-btn svg{
+  width:20px;height:20px;
+  fill:currentColor !important;
+  stroke:none !important;
+  color:inherit !important;
+  opacity:1 !important;
+  display:block;
+}
+.nav-btn svg path,
+.nav-btn svg rect,
+.nav-btn svg circle{ fill:inherit; }
+/* Cutout pupils / gear hole stay dark so the glyph reads. */
+.nav-btn svg [fill="#0a0714"]{ fill:#0a0714 !important; }
+.nav-btn:hover{background:rgba(255,255,255,0.07); color:rgba(255,255,255,0.92) !important; transform:translateY(-1px);}
 .nav-btn.active{
-  background:linear-gradient(135deg, var(--accent), var(--accent2)); color:#fff;
+  background:linear-gradient(135deg, var(--accent), var(--accent2)); color:#fff !important;
   border-color:rgba(255,255,255,0.25);
   box-shadow:0 4px 18px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.35);
 }
+.nav-btn.active svg{fill:#fff !important; color:#fff !important;}
 .sidebar-spacer{flex:1;}
 
 .main{flex:1; display:flex; flex-direction:column; overflow:hidden; border-radius:18px;}
 
 .topbar{
-  height:60px; padding:0 20px; display:flex; align-items:center; justify-content:space-between;
+  height:60px; padding:0 20px; display:flex; align-items:center; gap:14px;
   border-bottom:1px solid var(--glass-line); flex-shrink:0;
+  position:relative; z-index:40; overflow:visible;
 }
-.instance-select-wrap select{min-width:220px;}
+.instance-select-wrap{flex-shrink:0; max-width:280px;}
+.instance-select-wrap select{min-width:180px; max-width:260px;}
+.instance-select-wrap .custom-select{max-width:280px;}
+.instance-select-wrap .custom-select-btn{max-width:280px; min-width:180px;}
+.topbar-channel-chips{display:flex; align-items:center; gap:8px; flex:1; min-width:0;}
+.updates-menu-wrap{position:relative; z-index:45;}
+.updates-menu-wrap.open{z-index:500;}
+.topbar-chip{
+  appearance:none; border:1px solid var(--glass-line-strong); background:rgba(255,255,255,0.08);
+  color:var(--text); font-size:12px; font-weight:800; letter-spacing:0.5px; text-transform:uppercase;
+  padding:6px 12px; border-radius:999px; cursor:pointer; transition:border-color .15s, background .15s, transform .12s;
+  position:relative; z-index:2;
+}
+.topbar-chip:hover{border-color:var(--accent); background:rgba(157,107,255,0.16); transform:translateY(-1px);}
+.topbar-chip.beta{border-color:rgba(255,196,80,0.45); color:#ffd27a; background:rgba(255,196,80,0.10);}
+.topbar-chip.beta:hover{border-color:rgba(255,196,80,0.75); background:rgba(255,196,80,0.18);}
+.topbar-chip.has-update{border-color:var(--accent); box-shadow:0 0 0 0 rgba(157,107,255,0.45); animation:updateChipPulse 1.8s ease-out infinite;}
+@keyframes updateChipPulse{
+  0%{box-shadow:0 0 0 0 rgba(157,107,255,0.40);}
+  70%{box-shadow:0 0 0 10px rgba(157,107,255,0);}
+  100%{box-shadow:0 0 0 0 rgba(157,107,255,0);}
+}
+/* Fixed so .main{overflow:hidden} + liquid-glass stacking can't clip/cover it. */
+.updates-menu{
+  position:fixed; z-index:1200; min-width:280px; max-width:min(360px, calc(100vw - 24px));
+  padding:8px; border-radius:12px; border:1px solid var(--glass-line-strong);
+  background:rgba(14,10,24,0.98); box-shadow:0 18px 48px rgba(0,0,0,0.55);
+  -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px);
+}
+.updates-menu.hidden{display:none !important;}
+.updates-menu-item, .updates-menu-action{
+  appearance:none; width:100%; text-align:left; border:0; background:transparent; color:var(--text);
+  font-size:12.5px; font-weight:700; padding:9px 10px; border-radius:8px; cursor:pointer;
+}
+.updates-menu-item:hover, .updates-menu-action:hover{background:rgba(255,255,255,0.08);}
+.updates-menu-action{width:auto; flex-shrink:0; color:var(--accent); font-size:11.5px; padding:6px 8px;}
+.updates-menu-sep{height:1px; background:var(--glass-line); margin:6px 4px;}
+.updates-menu-section-label{
+  font-size:10px; font-weight:800; letter-spacing:0.7px; text-transform:uppercase;
+  color:var(--text-faint); padding:6px 10px 2px;
+}
+.updates-menu-row{display:flex; align-items:center; gap:8px; padding:4px 6px 8px;}
+.updates-menu-meta{flex:1; font-size:12px; color:var(--text-dim); line-height:1.35;}
+.topbar-right{margin-left:auto; position:relative; z-index:30;}
+/* While Updates is open, don't let launchpad tiles paint over the menu. */
+body.updates-menu-open .launchpad-hero,
+body.updates-menu-open .launch-center,
+body.updates-menu-open .version-tile,
+body.updates-menu-open .instance-card{
+  pointer-events:none;
+}
+body.updates-menu-open .main{
+  /* Keep radius clip on the shell, but lift the topbar stack above the view. */
+  isolation:auto;
+}
+body.account-menu-open .launchpad-hero,
+body.account-menu-open .launch-center,
+body.account-menu-open .version-tile,
+body.account-menu-open .instance-card{
+  pointer-events:none;
+}
+body.account-menu-open .topbar{
+  z-index:500;
+}
+body.account-menu-open .account-menu{
+  pointer-events:auto !important;
+  z-index:5000 !important;
+}
 
 select, input{
   background:rgba(255,255,255,0.06); border:1px solid var(--glass-line-strong); color:var(--text);
@@ -202,8 +289,16 @@ select:focus, input:focus{border-color:var(--accent); box-shadow:0 0 0 3px var(-
   transition:border-color .15s;
 }
 .account-pill:hover{border-color:var(--accent);}
-.account-pill img{width:26px;height:26px;border-radius:7px; image-rendering:pixelated; flex-shrink:0;}
-.account-pill .chev{color:var(--text-faint); font-size:10px; margin-left:2px; flex-shrink:0;}
+.account-pill img{
+  width:26px; height:26px; border-radius:7px; image-rendering:pixelated; flex-shrink:0;
+  object-fit:cover; object-position:center; display:block;
+  box-sizing:border-box; border:1px solid transparent;
+}
+.account-pill .chev{
+  width:0; height:0; margin-left:2px; flex-shrink:0;
+  border-left:4px solid transparent; border-right:4px solid transparent;
+  border-top:5px solid var(--text-faint);
+}
 .pill-info{display:flex; flex-direction:column; gap:3px; min-width:0;}
 .pill-name{font-size:13px; font-weight:700; white-space:nowrap;}
 .pill-level-row{display:flex; align-items:center; gap:5px;}
@@ -218,18 +313,42 @@ select:focus, input:focus{border-color:var(--accent); box-shadow:0 0 0 3px var(-
 .source-tab.active{background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff;}
 
 .account-menu{
-  position:absolute; top:calc(100% + 8px); right:0; width:236px; z-index:50;
+  position:fixed; z-index:5000; width:248px;
   border-radius:14px; overflow:hidden;
   animation:menu-in .16s ease;
+  background:rgba(14,10,24,0.98);
+  border:1px solid var(--glass-line-strong);
+  box-shadow:0 18px 48px rgba(0,0,0,0.55);
+  -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px);
+  pointer-events:auto;
+  -webkit-app-region:no-drag;
 }
 @keyframes menu-in{from{opacity:0; transform:translateY(-6px);}to{opacity:1; transform:translateY(0);}}
 .account-menu-item{
   display:flex; align-items:center; gap:10px; padding:10px 14px; font-size:13.5px; cursor:pointer;
 }
 .account-menu-item:hover{background:rgba(255,255,255,0.08);}
-.account-menu-item img{width:22px;height:22px;border-radius:5px; image-rendering:pixelated;}
+.account-menu-item img{
+  width:22px; height:22px; border-radius:5px; image-rendering:pixelated;
+  object-fit:cover; object-position:center; flex-shrink:0; display:block;
+}
 .account-menu-item.action{color:var(--accent); font-weight:600; border-top:1px solid var(--glass-line);}
-.account-menu-item .check{margin-left:auto; color:var(--ok); font-size:12px;}
+.account-menu-item.logout{color:#f07178; font-weight:700;}
+.account-menu-item .check{
+  margin-left:auto; width:8px; height:8px; border-radius:50%;
+  background:var(--ok); box-shadow:0 0 6px var(--ok); flex-shrink:0;
+}
+.account-menu-item .quick-launch{
+  margin-left:auto; appearance:none; border:0; background:rgba(255,255,255,0.08);
+  color:var(--text); width:26px; height:26px; border-radius:7px; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center; padding:0;
+}
+.account-menu-item .quick-launch::before{
+  content:''; display:block; width:0; height:0;
+  border-top:5px solid transparent; border-bottom:5px solid transparent;
+  border-left:7px solid currentColor; margin-left:2px;
+}
+.account-menu-item .quick-launch:hover{background:var(--accent); color:#fff;}
 
 /* ---------- views ---------- */
 .view{display:none; padding:24px 28px; overflow-y:auto; flex:1;}
@@ -321,41 +440,32 @@ h1{margin:0 0 4px; font-size:22px; letter-spacing:0.2px;}
 }
 @keyframes ring-spin{0%{transform:translateX(-50%) rotateX(72deg) rotateZ(0);}100%{transform:translateX(-50%) rotateX(72deg) rotateZ(360deg);}}
 
-/* ---------- launch overlay (full takeover animation) ---------- */
+/* ---------- launch overlay (liquid-glass card) ---------- */
 .launch-overlay{
   position:fixed; inset:0; z-index:300; display:flex; flex-direction:column; align-items:center; justify-content:center;
-  background:rgba(8,5,18,0.72);
-  -webkit-backdrop-filter:blur(22px) saturate(1.4); backdrop-filter:blur(22px) saturate(1.4);
-  opacity:0; pointer-events:none; transition:opacity .35s ease;
+  background:rgba(8,5,18,0.55);
+  -webkit-backdrop-filter:blur(18px) saturate(1.3); backdrop-filter:blur(18px) saturate(1.3);
+  opacity:0; pointer-events:none; transition:opacity .28s ease;
 }
 .launch-overlay.show{opacity:1; pointer-events:auto;}
-.portal{position:relative; width:190px; height:190px; margin-bottom:34px;}
-.portal-ring{
-  position:absolute; inset:0; border-radius:50%;
-  border:3px solid transparent;
-  border-top-color:var(--accent); border-right-color:var(--accent2);
-  animation:portal-spin 1.1s linear infinite;
-  box-shadow:0 0 30px var(--accent-glow);
+.overlay-card{
+  width:min(420px, 88vw); padding:28px 28px 22px; border-radius:20px;
+  display:flex; flex-direction:column; align-items:center; text-align:center;
 }
-.portal-ring.r2{inset:18px; animation-duration:1.7s; animation-direction:reverse; border-top-color:var(--accent2); border-right-color:var(--accent);}
-.portal-ring.r3{inset:38px; animation-duration:2.6s; opacity:0.7;}
-@keyframes portal-spin{to{transform:rotate(360deg);}}
-.portal-core{
-  position:absolute; inset:56px; border-radius:50%;
-  background:radial-gradient(circle at 40% 35%, #fff, var(--accent) 45%, var(--accent2) 90%);
-  box-shadow:0 0 44px var(--accent-glow), 0 0 90px var(--accent-glow);
-  animation:core-pulse 1.6s ease-in-out infinite;
-  display:flex; align-items:center; justify-content:center;
+.overlay-brand{
+  height:72px; width:auto; max-width:100%; margin-bottom:20px; object-fit:contain;
+  filter:drop-shadow(0 4px 18px rgba(0,0,0,0.45));
+  pointer-events:none; user-select:none; opacity:0.95;
 }
-@keyframes core-pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
-.overlay-title{font-size:21px; font-weight:800; letter-spacing:0.5px; margin-bottom:8px;}
+.overlay-title{font-size:20px; font-weight:800; letter-spacing:0.4px; margin-bottom:8px; color:#fff;}
 .overlay-label{font-size:13.5px; color:var(--text-dim); font-weight:600; min-height:20px; margin-bottom:18px;}
-.overlay-track{width:380px; height:9px; background:rgba(255,255,255,0.09); border-radius:6px; overflow:hidden; border:1px solid var(--glass-line);}
+.overlay-track{width:100%; height:9px; background:rgba(255,255,255,0.09); border-radius:6px; overflow:hidden; border:1px solid var(--glass-line);}
 .overlay-fill{height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width .25s; box-shadow:0 0 14px var(--accent-glow); border-radius:6px;}
 .overlay-fill.indeterminate{width:38% !important; animation:indet 1.2s ease-in-out infinite;}
 @keyframes indet{0%{margin-left:-38%;}100%{margin-left:100%;}}
-.overlay-tip{margin-top:20px; font-size:12px; color:var(--text-faint); font-style:italic;}
-.overlay-hide{margin-top:26px; background:transparent; border:1px solid var(--glass-line-strong); color:var(--text-dim); padding:8px 20px; border-radius:9px; cursor:pointer; font-size:12.5px; font-weight:600;}
+.overlay-meta{width:100%; display:flex; justify-content:space-between; margin-top:8px; font-size:12px; color:var(--text-dim);}
+.overlay-tip{margin-top:16px; font-size:12px; color:var(--text-faint); font-style:italic;}
+.overlay-hide{margin-top:20px; background:transparent; border:1px solid var(--glass-line-strong); color:var(--text-dim); padding:8px 20px; border-radius:9px; cursor:pointer; font-size:12.5px; font-weight:600;}
 .overlay-hide:hover{border-color:var(--accent); color:var(--text);}
 .launch-particle{position:absolute; width:6px; height:6px; border-radius:50%; background:var(--accent); pointer-events:none; box-shadow:0 0 8px var(--accent-glow);}
 
@@ -376,27 +486,29 @@ h1{margin:0 0 4px; font-size:22px; letter-spacing:0.2px;}
 .instance-group-row{display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:14px; margin-bottom:8px;}
 .instance-group-label, .pop-group-label{
   display:flex; align-items:center; gap:8px;
-  font-size:10.5px; font-weight:900; letter-spacing:0.9px; text-transform:uppercase;
-  color:var(--text-faint); margin:10px 0 4px;
+  font-size:12px; font-weight:900; letter-spacing:0.4px; text-transform:none;
+  color:var(--text); margin:10px 0 4px;
 }
-.pop-group-label{margin:8px 0 3px;}
+.pop-group-label{margin:8px 0 3px; font-size:13px;}
 .instance-group-label:first-child, .pop-group-label:first-child{margin-top:0;}
+.pop-meta .loader-tag, .pop-item .loader-tag{ font-weight:800; color:var(--text); }
 .igl-count{
   font-size:9.5px; font-weight:800; letter-spacing:0.4px; color:var(--text-faint);
   background:rgba(255,255,255,0.07); border-radius:20px; padding:1px 7px;
 }
 .igl-dot{width:7px; height:7px; border-radius:50%; background:var(--text-faint); flex-shrink:0;}
-.loader-vanilla .igl-dot{background:#8ea0b5;}
+.loader-vanilla .igl-dot{background:#8ea0b5; box-shadow:0 0 7px rgba(142,160,181,0.6);}
 .loader-fabric  .igl-dot{background:#c8a165; box-shadow:0 0 7px rgba(200,161,101,0.6);}
 .loader-quilt   .igl-dot{background:#b46cd6; box-shadow:0 0 7px rgba(180,108,214,0.6);}
 .loader-forge   .igl-dot{background:#5b7fa6; box-shadow:0 0 7px rgba(91,127,166,0.6);}
+.instance-card.loader-vanilla .art{box-shadow:inset 0 -2px 0 #8ea0b5;}
 .instance-card.loader-fabric .art{box-shadow:inset 0 -2px 0 #c8a165;}
 .instance-card.loader-quilt  .art{box-shadow:inset 0 -2px 0 #b46cd6;}
 .instance-card.loader-forge  .art{box-shadow:inset 0 -2px 0 #5b7fa6;}
 
 /* group headings inside the enhanced <select> panels */
 .custom-select-group{
-  font-size:9.5px; font-weight:900; letter-spacing:1px; text-transform:uppercase;
+  font-size:11px; font-weight:900; letter-spacing:0.4px; text-transform:none;
   color:var(--text-faint); padding:9px 12px 3px;
 }
 .custom-select-group:first-child{padding-top:4px;}
@@ -506,6 +618,9 @@ h1{margin:0 0 4px; font-size:22px; letter-spacing:0.2px;}
   width:30px; height:30px; border-radius:8px; cursor:pointer; font-size:13px; flex-shrink:0;
   transition:border-color .15s, color .15s, background .15s, transform .1s;
 }
+.mod-delete-btn{display:inline-flex; align-items:center; justify-content:center; padding:0;}
+.mod-delete-btn .trash-ico{width:16px; height:16px; fill:currentColor; display:block;}
+.skin-tile-del .trash-ico{width:12px; height:12px; fill:currentColor; display:block;}
 .mod-delete-btn:hover{border-color:var(--err); color:#fff; background:var(--err); transform:translateY(-1px);}
 .mod-delete-btn:disabled{opacity:0.4; cursor:default; transform:none;}
 .mods-drop-hint{
@@ -546,7 +661,8 @@ h1{margin:0 0 4px; font-size:22px; letter-spacing:0.2px;}
 .slider-row{display:block; margin-bottom:16px; font-size:13.5px;}
 .slider-row span{display:block; margin-bottom:6px;}
 .slider-row input[type="range"]{width:100%; accent-color:var(--accent); background:transparent; padding:0; border:none;}
-.setting-toggle-row{display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:14px; font-size:13.5px;}
+.setting-toggle-row{display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:20px; font-size:13.5px;}
+.setting-toggle-row:last-child{margin-bottom:0;}
 .setting-toggle-row .hint{display:block; font-size:11.5px; color:var(--text-faint); margin-top:3px;}
 .account-list{display:flex; flex-direction:column; gap:8px; margin-bottom:12px;}
 .account-list-item{display:flex; align-items:center; gap:10px; background:rgba(255,255,255,0.05); border:1px solid var(--glass-line); border-radius:11px; padding:9px 12px; font-size:13.5px;}
@@ -608,18 +724,37 @@ h1{margin:0 0 4px; font-size:22px; letter-spacing:0.2px;}
 .custom-select-btn{
   background:rgba(255,255,255,0.06); border:1px solid var(--glass-line-strong); color:var(--text);
   padding:10px 14px; border-radius:10px; font-size:13.5px; font-weight:600; cursor:pointer;
-  min-width:160px; text-align:left; display:flex; align-items:center; justify-content:space-between;
-  transition:border-color .15s;
+  min-width:160px; max-width:280px; text-align:left; display:flex; align-items:center; justify-content:space-between;
+  transition:border-color .15s; gap:8px;
 }
-.custom-select-btn::after{content:"▾"; color:var(--text-faint); margin-left:10px; font-size:11px;}
+.custom-select-btn .cs-label{
+  flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.custom-select-btn .cs-caret{
+  flex-shrink:0; width:0; height:0;
+  border-left:4px solid transparent; border-right:4px solid transparent;
+  border-top:5px solid var(--text-faint);
+}
 .custom-select-btn:hover{border-color:var(--accent);}
 .custom-select-panel{
-  position:absolute; top:calc(100% + 6px); left:0; min-width:100%; max-height:280px; overflow-y:auto;
-  background:rgba(22,17,40,0.92);
+  position:absolute; top:calc(100% + 6px); left:0;
+  /* Never 100% — when portaled to <body>, 100% becomes the viewport and the menu spans the whole window. */
+  width:max-content; max-width:min(280px, calc(100vw - 24px));
+  max-height:280px; overflow-y:auto;
+  background:rgba(12,9,22,0.98);
   -webkit-backdrop-filter:blur(24px) saturate(1.5); backdrop-filter:blur(24px) saturate(1.5);
-  border:1px solid var(--glass-line-strong); border-radius:12px; z-index:60;
-  box-shadow:0 16px 44px rgba(0,0,0,0.55); padding:5px;
+  border:1px solid var(--glass-line-strong); border-radius:12px; z-index:1300;
+  box-shadow:0 16px 44px rgba(0,0,0,0.65); padding:5px;
   animation:menu-in .15s ease;
+}
+body.dropdown-open .launchpad-hero,
+body.dropdown-open .launch-center,
+body.dropdown-open .skin-stage,
+body.dropdown-open .skin-render{
+  pointer-events:none;
+}
+body.dropdown-open .topbar{
+  z-index:500;
 }
 .custom-select-panel.hidden{display:none;}
 .custom-select-item{padding:9px 12px; border-radius:8px; font-size:13.5px; cursor:pointer; white-space:nowrap;}
@@ -653,7 +788,11 @@ h1{margin:0 0 4px; font-size:22px; letter-spacing:0.2px;}
   opacity:0; transform:translateY(10px); transition:opacity .2s, transform .2s;
 }
 .download-bar.show{opacity:1; transform:translateY(0);}
-.download-bar-icon{width:28px;height:28px;border-radius:8px; background:linear-gradient(135deg,var(--accent),var(--accent2)); flex-shrink:0;}
+.download-bar-icon{
+  width:28px; height:28px; border-radius:8px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  flex-shrink:0; box-sizing:border-box;
+}
 .download-bar-info{flex:1; min-width:0;}
 .download-bar-label{font-size:12.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:5px;}
 .download-bar-track{height:5px; background:rgba(255,255,255,0.1); border-radius:3px; overflow:hidden;}
@@ -690,8 +829,8 @@ h1{margin:0 0 4px; font-size:22px; letter-spacing:0.2px;}
    ===================================================================== */
 
 /* ---------- upgraded logo: ringed planet with orbiting sparks ---------- */
-.logo-orbit{position:relative; width:26px; height:26px;}
-.logo-planet{width:26px; height:26px; display:block; filter:drop-shadow(0 0 7px var(--accent-glow));}
+.logo-orbit{position:relative; width:28px; height:28px; flex-shrink:0; overflow:visible;}
+.logo-planet{width:28px; height:28px; display:block; filter:drop-shadow(0 0 7px var(--accent-glow)); overflow:visible;}
 .logo-ring-front{clip-path:inset(50% 0 0 0);}
 .logo-ring-back{opacity:0.45;}
 .logo-planet{animation:logo-bob 4.5s ease-in-out infinite;}
@@ -742,7 +881,11 @@ h1{margin:0 0 4px; font-size:22px; letter-spacing:0.2px;}
 }
 .chip:hover{border-color:var(--accent); transform:translateY(-1px);}
 .chip-icon{color:var(--accent); font-size:12px;}
-.chip-caret{color:var(--text-faint); font-size:10px;}
+.chip-caret{
+  width:0; height:0; margin-left:auto; flex-shrink:0;
+  border-left:4px solid transparent; border-right:4px solid transparent;
+  border-top:5px solid var(--text-faint);
+}
 .chip-state{
   font-size:10px; font-weight:800; letter-spacing:0.5px; padding:2px 7px; border-radius:9px;
   background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff;
@@ -869,6 +1012,15 @@ h1{margin:0 0 4px; font-size:22px; letter-spacing:0.2px;}
 .confirm-title{font-weight:800; font-size:16px; margin-bottom:10px; color:#fff;}
 .confirm-message{font-size:13.5px; color:var(--text-dim); line-height:1.5;}
 .confirm-actions{display:flex; justify-content:flex-end; gap:10px; margin-top:20px;}
+.crash-panel{width:min(480px, 90vw);}
+.crash-fix-list{list-style:none; margin:14px 0 0; padding:0; display:flex; flex-direction:column; gap:8px; max-height:260px; overflow-y:auto;}
+.crash-fix-list li{display:flex; gap:10px; align-items:flex-start; padding:10px 12px; border-radius:12px; background:rgba(255,255,255,0.04); border:1px solid var(--glass-line);}
+.crash-fix-mark{flex:none; width:16px; height:16px; margin-top:1px; border-radius:50%; border:2px solid var(--text-dim);}
+.crash-fix-list li.ok .crash-fix-mark{border-color:#4ade80; background:#4ade80;}
+.crash-fix-list li.fail .crash-fix-mark{border-color:#e0625a; background:#e0625a;}
+.crash-fix-label{font-weight:700; font-size:13.5px; color:var(--text);}
+.crash-fix-detail{font-size:12px; color:var(--text-dim); margin-top:2px;}
+.crash-status{margin-top:12px; font-size:12.5px; color:var(--text-dim);}
 
 .crop-modal{position:fixed; inset:0; z-index:900; display:flex; align-items:center; justify-content:center; background:rgba(5,3,12,0.6); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);}
 .crop-modal.hidden{display:none;}
@@ -1481,20 +1633,45 @@ body.dropdown-open .instance-grid {
 .launch-badge.loader-quilt  .lb-loader{color:#d3a3ec;}
 .launch-badge.loader-forge  .lb-loader{color:#9dbbd8;}
 
-/* --- Content / Library tabs --- */
+/* --- Content / Library top switchers (full-width flush) --- */
+.content-switch-header{ margin-bottom:12px; width:100%; }
+.content-switch-header .mode-tabs{
+  display:flex; width:100%; gap:12px; padding:6px; border-radius:16px;
+  box-sizing:border-box;
+}
+.content-switch-header .mode-tab{
+  flex:1; text-align:center;
+  /* Match LAUNCH GAME label weight / tracking; larger so it fills the tab. */
+  font-size:18px; font-weight:900; letter-spacing:1.2px;
+  padding:16px 18px; border-radius:12px;
+  text-transform:uppercase;
+}
 .mode-row{margin-bottom:8px;}
 .mode-tabs{display:flex; gap:4px; background:rgba(0,0,0,0.26); padding:4px; border-radius:11px;}
 .mode-tab{
   background:transparent; border:none; color:var(--text-dim); cursor:pointer;
-  font-family:inherit; font-size:12.5px; font-weight:800; letter-spacing:0.3px;
-  padding:7px 18px; border-radius:8px; transition:background 0.16s, color 0.16s;
+  font-family:inherit; font-size:13px; font-weight:800; letter-spacing:0.3px;
+  padding:8px 22px; border-radius:10px; transition:background 0.16s, color 0.16s;
 }
 .mode-tab:hover{color:var(--text);}
 .mode-tab.active{
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#fff; box-shadow:0 4px 14px var(--accent-glow);
+  background:rgba(255,255,255,0.12);
+  color:#fff;
+}
+.content-switch-header .mode-tabs.liquid-glass .mode-tab.active{
+  /* Near-opaque so it reads the same dark gray over bright or dark art. */
+  background:rgba(22,22,30,0.88);
+  color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 0 1px rgba(255,255,255,0.08), 0 2px 10px rgba(0,0,0,0.30);
+  text-shadow:
+    0 0 8px rgba(255,255,255,0.55),
+    0 2px 6px rgba(0,0,0,0.45);
 }
 #content-pane.hidden, #library-pane.hidden, #content-controls.hidden{display:none;}
+.mon-titlebar-label{
+  font-size:11px; font-weight:800; letter-spacing:1.6px; text-transform:uppercase;
+  color:var(--text-dim); margin-left:2px;
+}
 
 .stack-empty{
   font-size:11.5px; color:var(--text-faint); line-height:1.5;
@@ -1848,6 +2025,11 @@ body.dropdown-open .instance-grid {
   background:linear-gradient(135deg,var(--accent),var(--accent2));
   display:flex; align-items:center; justify-content:center;
   font-size:11px; font-weight:900; color:#fff;
+  overflow:hidden; box-sizing:border-box; padding:2px;
+}
+.fr-group-icon img{
+  width:100%; height:100%; object-fit:contain; object-position:center;
+  display:block; border-radius:5px;
 }
 .fr-groups-head{display:flex; align-items:center; justify-content:space-between; margin-top:6px;}
 
@@ -2014,21 +2196,54 @@ body.dropdown-open .instance-grid {
 .update-modal{
   position:fixed; inset:0; z-index:400;
   display:flex; align-items:center; justify-content:center;
-  background:rgba(8,5,18,0.72);
-  -webkit-backdrop-filter:blur(22px) saturate(1.4); backdrop-filter:blur(22px) saturate(1.4);
+  background:rgba(8,5,18,0.55);
+  -webkit-backdrop-filter:blur(18px) saturate(1.3); backdrop-filter:blur(18px) saturate(1.3);
   opacity:0; pointer-events:none; transition:opacity .3s ease;
 }
 .update-modal.show{opacity:1; pointer-events:auto;}
 .update-card{
-  position:relative; width:390px; max-width:calc(100vw - 48px);
+  position:relative; width:420px; max-width:calc(100vw - 48px);
   padding:26px 26px 22px; text-align:left;
-  background:var(--glass-bg); border:1px solid var(--glass-line-strong);
-  border-radius:16px;
-  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.5); backdrop-filter:blur(var(--glass-blur)) saturate(1.5);
-  box-shadow:0 24px 60px rgba(0,0,0,0.5), inset 0 1px 0 var(--glass-highlight);
+  border-radius:20px;
   transform:translateY(10px); transition:transform .25s ease;
 }
 .update-modal.show .update-card{transform:translateY(0);}
+.update-brand{
+  height:72px; width:auto; max-width:100%; display:block; margin:0 auto 18px;
+  object-fit:contain; pointer-events:none; user-select:none;
+  filter:drop-shadow(0 4px 18px rgba(0,0,0,0.45));
+}
+.update-progress-wrap{
+  margin:0 0 14px; padding:12px 14px; border-radius:12px;
+  background:rgba(0,0,0,0.22); border:1px solid var(--glass-line);
+  animation:updProgIn .28s ease-out;
+}
+@keyframes updProgIn{from{opacity:0; transform:translateY(6px);}to{opacity:1; transform:none;}}
+.update-progress-wrap.hidden{display:none;}
+.update-progress-row{display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:8px;}
+.update-progress-label{font-size:12.5px; font-weight:700; color:var(--text);}
+.update-progress-pct{font-size:15px; font-weight:900; color:#fff; font-variant-numeric:tabular-nums;}
+.update-progress-track{
+  position:relative; width:100%; height:10px; border-radius:6px; overflow:hidden;
+  background:rgba(255,255,255,0.09); border:1px solid var(--glass-line);
+}
+.update-progress-fill{
+  position:relative; height:100%; width:0%; border-radius:6px; overflow:hidden;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  box-shadow:0 0 14px var(--accent-glow); transition:width .35s ease-out;
+}
+.update-progress-fill::after{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%);
+  transform:translateX(-100%); animation:updShimmer 1.4s linear infinite;
+}
+@keyframes updShimmer{to{transform:translateX(100%);}}
+.update-progress-wrap.installing .update-progress-fill{width:40% !important; animation:updIndet 1.3s ease-in-out infinite;}
+@keyframes updIndet{0%{margin-left:-40%;}100%{margin-left:100%;}}
+.update-progress-stats{
+  display:flex; justify-content:space-between; gap:10px; margin-top:8px;
+  font-size:11.5px; color:var(--text-dim); font-variant-numeric:tabular-nums;
+}
 /* Header row: a small rounded-square icon tile + title, the same icon
    language the rest of the app uses (see .mod-icon / .download-bar-icon) —
    not a glowing hero sphere. */
@@ -2043,10 +2258,45 @@ body.dropdown-open .instance-grid {
 .update-title{font-size:16px; font-weight:700; letter-spacing:0.2px;}
 .update-sub{font-size:13px; color:var(--text-dim); line-height:1.6; margin-bottom:20px;}
 .update-sub b{color:var(--text); font-weight:700;}
+.update-badge-row{display:flex; gap:6px; margin-top:4px; flex-wrap:wrap;}
+.update-channel-badge, .update-policy-badge{
+  font-size:10px; font-weight:800; letter-spacing:0.6px; text-transform:uppercase;
+  padding:2px 7px; border-radius:999px; border:1px solid var(--glass-line-strong);
+  color:var(--text-dim); background:rgba(255,255,255,0.05);
+}
+.update-channel-badge.beta{color:#ffd27a; border-color:rgba(255,196,80,0.4);}
+.update-policy-badge.mandatory{color:#ff9b9b; border-color:rgba(255,110,110,0.45); background:rgba(255,80,80,0.12);}
+.update-versions{
+  display:flex; align-items:center; gap:10px; margin:0 0 12px;
+  font-size:14px; font-weight:700; color:var(--text);
+}
+.update-arrow{color:var(--text-faint); font-weight:600;}
+.update-notes-wrap{
+  margin:0 0 14px; padding:10px 12px 10px; border-radius:10px;
+  background:rgba(0,0,0,0.22); border:1px solid var(--glass-line);
+}
+.update-notes-wrap.hidden{display:none;}
+.update-notes-title{
+  font-size:11px; font-weight:900; letter-spacing:0.8px; text-transform:uppercase;
+  color:var(--text); margin-bottom:6px;
+}
+.update-notes{
+  list-style:none; margin:0; padding:0 4px 0 0;
+  max-height:150px; overflow-y:auto;
+  font-size:12.5px; color:var(--text-dim); line-height:1.5;
+}
+.update-notes li{position:relative; padding:3px 0 3px 16px;}
+.update-notes li::before{
+  content:''; position:absolute; left:3px; top:10px; width:6px; height:6px; border-radius:50%;
+  background:var(--accent); box-shadow:0 0 6px var(--accent-glow);
+}
+.update-error{font-size:12.5px; color:#ff9b9b; margin:0 0 12px; line-height:1.45;}
+.update-modal.mandatory{background:rgba(8,5,18,0.88);}
 .update-actions{display:flex; gap:10px;}
 /* Reuses the app's own .pill-btn / .pill-btn.primary so the buttons here are
    literally the same control used everywhere else, rather than a lookalike. */
-.update-actions .pill-btn{flex:1; justify-content:center;}
+.update-actions .pill-btn{flex:1; justify-content:center; color:#fff;}
+.update-actions .pill-btn.primary{color:#0a0714;}
 .update-foot{margin-top:16px; font-size:11.5px; color:var(--text-faint);}
 .whatsnew-modal{
   position:fixed; inset:0; z-index:900;
@@ -2207,22 +2457,7 @@ body.dropdown-open .instance-grid {
   flex-wrap: nowrap !important;
 }
 .launch-btn { width: 100% !important; }
-.titlebar-title {
-  font-family: inherit !important;
-  font-size: 18px !important;
-  font-weight: 900 !important;
-  letter-spacing: 1px !important;
-  /* Wordmark: uppercase, accent gradient. `color` is still declared as a
-     fallback because background-clip:text leaves the text invisible on
-     any engine that does not support it — without the fallback the
-     title would silently vanish rather than degrade. */
-  color: var(--accent) !important;
-  text-transform: uppercase !important;
-  background: linear-gradient(100deg, var(--accent) 0%, var(--accent2) 55%, var(--accent) 100%) !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-}
+/* Titlebar brand is the Solar Client logo image (.titlebar-brand). */
 .launchpad-hero {
   background: transparent !important;
   border: none !important;
@@ -2460,9 +2695,7 @@ body.dropdown-open .instance-grid {
 
 /* ---- 2. hand it back to the few surfaces that earn it ---------------- */
 /* App shell: at most four of these are on screen, none of them repeat. */
-.titlebar:not(#_):not(#__),
-#ad-column:not(#_):not(#__),
-.ad-column:not(#_):not(#__){
+.titlebar:not(#_):not(#__){
   -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.5) !important;
   backdrop-filter:blur(var(--glass-blur)) saturate(1.5) !important;
 }
@@ -2482,76 +2715,35 @@ body.dropdown-open .instance-grid {
   backdrop-filter:blur(20px) saturate(1.3) !important;
 }
 
-/* Transient popovers + liquid glass surfaces.
-   CLEAR glass: tiny blur only — heavy blur = frosted bullshit, kills lens. */
+/* Transient popovers. Liquid glass layers get their own allowlist below. */
 .custom-select-panel:not(#_):not(#__),
 .toast:not(#_):not(#__){
   -webkit-backdrop-filter:blur(12px) saturate(1.4) !important;
   backdrop-filter:blur(12px) saturate(1.4) !important;
 }
+/* Liqui anatomy layers — engine sets backdrop-filter with inline !important.
+   Allowlist only needs to beat the global kill strip for non-important fallbacks. */
+.lq-backdrop:not(#_):not(#__):not(#___),
+.lq-refract:not(#_):not(#__):not(#___){
+  /* Engine owns the filter string; do not force none here. */
+}
 .liquid-glass:not(#_):not(#__),
-.lg-backboard:not(#_):not(#__){
-  -webkit-backdrop-filter: blur(3px) saturate(1.8) brightness(1.06) !important;
-  backdrop-filter: blur(3px) saturate(1.8) brightness(1.06) !important;
-  -webkit-backdrop-filter: blur(2px) saturate(1.85) brightness(1.08) url(#solar-liquid-glass) !important;
-  backdrop-filter: blur(2px) saturate(1.85) brightness(1.08) url(#solar-liquid-glass) !important;
-}
-/* Squircle / panel shells — card lens */
-.level-card.liquid-glass:not(#_):not(#__),
-.content-bar.liquid-glass:not(#_):not(#__),
-.dock-card.liquid-glass:not(#_):not(#__),
-.settings-group.liquid-glass:not(#_):not(#__),
-.skins-preview.liquid-glass:not(#_):not(#__),
-.skins-library.liquid-glass:not(#_):not(#__),
-.fr-main.liquid-glass:not(#_):not(#__),
-.fr-sidebar.liquid-glass:not(#_):not(#__),
-.se-card.liquid-glass:not(#_):not(#__),
-.sync-card.liquid-glass:not(#_):not(#__),
-.applied-details.liquid-glass:not(#_):not(#__),
-.srv-console.liquid-glass:not(#_):not(#__),
-.palette-box.liquid-glass:not(#_):not(#__),
-.confirm-panel.liquid-glass:not(#_):not(#__),
-.crop-panel.liquid-glass:not(#_):not(#__),
-.version-popover.liquid-glass:not(#_):not(#__),
-.version-picker-panel.liquid-glass:not(#_):not(#__),
-.discord-link-banner.liquid-glass:not(#_):not(#__),
-.account-menu.liquid-glass:not(#_):not(#__),
-.srv-card.liquid-glass:not(#_):not(#__),
-.fr-invite.liquid-glass:not(#_):not(#__){
-  -webkit-backdrop-filter: blur(3px) saturate(1.8) brightness(1.06) !important;
-  backdrop-filter: blur(3px) saturate(1.8) brightness(1.06) !important;
-  -webkit-backdrop-filter: blur(2px) saturate(1.85) brightness(1.08) url(#solar-liquid-glass-card) !important;
-  backdrop-filter: blur(2px) saturate(1.85) brightness(1.08) url(#solar-liquid-glass-card) !important;
-}
-/* Launch + sidebar backboards — panel lens on the sheet, NOT on the shell */
+.liquid-glass.lq-surface:not(#_):not(#__),
 .main.liquid-glass:not(#_):not(#__),
 .sidebar.liquid-glass:not(#_):not(#__){
   -webkit-backdrop-filter:none !important;
   backdrop-filter:none !important;
-}
-.main.liquid-glass > .lg-backboard:not(#_):not(#__),
-.sidebar.liquid-glass > .lg-backboard:not(#_):not(#__){
-  -webkit-backdrop-filter: blur(3px) saturate(1.8) brightness(1.06) !important;
-  backdrop-filter: blur(3px) saturate(1.8) brightness(1.06) !important;
-  -webkit-backdrop-filter: blur(2px) saturate(1.85) brightness(1.08) url(#solar-liquid-glass-panel) !important;
-  backdrop-filter: blur(2px) saturate(1.85) brightness(1.08) url(#solar-liquid-glass-panel) !important;
-}
-/* Grid cards: light frost, no per-card SDF (lag) */
-.instance-card.liquid-glass:not(#_):not(#__),
-.mod-card.liquid-glass:not(#_):not(#__){
-  -webkit-backdrop-filter: blur(3px) saturate(1.75) brightness(1.05) !important;
-  backdrop-filter: blur(3px) saturate(1.75) brightness(1.05) !important;
 }
 
 /* ---- 3. fake glass for everything that lost its blur ------------------
    A single gradient paint. It reads as glass because it IS sitting on the
    blurred .main sheet -- the highlight and the hairline are what the eye
    actually reads as "glass", not the (invisible, at this point) blur. */
-.instance-card, .version-tile, .mod-card, .mod-row, .installed-mod-row,
-.settings-group, .dock-card, .se-card, .sync-card, .skins-library,
-.skins-preview, .fr-main, .fr-sidebar, .ad-column, .applied-details,
-.srv-console, .crash-banner, .discord-link-banner, .palette-box,
-.confirm-panel, .crop-panel, .glass{
+.instance-card:not(.liquid-glass), .version-tile, .mod-card:not(.liquid-glass), .mod-row, .installed-mod-row,
+.settings-group:not(.liquid-glass), .dock-card:not(.liquid-glass), .se-card:not(.liquid-glass), .sync-card:not(.liquid-glass), .skins-library:not(.liquid-glass),
+.skins-preview:not(.liquid-glass), .fr-main:not(.liquid-glass), .fr-sidebar:not(.liquid-glass), .applied-details:not(.liquid-glass),
+.srv-console:not(.liquid-glass), .crash-banner, .discord-link-banner:not(.liquid-glass), .palette-box:not(.liquid-glass),
+.confirm-panel:not(.liquid-glass), .crop-panel:not(.liquid-glass), .glass:not(.liquid-glass){
   background-image:linear-gradient(
     180deg,
     rgba(255,255,255,0.055) 0%,
@@ -2559,7 +2751,7 @@ body.dropdown-open .instance-grid {
     rgba(255,255,255,0.006) 100%);
 }
 
-.launch-btn, .chip, .level-card, .edition-switch, .launch-another, .bedrock-launch, .monitor-chip{
+.launch-btn:not(.liquid-glass), .chip:not(.liquid-glass), .level-card:not(.liquid-glass), .edition-switch:not(.liquid-glass), .launch-another:not(.liquid-glass), .bedrock-launch:not(.liquid-glass), .monitor-chip:not(.liquid-glass){
   background-color:rgba(30,24,56,0.46) !important;
   background-image:linear-gradient(
     180deg,
@@ -2710,13 +2902,19 @@ body.modal-open .blob{
 }
 
 /* ---- 7. perf mode: strip the shell blur too --------------------------
-   Bound to the existing Performance Mode toggle. On integrated graphics
-   this is the difference between a smooth window and a slideshow. */
+   Bound to the existing Performance Mode / Lightweight graphics toggle.
+   Liquid-glass layers (.lq-backdrop / .lq-refract) are excluded — the engine
+   switches them to a frost tier instead of killing the material. */
 body.perf-lite *:not(#_):not(#__):not(#___),
 body.perf-lite *:not(#_):not(#__):not(#___)::before,
 body.perf-lite *:not(#_):not(#__):not(#___)::after{
   -webkit-backdrop-filter:none !important;
   backdrop-filter:none !important;
+  box-shadow:none !important;
+}
+body.perf-lite .lq-backdrop:not(#_):not(#__):not(#___),
+body.perf-lite .lq-refract:not(#_):not(#__):not(#___){
+  /* Engine re-applies frost blur with inline !important — leave property alone. */
   box-shadow:none !important;
 }
 body.perf-lite .blob{display:none !important;}
@@ -2740,12 +2938,14 @@ body.perf-lite #starfield{display:none !important;}
 
 /* ---------- version badges (title bar + Settings > About) ---------- */
 .titlebar-version{
-  margin-left:7px; padding:1px 6px; border-radius:6px;
+  margin-left:0; padding:1px 6px; border-radius:6px;
   font-size:10.5px; font-weight:700; letter-spacing:0.3px;
   color:var(--accent);
+  -webkit-text-fill-color:var(--accent);
   background:color-mix(in srgb, var(--accent) 16%, transparent);
   border:1px solid color-mix(in srgb, var(--accent) 32%, transparent);
   vertical-align:middle;
+  flex-shrink:0;
 }
 .about-version{
   font-size:13px; font-weight:700; color:var(--text);
@@ -2754,207 +2954,107 @@ body.perf-lite #starfield{display:none !important;}
 .about-version.dim{ color:var(--text-dim); font-weight:600; }
 
 /* =====================================================================
-   LIQUID GLASS — lensing material (Apple Liquid Glass / Chance refs)
+   LIQUID GLASS — liqui.design anatomy (own Electron reimplementation)
 
-   What it IS (research + refs):
-     • Edge LENSING — SDF displacement bends the backdrop at the rim
-     • Clear / quiet center — not milky frost, not chrome plastic
-     • Soft thickness — one faint top-edge catch of light
-     • Chromatic fringe from RGB displacement passes (not a painted stroke)
-
-   What it is NOT (why previous passes looked wrong):
-     • Hard border / “stroke”
-     • Hot white specular sheets / soft-light gloss floods
-     • Fat rainbow ::after outline
-     • Heavy frost blur that kills the lens
-
-   Layout / ads untouched. Surface only.
+   Backdrop A (.lq-backdrop): blur + saturate
+   Backdrop B (.lq-refract):  displacement-only url(#sc-lq-*)
+   Tint / specular / shine / content stacking — same as @liqui-design/glass
+   Host never carries backdrop-filter (nested blur kills the lens).
+   Ad column uses liquid-glass too (Chance); iframe boxes stay above via z-index.
    ===================================================================== */
 
+:root{
+  --lq-tint: rgba(30, 32, 46, 0.55);
+  --lq-tint-deep: rgba(18, 20, 32, 0.32);
+  --lq-rim-hi: rgba(255, 255, 255, 0.50);
+  --lq-rim-lo: rgba(255, 255, 255, 0.12);
+  --lq-shadow: 0 16px 40px rgba(0,0,5,0.45), 0 4px 12px rgba(0,0,5,0.28);
+}
+
 .liquid-glass,
-.lg-backboard,
-.launch-btn.liquid-glass,
-.launch-another.liquid-glass,
-.bedrock-launch.liquid-glass,
-.chip.liquid-glass,
-.level-card.liquid-glass,
-.edition-switch.liquid-glass{
-  --lg-fill: rgba(255,255,255,0.06);
-  --lg-tint: rgba(16, 20, 36, 0.12);
+.liquid-glass.lq-surface{
   position:relative !important;
   isolation:isolate !important;
   overflow:hidden !important;
   color:#fff !important;
   border:1px solid transparent !important;
-  background-color:transparent !important;
-  background-image:none !important;
-  background:
-    linear-gradient(180deg, var(--lg-fill) 0%, transparent 42%, var(--lg-tint) 100%) !important;
-  /* Tiny blur only — refraction does the work */
-  -webkit-backdrop-filter: blur(3px) saturate(1.8) brightness(1.06) !important;
-  backdrop-filter: blur(3px) saturate(1.8) brightness(1.06) !important;
-  -webkit-backdrop-filter: blur(2px) saturate(1.85) brightness(1.08) url(#solar-liquid-glass) !important;
-  backdrop-filter: blur(2px) saturate(1.85) brightness(1.08) url(#solar-liquid-glass) !important;
-  box-shadow:
-    /* depth under the pane — not a glow outline */
-    0 10px 28px rgba(0,0,0,0.36),
-    0 2px 8px rgba(0,0,0,0.18),
-    /* single soft top-edge catch (specular edge, not a stroke) */
-    inset 0 1px 0 rgba(255,255,255,0.28),
-    inset 0 -8px 18px -10px rgba(0,0,0,0.28) !important;
-  transition:
-    transform .22s cubic-bezier(.2,.7,.3,1),
-    box-shadow .28s ease,
-    background .28s ease !important;
-}
-
-.level-card.liquid-glass,
-.content-bar.liquid-glass,
-.dock-card.liquid-glass,
-.settings-group.liquid-glass,
-.skins-preview.liquid-glass,
-.skins-library.liquid-glass,
-.fr-main.liquid-glass,
-.fr-sidebar.liquid-glass,
-.se-card.liquid-glass,
-.sync-card.liquid-glass,
-.applied-details.liquid-glass,
-.srv-console.liquid-glass,
-.palette-box.liquid-glass,
-.confirm-panel.liquid-glass,
-.crop-panel.liquid-glass,
-.version-popover.liquid-glass,
-.version-picker-panel.liquid-glass,
-.discord-link-banner.liquid-glass,
-.account-menu.liquid-glass,
-.srv-card.liquid-glass,
-.fr-invite.liquid-glass{
-  -webkit-backdrop-filter: blur(3px) saturate(1.8) brightness(1.06) !important;
-  backdrop-filter: blur(3px) saturate(1.8) brightness(1.06) !important;
-  -webkit-backdrop-filter: blur(2px) saturate(1.85) brightness(1.08) url(#solar-liquid-glass-card) !important;
-  backdrop-filter: blur(2px) saturate(1.85) brightness(1.08) url(#solar-liquid-glass-card) !important;
-}
-
-.instance-card.liquid-glass,
-.mod-card.liquid-glass{
-  -webkit-backdrop-filter: blur(3px) saturate(1.75) brightness(1.05) !important;
-  backdrop-filter: blur(3px) saturate(1.75) brightness(1.05) !important;
-}
-
-/* Host shells stay transparent; lens lives on .lg-backboard */
-.main.liquid-glass,
-.sidebar.liquid-glass{
-  isolation:isolate !important;
   background:transparent !important;
   background-image:none !important;
-  border:1px solid transparent !important;
   -webkit-backdrop-filter:none !important;
   backdrop-filter:none !important;
-  box-shadow:0 12px 32px rgba(0,0,0,0.30) !important;
-}
-.main.liquid-glass > .lg-backboard,
-.sidebar.liquid-glass > .lg-backboard{
-  position:absolute !important;
-  inset:0 !important;
-  z-index:-1 !important;
-  pointer-events:none !important;
-  border-radius:inherit !important;
-  border:none !important;
-  --lg-fill: rgba(255,255,255,0.05);
-  --lg-tint: rgba(12, 14, 28, 0.14);
-  background:
-    linear-gradient(180deg, var(--lg-fill) 0%, transparent 45%, var(--lg-tint) 100%) !important;
-  -webkit-backdrop-filter: blur(3px) saturate(1.8) brightness(1.06) !important;
-  backdrop-filter: blur(3px) saturate(1.8) brightness(1.06) !important;
-  -webkit-backdrop-filter: blur(2px) saturate(1.85) brightness(1.08) url(#solar-liquid-glass-panel) !important;
-  backdrop-filter: blur(2px) saturate(1.85) brightness(1.08) url(#solar-liquid-glass-panel) !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.22),
-    inset 0 -10px 20px -12px rgba(0,0,0,0.30) !important;
+  box-shadow:var(--lq-shadow) !important;
 }
 
-/* Quiet sheen only — NEVER a hot glossy sheet (that was the “too shiny”) */
-.liquid-glass::before,
-.lg-backboard::before,
-.launch-btn.liquid-glass::before,
-.launch-another.liquid-glass::before,
-.bedrock-launch.liquid-glass::before,
-.chip.liquid-glass::before,
-.level-card.liquid-glass::before,
-.edition-switch.liquid-glass::before{
-  content:'' !important;
+.lq-backdrop,
+.lq-refract,
+.lq-tint,
+.lq-specular,
+.lq-shine{
   position:absolute !important;
   inset:0 !important;
   border-radius:inherit !important;
   pointer-events:none !important;
+}
+
+.lq-backdrop,
+.lq-refract{
   z-index:0 !important;
-  transform:none !important;
-  animation:none !important;
-  background:
-    radial-gradient(90% 55% at 20% 0%,
-      rgba(255,255,255,0.18) 0%,
-      transparent 55%) !important;
-  mix-blend-mode:normal;
-  opacity:0.55 !important;
 }
 
-/* No painted prism stroke — chromatic comes from the SDF RGB passes */
-.liquid-glass::after,
-.lg-backboard::after,
-.launch-btn.liquid-glass::after,
-.launch-another.liquid-glass::after,
-.bedrock-launch.liquid-glass::after,
-.chip.liquid-glass::after,
-.level-card.liquid-glass::after,
-.edition-switch.liquid-glass::after{
+.lq-tint{
+  z-index:1 !important;
+  background:linear-gradient(135deg, var(--lq-tint), var(--lq-tint-deep)) !important;
+  opacity:1;
+}
+
+.lq-specular{
+  z-index:2 !important;
+  background-size:100% 100% !important;
+  background-repeat:no-repeat !important;
+}
+
+.lq-shine{
+  z-index:2 !important;
+  box-shadow:
+    inset 0 1px 1px var(--lq-rim-hi),
+    inset 1px 0 1px 0.5px color-mix(in srgb, var(--lq-rim-hi) 60%, transparent),
+    inset -1px -1px 1px var(--lq-rim-lo) !important;
+  background:none !important;
+}
+
+/* Content above every glass layer (engine inserts layers as first children) */
+.liquid-glass.lq-surface > *:not(.lq-backdrop):not(.lq-refract):not(.lq-tint):not(.lq-specular):not(.lq-shine){
+  position:relative !important;
+  z-index:3 !important;
+}
+
+.liquid-glass::before,
+.liquid-glass::after{
   content:none !important;
   display:none !important;
 }
 
-.liquid-glass > *:not(.lg-backboard),
-.launch-btn.liquid-glass > *,
-.launch-another.liquid-glass > *,
-.bedrock-launch.liquid-glass > *,
-.chip.liquid-glass > *,
-.level-card.liquid-glass > *,
-.edition-switch.liquid-glass > *{
-  position:relative !important;
-  z-index:2 !important;
+.main.liquid-glass,
+.sidebar.liquid-glass{
+  isolation:isolate !important;
+  background:transparent !important;
+  box-shadow:0 12px 32px rgba(0,0,0,0.30) !important;
 }
 
-/* Controls: slight lift, still no stroke / no chrome flood */
 .launch-btn.liquid-glass:hover:not(:disabled),
 .launch-another.liquid-glass:hover:not(:disabled),
 .bedrock-launch.liquid-glass:hover:not(:disabled),
 .chip.liquid-glass:hover:not(:disabled){
   transform:translateY(-2px) !important;
-  border-color:transparent !important;
-  background:
-    linear-gradient(180deg,
-      rgba(255,255,255,0.10) 0%,
-      transparent 48%,
-      rgba(18, 22, 40, 0.16) 100%) !important;
   box-shadow:
     0 14px 34px rgba(0,0,0,0.40),
-    0 0 24px color-mix(in srgb, var(--accent) 22%, transparent),
-    inset 0 1px 0 rgba(255,255,255,0.34),
-    inset 0 -8px 18px -10px rgba(0,0,0,0.26) !important;
-}
-.launch-btn.liquid-glass:hover:not(:disabled)::before,
-.chip.liquid-glass:hover:not(:disabled)::before,
-.bedrock-launch.liquid-glass:hover:not(:disabled)::before,
-.launch-another.liquid-glass:hover:not(:disabled)::before{
-  opacity:0.70 !important;
+    0 0 24px color-mix(in srgb, var(--accent) 22%, transparent) !important;
 }
 .launch-btn.liquid-glass:active:not(:disabled),
 .launch-another.liquid-glass:active:not(:disabled),
 .bedrock-launch.liquid-glass:active:not(:disabled),
 .chip.liquid-glass:active:not(:disabled){
   transform:translateY(0) scale(0.990) !important;
-  box-shadow:
-    0 6px 16px rgba(0,0,0,0.32),
-    inset 0 2px 8px rgba(0,0,0,0.28),
-    inset 0 1px 0 rgba(255,255,255,0.20) !important;
   transition-duration:.08s !important;
 }
 .liquid-glass:disabled,
@@ -2966,35 +3066,6 @@ body.perf-lite #starfield{display:none !important;}
   filter:saturate(0.7) !important;
 }
 
-.main.liquid-glass:hover,
-.sidebar.liquid-glass:hover,
-.content-bar.liquid-glass:hover,
-.dock-card.liquid-glass:hover,
-.settings-group.liquid-glass:hover,
-.skins-preview.liquid-glass:hover,
-.skins-library.liquid-glass:hover,
-.fr-main.liquid-glass:hover,
-.fr-sidebar.liquid-glass:hover,
-.se-card.liquid-glass:hover,
-.sync-card.liquid-glass:hover,
-.applied-details.liquid-glass:hover,
-.srv-console.liquid-glass:hover,
-.palette-box.liquid-glass:hover,
-.confirm-panel.liquid-glass:hover,
-.crop-panel.liquid-glass:hover,
-.version-popover.liquid-glass:hover,
-.version-picker-panel.liquid-glass:hover,
-.discord-link-banner.liquid-glass:hover,
-.account-menu.liquid-glass:hover,
-.srv-card.liquid-glass:hover,
-.fr-invite.liquid-glass:hover,
-.instance-card.liquid-glass:hover,
-.mod-card.liquid-glass:hover,
-.level-card.liquid-glass:hover,
-.edition-switch.liquid-glass:hover{
-  transform:none !important;
-}
-
 .edition-switch.liquid-glass .edition-btn{
   background:transparent !important;
   border:none !important;
@@ -3003,19 +3074,11 @@ body.perf-lite #starfield{display:none !important;}
   backdrop-filter:none !important;
 }
 .edition-switch.liquid-glass .edition-btn.active{
-  background:rgba(255,255,255,0.10) !important;
+  /* Same dark selected pill as Content / Library. */
+  background:rgba(22,22,30,0.88) !important;
   color:#fff !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.28),
-    0 4px 12px rgba(0,0,0,0.14) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 0 1px rgba(255,255,255,0.08), 0 2px 10px rgba(0,0,0,0.30) !important;
   border-radius:inherit;
-}
-
-.launch-btn.liquid-glass.stopping{
-  --lg-fill: rgba(255,180,180,0.10);
-  --lg-tint: rgba(70, 12, 18, 0.22);
-  background:
-    linear-gradient(180deg, var(--lg-fill) 0%, transparent 42%, var(--lg-tint) 100%) !important;
 }
 
 .bedrock-launch.liquid-glass,
@@ -3024,32 +3087,29 @@ body.perf-lite #starfield{display:none !important;}
   color:#fff !important;
 }
 
-body.perf-lite .liquid-glass,
-body.perf-lite .lg-backboard{
-  -webkit-backdrop-filter:none !important;
-  backdrop-filter:none !important;
-  background:
-    linear-gradient(180deg,
-      rgba(255,255,255,0.12) 0%,
-      rgba(40, 34, 64, 0.78) 100%) !important;
-  filter:none !important;
+body.perf-lite .liquid-glass{
+  /* Frost fallback is applied by the engine — keep host transparent. */
+  background:transparent !important;
 }
-body.perf-lite .liquid-glass::before,
-body.perf-lite .lg-backboard::before{
-  opacity:0.35 !important;
+body.perf-lite .lq-refract,
+body.perf-lite .lq-specular{
+  display:none !important;
+}
+body.perf-lite .lq-backdrop,
+body.perf-lite .lq-tint,
+body.perf-lite .lq-shine{
+  display:block !important;
 }
 
-/* Kill leftover painted strokes on liquid surfaces */
 .liquid-glass,
 .liquid-glass:hover,
 .liquid-glass:hover:not(:disabled),
-.lg-backboard,
 .main.liquid-glass,
 .sidebar.liquid-glass{
   border-color:transparent !important;
 }
 
-/* ---- AD COLUMN LOCK — plain glass only, never liquid-glass overlays ---- */
+/* ---- AD COLUMN — same liquid-glass recipe as .main; keep layout locked ---- */
 #ad-column.ad-column,
 .ad-column#ad-column{
   display:flex !important;
@@ -3065,25 +3125,40 @@ body.perf-lite .lg-backboard::before{
   gap:10px !important;
   align-items:center !important;
   overflow:hidden !important;
-  isolation:auto !important;
-  color:inherit !important;
-  border:1px solid var(--glass-line) !important;
-  background:var(--glass-bg) !important;
-  background-image:linear-gradient(
-    180deg,
-    rgba(255,255,255,0.055) 0%,
-    rgba(255,255,255,0.018) 42%,
-    rgba(255,255,255,0.006) 100%) !important;
-  -webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.5) !important;
-  backdrop-filter:blur(var(--glass-blur)) saturate(1.5) !important;
-  box-shadow:inset 0 1px 0 var(--glass-highlight), 0 8px 32px rgba(0,0,0,0.35) !important;
+  isolation:isolate !important;
   filter:none !important;
   transform:none !important;
+  background:transparent !important;
+  border-color:transparent !important;
+  box-shadow:0 12px 32px rgba(0,0,0,0.30) !important;
 }
-#ad-column.ad-column::before,
-#ad-column.ad-column::after,
-.ad-column#ad-column::before,
-.ad-column#ad-column::after{
-  content:none !important;
-  display:none !important;
+/* Iframes must sit above the liquid-glass layer stack. */
+#ad-column .ad-box,
+#ad-column .ad-column-label{
+  position:relative !important;
+  z-index:4 !important;
 }
+
+/* Interior bars match the clearer topbar glass (less muddy nested tint). */
+.content-bar.glass.liquid-glass,
+.settings-group.glass.liquid-glass{
+  box-shadow:0 12px 32px rgba(0,0,0,0.30) !important;
+}
+.content-bar.liquid-glass.lq-surface > .lq-tint,
+.settings-group.liquid-glass.lq-surface > .lq-tint{
+  opacity:0.72 !important;
+}
+
+/* Online presence chip — sits in the open topbar space, launch-button type. */
+.online-indicator{
+  display:flex; align-items:center; gap:9px; flex-shrink:0;
+  margin:0 auto; padding:7px 16px; border-radius:999px;
+  background:rgba(255,255,255,0.07); border:1px solid var(--glass-line-strong);
+  font-size:12.5px; font-weight:900; letter-spacing:1px; text-transform:uppercase;
+  color:#fff; text-shadow:0 2px 10px rgba(0,0,0,0.4);
+}
+.online-indicator.hidden{display:none;}
+.online-dot{width:8px;height:8px;border-radius:50%; background:var(--ok); box-shadow:0 0 10px var(--ok); animation:pulse-dot 1.6s ease-in-out infinite;}
+.online-indicator.offline{color:var(--text-dim);}
+.online-indicator.offline .online-dot{background:var(--text-faint); box-shadow:none; animation:none;}
+

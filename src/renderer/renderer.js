@@ -41,15 +41,27 @@ const ACCENTS = [
 ];
 
 const defaultTheme = {
-  bg: 'nebula', accent: 'nebula', blur: 18, alpha: 55, sceneDim: 55,
+  bg: 'nebula', accent: 'nebula', blur: 18, alpha: 34, sceneDim: 9,
   animations: true, particles: true, parallax: true, trail: false,
   perfMode: true, memMax: 4, memMin: 2, customBgUrl: null,
   lowGraphics: false,   // auto-enabled by the quality governor on weak GPUs
   customBgPosX: 50, customBgPosY: 50,
+  monBgSync: true,
+  monBg: 'nebula',
 };
 let theme = { ...defaultTheme };
 try { theme = { ...defaultTheme, ...JSON.parse(localStorage.getItem('nebula-theme') || '{}') }; } catch { /* fresh */ }
-function saveTheme() { localStorage.setItem('nebula-theme', JSON.stringify(theme)); }
+// One-shot: adopt Chance's tuned glass shell/dim as the new baseline.
+if (localStorage.getItem('nebula-glass-defaults-v') !== '3') {
+  theme.alpha = 34;
+  theme.sceneDim = 9;
+  localStorage.setItem('nebula-glass-defaults-v', '3');
+  try { localStorage.setItem('nebula-theme', JSON.stringify(theme)); } catch { /* ignore */ }
+}
+function saveTheme() {
+  localStorage.setItem('nebula-theme', JSON.stringify(theme));
+  try { window.nebula.notifyThemeChanged?.(); } catch { /* monitor may not be open */ }
+}
 
 function hexToRgba(hex, a) {
   const n = parseInt(hex.slice(1), 16);
@@ -65,6 +77,10 @@ function applyTheme() {
   root.setProperty('--accent-glow', hexToRgba(accent.a, 0.5));
   root.setProperty('--glass-blur', `${theme.blur}px`);
   root.setProperty('--glass-alpha', `${theme.alpha / 100}`);
+  // Shell opacity drives liqui tint density (dark theme tokens × alpha).
+  const a = theme.alpha / 100;
+  root.setProperty('--lq-tint', `rgba(30, 32, 46, ${(0.35 + 0.45 * a).toFixed(3)})`);
+  root.setProperty('--lq-tint-deep', `rgba(18, 20, 32, ${(0.18 + 0.35 * a).toFixed(3)})`);
 
   const isCustom = theme.bg === 'custom' && theme.customBgUrl;
   const bg = isCustom ? { kind: 'scene' } : (window.NEBULA_BACKGROUNDS[theme.bg] || window.NEBULA_BACKGROUNDS.nebula);
@@ -76,6 +92,10 @@ function applyTheme() {
     sceneEl.style.backgroundPosition = `${theme.customBgPosX ?? 50}% ${theme.customBgPosY ?? 50}%`;
     sceneEl.classList.add('show');
   } else if (bg.kind === 'scene') {
+    if (typeof bg.make !== 'function') {
+      ensureBackgrounds().then(() => applyTheme()).catch(() => {});
+      return;
+    }
     if (!sceneCache[theme.bg]) sceneCache[theme.bg] = bg.make();
     sceneEl.style.backgroundImage = sceneCache[theme.bg];
     sceneEl.style.imageRendering = 'pixelated';
@@ -101,8 +121,30 @@ function applyTheme() {
   // separate from theme.perfMode, which is about Java launch flags -- this
   // one is purely about what the launcher's own window costs to draw.
   document.body.classList.toggle('perf-lite', !!theme.lowGraphics);
+  if (window.SolarLiquidGlass) window.SolarLiquidGlass.refreshAll();
 }
 applyTheme();
+
+let _backgroundsPromise = null;
+function ensureBackgrounds() {
+  if (window.__nebulaBackgroundsFull) return Promise.resolve();
+  if (_backgroundsPromise) return _backgroundsPromise;
+  _backgroundsPromise = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'backgrounds.js';
+    s.onload = () => { window.__nebulaBackgroundsFull = true; resolve(); };
+    s.onerror = () => reject(new Error('backgrounds.js failed to load'));
+    document.head.appendChild(s);
+  });
+  return _backgroundsPromise;
+}
+
+// If the user last used a procedural scene, load generators then re-apply.
+(function bootSceneBg() {
+  const id = theme.bg;
+  if (id === 'custom' || id === 'nebula' || id === 'void' || !id) return;
+  ensureBackgrounds().then(() => applyTheme()).catch(() => {});
+})();
 
 // ---------- starfield canvas (twinkle + occasional shooting star) ----------
 //
@@ -172,9 +214,8 @@ applyTheme();
     if (!running) { rafId = 0; return; }
     rafId = requestAnimationFrame(frame);
 
-    // 20fps is indistinguishable for a twinkle and costs a third of what
-    // 60 does. Ambience should never compete with the UI for the GPU.
-    if (t - last < 50) return;
+    // ~10fps ambience — enough twinkle, half the GPU cost under glass.
+    if (t - last < 100) return;
     last = t;
 
     if (!layerA) return;
@@ -245,11 +286,16 @@ applyTheme();
   // applyTheme() flips theme.particles; expose the controls so it can
   // start/stop us instead of us polling a flag every frame.
   window.__starfield = { start, stop };
-  start();
+  // Defer ambience until after the first paint so glass shells win the
+  // compositor race on cold start.
+  requestAnimationFrame(() => requestAnimationFrame(() => start()));
 })();
 
 // ---------- customize tab controls ----------
 function renderCustomize() {
+  ensureBackgrounds().then(() => renderCustomizeNow());
+}
+function renderCustomizeNow() {
   // background presets
   const grid = document.getElementById('bg-preset-grid');
   grid.innerHTML = '';
@@ -269,7 +315,7 @@ function renderCustomize() {
   const custom = document.createElement('div');
   custom.className = 'bg-preset' + (theme.bg === 'custom' ? ' active' : '');
   const hasImg = !!theme.customBgUrl;
-  custom.innerHTML = `<div class="thumb custom-thumb${hasImg ? ' has-image' : ''}">＋</div><div class="label">Your photo</div>${hasImg ? '<div class="bg-custom-remove">Remove photo</div><div class="bg-custom-crop">Adjust crop</div>' : ''}`;
+  custom.innerHTML = `<div class="thumb custom-thumb${hasImg ? ' has-image' : ''}">ï¼‹</div><div class="label">Your photo</div>${hasImg ? '<div class="bg-custom-remove">Remove photo</div><div class="bg-custom-crop">Adjust crop</div>' : ''}`;
   if (hasImg) custom.querySelector('.thumb').style.backgroundImage = `url("${theme.customBgUrl}")`;
   custom.querySelector('.thumb').addEventListener('click', async () => {
     if (theme.customBgUrl && theme.bg !== 'custom') { theme.bg = 'custom'; saveTheme(); applyTheme(); renderCustomize(); return; }
@@ -289,6 +335,79 @@ function renderCustomize() {
   });
   custom.querySelector('.bg-custom-crop')?.addEventListener('click', (e) => { e.stopPropagation(); openCropModal(); });
   grid.appendChild(custom);
+
+  // Monitor background presets (+ sync toggle)
+  const monSync = document.getElementById('mon-bg-sync');
+  const monGrid = document.getElementById('mon-bg-preset-grid');
+  if (monSync) {
+    monSync.checked = theme.monBgSync !== false;
+    monSync.onchange = () => {
+      theme.monBgSync = monSync.checked;
+      saveTheme();
+      renderCustomize();
+    };
+  }
+  if (monGrid) {
+    monGrid.innerHTML = '';
+    monGrid.style.opacity = theme.monBgSync !== false ? '0.45' : '1';
+    monGrid.style.pointerEvents = theme.monBgSync !== false ? 'none' : 'auto';
+    const monActive = theme.monBgSync !== false ? theme.bg : (theme.monBg || 'nebula');
+    for (const [id, bg] of Object.entries(window.NEBULA_BACKGROUNDS)) {
+      const card = document.createElement('div');
+      card.className = 'bg-preset' + (monActive === id ? ' active' : '');
+      const thumbClass = bg.kind === 'nebula' ? 'thumb nebula-thumb' : bg.kind === 'void' ? 'thumb void-thumb' : 'thumb';
+      card.innerHTML = `<div class="${thumbClass}"></div><div class="label">${bg.name}</div>`;
+      if (bg.kind === 'scene') {
+        if (!sceneCache[id]) sceneCache[id] = bg.make();
+        card.querySelector('.thumb').style.backgroundImage = sceneCache[id];
+      }
+      card.addEventListener('click', () => {
+        theme.monBg = id;
+        theme.monBgSync = false;
+        if (monSync) monSync.checked = false;
+        saveTheme();
+        renderCustomize();
+      });
+      monGrid.appendChild(card);
+    }
+    // Your photo / Remove / Adjust crop for Monitor (same as launcher bg).
+    const monCustom = document.createElement('div');
+    const monCustomActive = monActive === 'custom' || (!theme.monBgSync && theme.monBg === 'custom');
+    monCustom.className = 'bg-preset' + (monCustomActive ? ' active' : '');
+    const monHasImg = !!theme.customBgUrl;
+    monCustom.innerHTML = `<div class="thumb custom-thumb${monHasImg ? ' has-image' : ''}">＋</div><div class="label">Your photo</div>${monHasImg ? '<div class="bg-custom-remove">Remove photo</div><div class="bg-custom-crop">Adjust crop</div>' : ''}`;
+    if (monHasImg) monCustom.querySelector('.thumb').style.backgroundImage = `url("${theme.customBgUrl}")`;
+    monCustom.querySelector('.thumb').addEventListener('click', async () => {
+      if (theme.customBgUrl && theme.monBg !== 'custom') {
+        theme.monBg = 'custom';
+        theme.monBgSync = false;
+        if (monSync) monSync.checked = false;
+        saveTheme();
+        renderCustomize();
+        return;
+      }
+      const picked = await window.nebula.pickBackgroundImage();
+      if (!picked) return;
+      theme.customBgUrl = picked.fileUrl;
+      theme.monBg = 'custom';
+      theme.monBgSync = false;
+      theme.customBgPosX = 50; theme.customBgPosY = 50;
+      if (monSync) monSync.checked = false;
+      saveTheme();
+      renderCustomize();
+      showToast('Monitor background set', 'Your photo will show on the Game Monitor.', 'success');
+      openCropModal();
+    });
+    monCustom.querySelector('.bg-custom-remove')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (theme.monBg === 'custom') theme.monBg = 'nebula';
+      saveTheme();
+      renderCustomize();
+    });
+    monCustom.querySelector('.bg-custom-crop')?.addEventListener('click', (e) => { e.stopPropagation(); openCropModal(); });
+    monGrid.appendChild(monCustom);
+  }
+
   // accents
   const row = document.getElementById('accent-row');
   row.innerHTML = '';
@@ -302,8 +421,6 @@ function renderCustomize() {
     row.appendChild(sw);
   }
   // sliders/toggles
-  document.getElementById('glass-blur').value = theme.blur;
-  document.getElementById('glass-blur-label').textContent = theme.blur;
   document.getElementById('glass-alpha').value = theme.alpha;
   document.getElementById('glass-alpha-label').textContent = theme.alpha;
   document.getElementById('anim-toggle').checked = theme.animations;
@@ -313,6 +430,7 @@ function renderCustomize() {
   document.getElementById('lowgfx-toggle').checked = !!theme.lowGraphics;
   document.getElementById('scene-dim').value = theme.sceneDim;
   document.getElementById('scene-dim-label').textContent = theme.sceneDim;
+  syncLiquidOpticsUI();
 }
 
 // ---------- background crop tool ----------
@@ -357,11 +475,6 @@ function openCropModal() {
   };
   document.getElementById('crop-cancel').onclick = cleanup;
 }
-document.getElementById('glass-blur').addEventListener('input', (e) => {
-  theme.blur = Number(e.target.value);
-  document.getElementById('glass-blur-label').textContent = theme.blur;
-  saveTheme(); applyTheme();
-});
 document.getElementById('glass-alpha').addEventListener('input', (e) => {
   theme.alpha = Number(e.target.value);
   document.getElementById('glass-alpha-label').textContent = theme.alpha;
@@ -386,6 +499,90 @@ document.getElementById('scene-dim').addEventListener('input', (e) => {
   document.getElementById('scene-dim-label').textContent = theme.sceneDim;
   saveTheme(); applyTheme();
 });
+
+// ---------- liquid glass optics (liqui.design dials) ----------
+function syncLiquidOpticsUI() {
+  if (!window.SolarLiquidGlass) return;
+  const o = SolarLiquidGlass.getOptics();
+  const set = (id, val, labelFn) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.value = val;
+    const lab = document.getElementById(id + '-label');
+    if (lab) lab.textContent = labelFn ? labelFn(val) : val;
+  };
+  set('lq-refraction', o.refraction);
+  set('lq-bezel', o.bezel);
+  set('lq-frost', Math.round(o.frost * 100), () => Number(o.frost).toFixed(2));
+  set('lq-blur', o.blur);
+  set('lq-specular', Math.round(o.specular * 100), () => Number(o.specular).toFixed(2));
+  const dispUi = o.dispersion > 1 ? o.dispersion : Math.round(o.dispersion * 100);
+  set('lq-dispersion', dispUi, () => String(dispUi));
+  const profile = document.getElementById('lq-profile');
+  const material = document.getElementById('lq-material');
+  if (profile) profile.value = o.profile || 'squircle';
+  if (material) material.value = o.material || 'auto';
+}
+
+function wireLiquidOptics() {
+  if (!window.SolarLiquidGlass) return;
+  // Prior builds' quality governor auto-saved lowGraphics=true / material frost,
+  // which killed refraction. Undo that once so liquid glass looks like before.
+  if (!localStorage.getItem('nebula-lq-restored-v2')) {
+    if (theme.lowGraphics) {
+      theme.lowGraphics = false;
+      saveTheme();
+      applyTheme();
+    }
+    try {
+      const raw = localStorage.getItem('nebula-liquid-optics');
+      if (raw) {
+        const o = JSON.parse(raw);
+        if (o.material === 'frost') {
+          o.material = 'auto';
+          localStorage.setItem('nebula-liquid-optics', JSON.stringify(o));
+        }
+      }
+    } catch { /* ignore */ }
+    localStorage.setItem('nebula-lq-restored-v2', '1');
+  }
+  SolarLiquidGlass.init();
+  syncLiquidOpticsUI();
+
+  const onNum = (id, key, map) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', () => {
+      const raw = Number(el.value);
+      const val = map ? map(raw) : raw;
+      SolarLiquidGlass.setOptics({ [key]: val });
+      const lab = document.getElementById(id + '-label');
+      if (lab) {
+        if (key === 'frost' || key === 'specular') lab.textContent = Number(val).toFixed(2);
+        else if (key === 'dispersion') lab.textContent = String(raw);
+        else lab.textContent = String(raw);
+      }
+    });
+  };
+  onNum('lq-refraction', 'refraction');
+  onNum('lq-bezel', 'bezel');
+  onNum('lq-frost', 'frost', (v) => v / 100);
+  onNum('lq-blur', 'blur');
+  onNum('lq-specular', 'specular', (v) => v / 100);
+  onNum('lq-dispersion', 'dispersion', (v) => v / 100);
+
+  document.getElementById('lq-profile')?.addEventListener('change', (e) => {
+    SolarLiquidGlass.setOptics({ profile: e.target.value });
+  });
+  document.getElementById('lq-material')?.addEventListener('change', (e) => {
+    SolarLiquidGlass.setOptics({ material: e.target.value });
+  });
+  document.getElementById('lq-reset')?.addEventListener('click', () => {
+    SolarLiquidGlass.resetOptics();
+    syncLiquidOpticsUI();
+  });
+}
+wireLiquidOptics();
 
 // ---------- toast notifications ----------
 function showToast(title, message, type = 'info') {
@@ -433,7 +630,14 @@ function showConfirm(message, { title = 'Are you sure?', confirmLabel = 'Confirm
 // ---------- bottom download progress bars ----------
 const downloadBars = new Map();
 function showDownloadBar(id, label) {
+  const existing = downloadBars.get(id);
+  if (existing) {
+    const lab = existing.querySelector('.download-bar-label');
+    if (lab && label) lab.textContent = label;
+    return existing;
+  }
   const container = document.getElementById('download-bar-container');
+  if (!container) return null;
   const el = document.createElement('div');
   el.className = 'download-bar';
   el.innerHTML = `
@@ -447,6 +651,7 @@ function showDownloadBar(id, label) {
   container.appendChild(el);
   requestAnimationFrame(() => el.classList.add('show'));
   downloadBars.set(id, el);
+  return el;
 }
 function updateDownloadBar(id, percent) {
   const el = downloadBars.get(id);
@@ -464,11 +669,15 @@ function removeDownloadBar(id) {
 
 // ---------- minecraft versions ----------
 let versionGroups = [];
+let versionGroupsFailed = false;
 async function loadVersionGroups() {
   try {
     versionGroups = await window.nebula.listVersionsGrouped();
+    versionGroupsFailed = false;
   } catch (err) {
     versionGroups = [];
+    versionGroupsFailed = true;
+    showToast('Versions unavailable', err?.message || 'Could not load Minecraft versions.', 'error');
   }
   renderVersionGrid();
 }
@@ -545,20 +754,34 @@ async function mountHeroSkin(uuid) {
     flat.src = renderUrl(uuid);
   };
 
+  // Show flat immediately; upgrade to 3D once skin3d.js is idle-loaded.
+  useFlatFallback();
   try {
+    await ensureSkin3D();
     const texture = await loadSkinTexture(uuid);
-    if (!texture) return useFlatFallback();
+    if (!texture || !window.Skin3D) return;
     if (!heroViewer) heroViewer = new Skin3D(canvas, { yaw: 0.5 });
     await heroViewer.setSkin(texture.dataUrl);
-    // Mojang tells us the model outright; only fall back to guessing when
-    // the texture came from somewhere that doesn't.
     if (texture.model) heroViewer.setSlim(texture.model === 'slim');
     flat.style.display = 'none';
     canvas.classList.remove('hidden');
   } catch (err) {
     console.warn('[SolarClient] skin preview failed, using flat render:', err);
-    return useFlatFallback();
   }
+}
+
+let _skin3dPromise = null;
+function ensureSkin3D() {
+  if (window.Skin3D) return Promise.resolve();
+  if (_skin3dPromise) return _skin3dPromise;
+  _skin3dPromise = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'skin3d.js';
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error('skin3d.js failed to load'));
+    document.head.appendChild(s);
+  });
+  return _skin3dPromise;
 }
 
 window.addEventListener('resize', () => { heroViewer?.requestRender(); skinsViewer?.requestRender(); });
@@ -578,23 +801,68 @@ function enhanceSelect(id) {
   const panel = document.createElement('div');
   panel.className = 'custom-select-panel hidden';
 
+  function placePanel() {
+    if (panel.classList.contains('hidden')) return;
+    const r = btn.getBoundingClientRect();
+    const pad = 6;
+    // Fit to the button — never inherit viewport width from portaled 100% CSS.
+    const width = Math.min(Math.max(r.width, 180), 280, window.innerWidth - 24);
+    let left = r.left;
+    let top = r.bottom + pad;
+    left = Math.min(left, window.innerWidth - width - 12);
+    left = Math.max(12, left);
+    const maxH = Math.min(280, window.innerHeight - top - 12);
+    panel.style.position = 'fixed';
+    panel.style.left = Math.round(left) + 'px';
+    panel.style.top = Math.round(top) + 'px';
+    panel.style.width = Math.round(width) + 'px';
+    panel.style.minWidth = Math.round(width) + 'px';
+    panel.style.maxWidth = Math.round(width) + 'px';
+    panel.style.maxHeight = Math.round(maxH) + 'px';
+    panel.style.zIndex = '1300';
+  }
+
+  function closePanel() {
+    panel.classList.add('hidden');
+    wrap.classList.remove('open');
+    if (!document.querySelector('.custom-select.open')) {
+      document.body.classList.remove('dropdown-open');
+    }
+  }
+
+  function openPanel() {
+    // Close competing menus so dropdowns never stack/overlap.
+    document.querySelectorAll('.account-menu').forEach((m) => m.remove());
+    document.querySelectorAll('.custom-select.open').forEach((w) => {
+      if (w !== wrap) w.classList.remove('open');
+    });
+    document.querySelectorAll('.custom-select-panel').forEach((p) => {
+      if (p !== panel) p.classList.add('hidden');
+    });
+    // Portal out of glass / overflow stacking so launchpad art cannot cover it.
+    if (panel.parentElement !== document.body) document.body.appendChild(panel);
+    panel.classList.remove('hidden');
+    wrap.classList.add('open');
+    document.body.classList.add('dropdown-open');
+    requestAnimationFrame(placePanel);
+  }
+
   function renderOptions() {
     panel.innerHTML = '';
     const addOption = (opt) => {
       const item = document.createElement('div');
       item.className = 'custom-select-item' + (opt.value === select.value ? ' active' : '');
       item.textContent = opt.textContent;
-      item.addEventListener('click', () => {
+      item.addEventListener('click', (e) => {
+        e.stopPropagation();
         select.value = opt.value;
         select.dispatchEvent(new Event('change', { bubbles: true }));
         syncLabel();
-        panel.classList.add('hidden');
+        closePanel();
         renderOptions();
       });
       panel.appendChild(item);
     };
-    // <optgroup> children need walking explicitly — select.options flattens
-    // them, which would drop the loader headings.
     for (const child of Array.from(select.children)) {
       if (child.tagName === 'OPTGROUP') {
         const head = document.createElement('div');
@@ -609,33 +877,21 @@ function enhanceSelect(id) {
   }
   function syncLabel() {
     const selected = select.options[select.selectedIndex];
-    btn.textContent = selected ? selected.textContent : '';
+    const label = selected ? selected.textContent : '';
+    btn.innerHTML = `<span class="cs-label"></span><span class="cs-caret" aria-hidden="true"></span>`;
+    btn.querySelector('.cs-label').textContent = label;
   }
 
   btn.addEventListener('click', (e) => {
     e.stopPropagation();
-    // Close every other dropdown (and clear their .open lift) first.
-    document.querySelectorAll('.custom-select-panel').forEach(p => {
-      if (p !== panel) {
-        p.classList.add('hidden');
-        p.closest('.custom-select')?.classList.remove('open');
-      }
-    });
-    panel.classList.toggle('hidden');
-    const isOpen = !panel.classList.contains('hidden');
-    wrap.classList.toggle('open', isOpen);
-    // The version/instance tiles use backdrop-filter, which creates its
-    // own stacking context — no z-index on the panel can beat that. The
-    // only reliable fix is hiding those tiles while a dropdown is open.
-    document.body.classList.toggle('dropdown-open', isOpen);
+    if (panel.classList.contains('hidden')) openPanel();
+    else closePanel();
   });
-  document.addEventListener('click', () => {
-    panel.classList.add('hidden');
-    wrap.classList.remove('open');
-    if (!document.querySelector('.custom-select.open')) {
-      document.body.classList.remove('dropdown-open');
-    }
+  document.addEventListener('click', (e) => {
+    if (wrap.contains(e.target) || panel.contains(e.target)) return;
+    closePanel();
   });
+  window.addEventListener('resize', () => placePanel());
 
   select.parentNode.insertBefore(wrap, select);
   wrap.appendChild(btn);
@@ -679,7 +935,7 @@ async function renderAccountBox() {
         <div class="xp-bar"><div class="xp-fill" style="width:${pct}%;background:${ore.color}"></div></div>
       </div>
     </div>
-    <span class="chev">▾</span>
+    <span class="chev" aria-hidden="true"></span>
   `;
   const img = pill.querySelector('img');
   img.onerror = () => { img.onerror = () => { img.style.display = 'none'; }; img.src = avatarUrlFallback(current.id); };
@@ -692,26 +948,48 @@ async function renderAccountBox() {
 
 async function toggleAccountMenu() {
   const existing = document.querySelector('.account-menu');
-  if (existing) { existing.remove(); return; }
+  if (existing) { existing.remove(); document.body.classList.remove('account-menu-open'); return; }
+  if (toggleAccountMenu._opening) return;
+  toggleAccountMenu._opening = true;
+
+  try {
+  // Close other dropdowns so nothing overlaps.
+  document.querySelectorAll('.custom-select.open').forEach((w) => w.classList.remove('open'));
+  document.querySelectorAll('.custom-select-panel').forEach((p) => p.classList.add('hidden'));
+  document.body.classList.remove('dropdown-open');
+  document.getElementById('version-popover')?.classList.add('hidden');
 
   const accounts = await window.nebula.listAccounts();
   const current = await window.nebula.currentAccount();
 
+  // Another click may have opened/closed while we awaited.
+  if (document.querySelector('.account-menu')) return;
+
   const menu = document.createElement('div');
-  menu.className = 'account-menu glass liquid-glass';
+  // Plain glass — liquid-glass layers were intercepting clicks on menu items.
+  menu.className = 'account-menu glass';
+  menu.addEventListener('click', (e) => e.stopPropagation());
   menu.innerHTML = accounts.map(a => `
     <div class="account-menu-item" data-id="${a.id}">
       <img src="${avatarUrl(a.id)}" alt="" onerror="this.src='${avatarUrlFallback(a.id)}'">
-      <span>${a.name}</span>
-      ${current && current.id === a.id ? '<span class="check">●</span>' : `<button class="quick-launch" data-id="${a.id}" title="Launch as this account without switching">▶</button>`}
+      <span>${escapeHtml(a.name)}</span>
+      ${current && current.id === a.id
+        ? '<span class="check" aria-label="Active"></span>'
+        : `<button type="button" class="quick-launch" data-id="${a.id}" title="Launch as this account without switching"></button>`}
     </div>
-  `).join('') + `<div class="account-menu-item action" id="menu-add-account">+ Add another account</div>`;
+  `).join('')
+    + `<div class="account-menu-item action" id="menu-add-account">+ Add another account</div>`
+    + (current
+      ? `<div class="account-menu-item action logout" id="menu-logout">Log out</div>`
+      : '');
 
   menu.querySelectorAll('.account-menu-item[data-id]').forEach(item => {
     item.addEventListener('click', async (e) => {
-      if (e.target.classList.contains('quick-launch')) return; // handled separately below
+      e.stopPropagation();
+      if (e.target.classList.contains('quick-launch')) return;
       await window.nebula.switchAccount(item.dataset.id);
       menu.remove();
+      document.body.classList.remove('account-menu-open');
       renderAccountBox();
     });
   });
@@ -719,20 +997,52 @@ async function toggleAccountMenu() {
     qbtn.addEventListener('click', async (e) => {
       e.stopPropagation();
       menu.remove();
+      document.body.classList.remove('account-menu-open');
       await launchInstance(qbtn.dataset.id);
     });
   });
-  menu.querySelector('#menu-add-account').addEventListener('click', async () => {
+  menu.querySelector('#menu-add-account')?.addEventListener('click', async (e) => {
+    e.stopPropagation();
     menu.remove();
+    document.body.classList.remove('account-menu-open');
     await doLogin();
   });
+  menu.querySelector('#menu-logout')?.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    menu.remove();
+    document.body.classList.remove('account-menu-open');
+    if (!current?.id) return;
+    try {
+      await window.nebula.removeAccount(current.id);
+      showToast('Logged out', `${current.name} signed out.`, 'success');
+    } catch (err) {
+      showToast('Logout failed', err?.message || String(err), 'error');
+    }
+    await renderAccountBox();
+    try { refreshAccountSettings(); } catch { /* settings tab may be inactive */ }
+  });
 
-  accountBox.appendChild(menu);
+  document.body.appendChild(menu);
+  document.body.classList.add('account-menu-open');
+  const pill = accountBox.querySelector('.account-pill');
+  const r = (pill || accountBox).getBoundingClientRect();
+  const width = 248;
+  let left = r.right - width;
+  left = Math.min(left, window.innerWidth - width - 12);
+  left = Math.max(12, left);
+  menu.style.left = `${Math.round(left)}px`;
+  menu.style.top = `${Math.round(r.bottom + 8)}px`;
+  } finally {
+    toggleAccountMenu._opening = false;
+  }
 }
 
-document.addEventListener('click', () => {
+document.addEventListener('click', (e) => {
   const existing = document.querySelector('.account-menu');
-  if (existing) existing.remove();
+  if (!existing) return;
+  if (existing.contains(e.target) || accountBox.contains(e.target)) return;
+  existing.remove();
+  document.body.classList.remove('account-menu-open');
 });
 
 async function doLogin() {
@@ -809,7 +1119,7 @@ function renderLevelCard(d) {
   document.getElementById('level-card-bar').style.width = `${pct}%`;
   document.getElementById('level-card-bar').style.background = ore.color;
   document.getElementById('level-card-xp').textContent =
-    `${fmtMins(d.totalXp)} / ${fmtMins(d.xpNeeded)} played`;
+    `${fmtMins(Math.min(d.totalXp, d.xpNeeded))} / ${fmtMins(d.xpNeeded)} played`;
 }
 
 refreshXpUi();
@@ -859,6 +1169,10 @@ function loaderKey(inst) {
 function loaderLabel(key) {
   return LOADER_LABEL[key] || (key[0].toUpperCase() + key.slice(1));
 }
+/** Dot-prefix loader tag for version switcher groups: `.vanilla`, `.fabric`, … */
+function loaderDotLabel(key) {
+  return `.${key || 'vanilla'}`;
+}
 
 // -> [[loaderKey, instances[]], ...] in a stable, familiar order, with any
 // unrecognised loader falling in after the known ones.
@@ -889,7 +1203,7 @@ async function refreshInstances() {
   for (const [key, instances] of groupByLoader(list)) {
     const header = document.createElement('div');
     header.className = `instance-group-label loader-${key}`;
-    header.innerHTML = `<span class="igl-dot"></span>${loaderLabel(key)}<span class="igl-count">${instances.length}</span>`;
+    header.innerHTML = `<span class="igl-dot"></span>${loaderDotLabel(key)}<span class="igl-count">${instances.length}</span>`;
     el.appendChild(header);
 
     const row = document.createElement('div');
@@ -903,7 +1217,7 @@ async function refreshInstances() {
         <div class="art">${inst.group.replace('.x', '')}</div>
         <div class="body">
           <div class="name">${escapeHtml(inst.name)}</div>
-          <div class="meta">${inst.versionNumber} · ${loaderLabel(key)}${ptStr ? ` · <span class="playtime-badge">${ptStr}</span>` : ''}</div>
+          <div class="meta">${inst.versionNumber} · ${loaderDotLabel(key)}${ptStr ? ` · <span class="playtime-badge">${ptStr}</span>` : ''}</div>
           <button class="del">Delete</button>
         </div>
       `;
@@ -924,68 +1238,46 @@ function rememberInstance(value) {
   if (value) localStorage.setItem(LAST_INSTANCE_KEY, value);
 }
 
-// RECOVERED from the newer renderer.
-//
-// src/renderer_backup/renderer.js is an OLDER build than the one that was
-// flattened. Restoring it fixed the load failure but silently reverted
-// these two helpers, so instance labels rendered as "Name (1.21.11)"
-// instead of "1.21.11 - Fabric". Re-added verbatim from the newer file.
-function formatRelativeTime(ms) {
-  const diff = Date.now() - ms;
-  if (diff < 60000) return 'Just now';
-  const mins = Math.floor(diff / 60000);
-  if (mins < 60) return `${mins} min ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs} hour${hrs > 1 ? 's' : ''} ago`;
-  const days = Math.floor(hrs / 24);
-  if (days === 1) return 'Yesterday';
-  return `${days} days ago`;
-}
-
-function formatInstanceLabel(i, includeTime = 0) {
+/** "1.21.8 .vanilla" / "1.21.11 .fabric" — a custom instance name is appended only if it adds something. */
+function formatInstanceLabel(i) {
+  const l = loaderKey(i);
   let name = i.name.replace(/[\[\]]/g, '').trim();
-  const l = (i.loader || 'vanilla').toLowerCase();
-  const lName = l.charAt(0).toUpperCase() + l.slice(1);
-  if (name.toLowerCase().startsWith(l + ' ')) name = name.substring(l.length + 1).trim();
+  const lower = name.toLowerCase();
+  if (lower.startsWith(l + ' ')) name = name.substring(l.length + 1).trim();
   if (name.toLowerCase().endsWith(' ' + l)) name = name.substring(0, name.length - l.length - 1).trim();
-  let display = name;
-  if (!name.includes(i.versionNumber)) {
-    display = `${name} — ${i.versionNumber}`;
-  }
-  if (l !== 'vanilla') {
-    display = `${display} • ${lName}`;
-  }
-  if (includeTime > 0) {
-    display = `${display} — ${formatRelativeTime(includeTime)}`;
-  }
+  let display = `${i.versionNumber} ${loaderDotLabel(l)}`;
+  if (name && name !== i.versionNumber) display = `${display} \u00b7 ${name}`;
   return escapeHtml(display);
 }
 
 async function refreshInstanceSelects(list) {
   const instances = list || await window.nebula.listInstances();
 
-  // Recently launched, newest first — also from the newer renderer.
+  // Recent launches (same store the version popover uses), newest first.
   let lastLaunchedHtml = '';
   try {
-    const last = JSON.parse(localStorage.getItem('solar-last-launched') || '[]');
-    if (last.length > 0) {
-      const opts = last.map(l => {
-        const match = instances.find(inst =>
-          inst.name === l.instanceName &&
-          inst.versionNumber === l.versionNumber &&
-          (inst.loader || 'vanilla') === (l.loader || 'vanilla'));
-        if (!match) return '';
-        return `<option value="${escapeHtml(`${match.name}|${match.versionNumber}|${match.loader}`)}">${formatInstanceLabel(match, l.time)}</option>`;
-      }).filter(Boolean);
-      if (opts.length > 0) {
-        lastLaunchedHtml = `<optgroup label="Recently launched">${opts.join('')}</optgroup>`;
-      }
+    const seen = new Set();
+    const opts = loadRecentLaunches().map(r => {
+      const loader = (r.loader || 'vanilla').toLowerCase();
+      const match = instances.find(inst =>
+        inst.name === r.name && inst.versionNumber === r.versionNumber
+        && (inst.loader || 'vanilla').toLowerCase() === loader)
+        || instances.find(inst => inst.versionNumber === r.versionNumber
+        && (inst.loader || 'vanilla').toLowerCase() === loader);
+      if (!match) return '';
+      const val = `${match.name}|${match.versionNumber}|${match.loader}`;
+      if (seen.has(val)) return '';
+      seen.add(val);
+      return `<option value="${escapeHtml(val)}">${formatInstanceLabel(match)}</option>`;
+    }).filter(Boolean);
+    if (opts.length > 0) {
+      lastLaunchedHtml = `<optgroup label="Recent">${opts.join('')}</optgroup>`;
     }
   } catch { /* corrupt entry: fall through to the plain list */ }
 
   const grouped = groupByLoader(instances);
   const optsHtml = grouped.map(([key, items]) => `
-    <optgroup label="${loaderLabel(key)}">
+    <optgroup label="${loaderDotLabel(key)}">
       ${items.map(i => `<option value="${escapeHtml(`${i.name}|${i.versionNumber}|${i.loader}`)}">${formatInstanceLabel(i)}</option>`).join('')}
     </optgroup>
   `).join('');
@@ -1192,7 +1484,7 @@ async function updateLaunchState() {
     chipLabel.textContent = name;
     // speculative pre-cache: start pulling this instance's files right now,
     // so by the time Launch is clicked there's (often) nothing left to download
-    window.nebula.prewarm({ instanceName: name, versionNumber: version });
+    window.nebula.prewarm({ instanceName: name, versionNumber: version, loader: loader || 'vanilla' });
   } else {
     chipLabel.textContent = 'No instance';
   }
@@ -1290,7 +1582,7 @@ async function openSyncModal() {
     || document.getElementById('launch-instance-select').value;
 
   const optionsFor = (sel) => groupByLoader(instances).map(([key, items]) => `
-    <optgroup label="${loaderLabel(key)}">
+    <optgroup label="${loaderDotLabel(key)}">
       ${items.map(i => `<option value="${escapeHtml(instanceValue(i))}">${escapeHtml(i.name)} (${i.versionNumber})</option>`).join('')}
     </optgroup>`).join('');
 
@@ -1460,7 +1752,7 @@ async function renderInstalledPanel({ panelId, folder, listFn, kindLabel, emptyP
               <input type="checkbox" data-file="${escapeHtml(m.fileName)}" ${m.enabled ? 'checked' : ''}>
               <span class="toggle-track"><span class="toggle-thumb"></span></span>
             </label>` : ''}
-            <button class="mod-delete-btn" data-file="${escapeHtml(m.fileName)}" title="Delete this ${kindLabel} permanently">🗑</button>
+            <button class="mod-delete-btn" data-file="${escapeHtml(m.fileName)}" title="Delete this ${kindLabel} permanently"><svg class="trash-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
           </div>
         `).join('')}
       </div>
@@ -1679,7 +1971,7 @@ document.getElementById('install-boost-btn').addEventListener('click', async () 
 });
 
 // =====================================================================
-// LAUNCH — full-screen portal overlay with particles + rotating tips,
+// LAUNCH — full-screen liquid-glass overlay with progress + rotating tips,
 // falls back to the inline bar if the user hides it.
 // =====================================================================
 const crashBanner = document.getElementById('crash-banner');
@@ -1713,18 +2005,19 @@ function fmtSpeed(bps) {
 
 function spawnLaunchParticles() {
   if (!theme.animations) return;
-  const portal = document.getElementById('portal');
-  for (let i = 0; i < 14; i++) {
+  const host = document.getElementById('overlay-card') || overlay;
+  if (!host) return;
+  for (let i = 0; i < 10; i++) {
     const p = document.createElement('div');
     p.className = 'launch-particle';
     const angle = Math.random() * Math.PI * 2;
-    const dist = 110 + Math.random() * 130;
-    p.style.left = '50%'; p.style.top = '50%';
+    const dist = 80 + Math.random() * 100;
+    p.style.left = '50%'; p.style.top = '42%';
     p.animate([
-      { transform: 'translate(-50%,-50%) scale(1)', opacity: 1 },
+      { transform: 'translate(-50%,-50%) scale(1)', opacity: 0.85 },
       { transform: `translate(calc(-50% + ${Math.cos(angle) * dist}px), calc(-50% + ${Math.sin(angle) * dist}px)) scale(0)`, opacity: 0 },
-    ], { duration: 900 + Math.random() * 700, easing: 'cubic-bezier(0.1,0.8,0.3,1)' }).onfinish = () => p.remove();
-    portal.appendChild(p);
+    ], { duration: 800 + Math.random() * 600, easing: 'cubic-bezier(0.1,0.8,0.3,1)' }).onfinish = () => p.remove();
+    host.appendChild(p);
   }
 }
 
@@ -1756,7 +2049,11 @@ function hideOverlay() {
   overlay.classList.remove('show');
   clearInterval(tipTimer);
   clearInterval(Number(overlay.dataset.burst || 0));
+  clearTimeout(Number(overlay.dataset.hideSoon || 0));
+  clearTimeout(Number(overlay.dataset.hideFallback || 0));
   overlay.dataset.burst = '';
+  overlay.dataset.hideSoon = '';
+  overlay.dataset.hideFallback = '';
 }
 document.getElementById('overlay-hide').addEventListener('click', () => {
   overlayHidden = true;
@@ -1764,7 +2061,7 @@ document.getElementById('overlay-hide').addEventListener('click', () => {
   launchProgress.classList.remove('hidden');
 });
 
-// ---- main button: LAUNCH ⇄ STOP, plus "Launch another" ----
+// ---- main button: LAUNCH â‡„ STOP, plus "Launch another" ----
 const launchBtn = document.getElementById('launch-btn');
 const launchLabelEl = document.getElementById('launch-label');
 const launchSubEl = document.getElementById('launch-sub');
@@ -2119,7 +2416,10 @@ async function launchInstance(accountId) {
   crashBanner.classList.add('hidden');
   launchProgress.classList.add('hidden');
   document.getElementById('launch-progress-fill').style.width = '0%';
+  gameWindowUp = false;
+  gameProcessStarted = false;
   showOverlay(`Launching ${instanceName}`);
+  pendingRecentLaunch = { name: instanceName, versionNumber, loader: loader || 'vanilla' };
 
   try {
     const p = window.nebula.launchGame({
@@ -2128,27 +2428,50 @@ async function launchInstance(accountId) {
     });
     const res = await p;
     if (res?.launchId) myLaunchIds.add(res.launchId);
+    commitRecentLaunch();
   } catch (err) {
+    pendingRecentLaunch = null;
     hideOverlay();
     launchProgress.classList.add('hidden');
     showToast('Launch failed', err.message, 'error');
   }
 }
 
-function renderRunningIndicator() {
-  const el = document.getElementById('running-indicator');
-  if (runningLaunches.size === 0) { el.classList.add('hidden'); el.innerHTML = ''; return; }
-  el.classList.remove('hidden');
-  // "2 running — Quilt (Figgy), Forge (Figgy)" read as one run-on line with
-  // two different bracket styles fighting each other. Instance and player
-  // are separated with "as", entries with commas, and the count is only
-  // spelled out when there's more than one.
-  const items = Array.from(runningLaunches.values())
-    .map(v => `${v.instanceName} as ${v.accountName}`)
-    .join(', ');
-  const prefix = runningLaunches.size > 1 ? `${runningLaunches.size} running: ` : 'Running: ';
-  el.innerHTML = `<span class="running-dot"></span>${prefix}${escapeHtml(items)}`;
+let pendingRecentLaunch = null;
+let gameWindowUp = false;
+let gameProcessStarted = false;
+function commitRecentLaunch() {
+  if (!pendingRecentLaunch) return;
+  rememberRecentLaunch(pendingRecentLaunch);
+  pendingRecentLaunch = null;
+  refreshInstanceSelects().catch(() => {});
 }
+
+function renderRunningIndicator() {
+  // Running text was removed from the topbar (replaced by Online count).
+  // Keep this as a no-op so existing call sites stay safe.
+}
+
+async function refreshOnlineIndicator() {
+  const el = document.getElementById('online-indicator');
+  const label = document.getElementById('online-indicator-label');
+  if (!el || !label) return;
+  try {
+    const n = await window.nebula.getOnlineCount?.();
+    if (typeof n === 'number' && n >= 0) {
+      el.classList.remove('offline', 'hidden');
+      label.textContent = n === 1 ? '1 online' : `${n} online`;
+      el.title = 'People currently connected to SolarClient online';
+      return;
+    }
+  } catch { /* fall through */ }
+  el.classList.add('offline');
+  el.classList.remove('hidden');
+  label.textContent = 'Online —';
+  el.title = 'Could not reach SolarClient online';
+}
+setInterval(refreshOnlineIndicator, 20000);
+setTimeout(() => refreshOnlineIndicator(), 800);
 
 window.nebula.onStarted(({ launchId, instanceName, accountName }) => {
   runningLaunches.set(launchId, { instanceName, accountName, startedAt: Date.now() });
@@ -2157,19 +2480,34 @@ window.nebula.onStarted(({ launchId, instanceName, accountName }) => {
   renderRunningIndicator();
   updateLaunchButtons();
   showToast('Launching', `${instanceName} · ${accountName}`, 'info');
-  // small XP bonus just for launching
-  // (No XP for pressing launch — XP is playtime, awarded per minute by the
-  // main process while the game is actually running.)
   window.nebula.openMonitor(launchId);
+  commitRecentLaunch();
+  if (overlayLaunchId === launchId && overlay.classList.contains('show')) {
+    gameProcessStarted = true;
+    progressPending = null;
+    overlayLabel.textContent = 'Starting Minecraft…';
+    if (progressEls.ovPct) progressEls.ovPct.textContent = '';
+    if (progressEls.ovSpeed) progressEls.ovSpeed.textContent = '';
+    overlayFill.classList.add('indeterminate');
+  }
+  // Last-resort fallback only (slow PCs / modpacks) — never the normal path.
+  clearTimeout(Number(overlay.dataset.hideFallback || 0));
+  overlay.dataset.hideFallback = String(setTimeout(() => {
+    if (overlay.classList.contains('show') && overlayLaunchId === launchId) hideOverlay();
+  }, 90000));
 });
 
 window.nebula.onLog(({ launchId, line }) => {
   if (launchId !== overlayLaunchId) return;
-  if (overlay.classList.contains('show') && /Setting user|LWJGL|Backend library|Sound engine started/i.test(line)) {
+  // Only lines logged once the game window is on screen and loading is done.
+  // Datafixer / graphics-adapter lines print before the window exists.
+  if (overlay.classList.contains('show') && /Sound engine started|OpenAL initialized|Created: \d+x\d+x\d+ minecraft:textures\/atlas\/blocks|textures-atlas/i.test(line)) {
+    gameWindowUp = true;
     overlayLabel.textContent = 'Game running — have fun!';
     overlayFill.classList.remove('indeterminate');
     overlayFill.style.width = '100%';
-    setTimeout(hideOverlay, 1200);
+    clearTimeout(Number(overlay.dataset.hideSoon || 0));
+    overlay.dataset.hideSoon = String(setTimeout(hideOverlay, 350));
   }
 });
 
@@ -2230,11 +2568,13 @@ function flushProgress() {
 
 window.nebula.onProgress(({ launchId, label, percent, bytesPerSec }) => {
   if (launchId && overlayLaunchId && launchId !== overlayLaunchId) return;
+  if (gameWindowUp || gameProcessStarted) return;
   progressPending = {
     label,
     spd: fmtSpeed(bytesPerSec),
     percent,
-    whole: percent == null ? 0 : Math.round(percent),
+    // 100% is reserved for "game window is up" (set by the log watcher).
+    whole: percent == null ? 0 : Math.min(99, Math.round(percent)),
   };
   if (!progressQueued) { progressQueued = true; requestAnimationFrame(flushProgress); }
 });
@@ -2255,29 +2595,106 @@ window.nebula.onClosed(({ launchId, code }) => {
   if (code !== 0 && code !== null) showToast('Game exited', `Exit code ${code} — check the monitor window for the log.`, 'error');
 });
 
-window.nebula.onCrashSuggestion(({ message, fixable, javaMajor }) => {
-  crashBanner.innerHTML = `<span>Possible fix: ${escapeHtml(message)}</span>`;
-  if (fixable === 'java' && javaMajor) {
-    const btn = document.createElement('button');
-    btn.className = 'pill-btn mini crash-fix-btn';
-    btn.textContent = `Fix Java ${javaMajor}`;
-    btn.addEventListener('click', async () => {
-      btn.disabled = true;
-      btn.textContent = 'Re-downloading…';
-      window.nebula.onFixProgress(({ label }) => { btn.textContent = label || 'Working…'; });
-      try {
-        await window.nebula.fixJava(javaMajor);
-        btn.textContent = 'Fixed — try launching again';
-        showToast('Java repaired', `Java ${javaMajor} was re-downloaded fresh.`, 'success');
-      } catch (err) {
-        btn.textContent = 'Fix Java ' + javaMajor;
-        btn.disabled = false;
-        showToast("Couldn't fix Java", err.message, 'error');
-      }
-    });
-    crashBanner.appendChild(btn);
+// ---------- crash auto-fix dialog ----------
+const crashModal = document.getElementById('crash-modal');
+const crashFixList = document.getElementById('crash-fix-list');
+const crashStatus = document.getElementById('crash-status');
+const crashApplyBtn = document.getElementById('crash-apply');
+const crashDismissBtn = document.getElementById('crash-dismiss');
+const crashReportBtn = document.getElementById('crash-report');
+let crashState = null; // { launchId, instanceName, versionNumber, loader, phase: 'ask'|'applying'|'done' }
+
+function closeCrashModal() {
+  crashModal.classList.add('hidden');
+  crashState = null;
+}
+
+window.nebula.onCrashAnalysis((a) => {
+  if (crashState?.phase === 'applying') return;
+  crashState = { ...a, phase: 'ask' };
+  const label = `${a.versionNumber} ${loaderDotLabel(a.loader || 'vanilla')}`;
+  document.getElementById('crash-title').textContent = `${label} crashed`;
+  document.getElementById('crash-summary').textContent = a.fixes.length
+    ? `${a.summary} Would you like to apply the fixes?`
+    : a.summary;
+  crashFixList.innerHTML = a.fixes.map(f => `
+    <li data-id="${escapeHtml(f.id)}"><span class="crash-fix-mark"></span>
+      <div><div class="crash-fix-label">${escapeHtml(f.label)}</div>
+      ${f.detail ? `<div class="crash-fix-detail">${escapeHtml(f.detail)}</div>` : ''}</div></li>`).join('');
+  crashFixList.classList.toggle('hidden', !a.fixes.length);
+  crashStatus.classList.add('hidden');
+  crashReportBtn.classList.toggle('hidden', !a.hasReport);
+  crashApplyBtn.classList.toggle('hidden', !a.fixes.length);
+  crashApplyBtn.disabled = false;
+  crashApplyBtn.textContent = 'Apply fixes';
+  crashDismissBtn.disabled = false;
+  crashDismissBtn.textContent = a.fixes.length ? 'Not now' : 'Close';
+  crashModal.classList.remove('hidden');
+});
+
+window.nebula.onFixProgress(({ label }) => {
+  if (crashState?.phase !== 'applying') return;
+  crashStatus.textContent = label || 'Working…';
+});
+
+crashDismissBtn.addEventListener('click', closeCrashModal);
+crashModal.addEventListener('click', (e) => { if (e.target === crashModal && crashState?.phase !== 'applying') closeCrashModal(); });
+crashReportBtn.addEventListener('click', () => { if (crashState) window.nebula.openCrashReport(crashState.launchId); });
+
+crashApplyBtn.addEventListener('click', async () => {
+  if (!crashState) return;
+  if (crashState.phase === 'done') {
+    const { instanceName, versionNumber, loader } = crashState;
+    closeCrashModal();
+    const sel = document.getElementById('launch-instance-select');
+    const want = `${instanceName}|${versionNumber}|${loader}`;
+    if ([...sel.options].some(o => o.value === want)) sel.value = want;
+    launchInstance();
+    return;
   }
-  crashBanner.classList.remove('hidden');
+  crashState.phase = 'applying';
+  crashApplyBtn.disabled = true;
+  crashDismissBtn.disabled = true;
+  crashApplyBtn.textContent = 'Fixing…';
+  crashStatus.textContent = 'Working…';
+  crashStatus.classList.remove('hidden');
+  try {
+    const { results, memoryMaxGB } = await window.nebula.applyCrashFixes(crashState.launchId);
+    for (const r of results) {
+      const li = crashFixList.querySelector(`li[data-id="${CSS.escape(r.id)}"]`);
+      if (!li) continue;
+      li.classList.add(r.ok ? 'ok' : 'fail');
+      if (!r.ok && r.error) {
+        const d = document.createElement('div');
+        d.className = 'crash-fix-detail';
+        d.textContent = r.error;
+        li.lastElementChild.appendChild(d);
+      }
+    }
+    if (memoryMaxGB) {
+      theme.memMax = memoryMaxGB;
+      theme.memMin = Math.min(theme.memMin || 2, memoryMaxGB);
+      saveTheme();
+      const slider = document.getElementById('mem-max');
+      if (slider) { slider.value = memoryMaxGB; document.getElementById('mem-max-label').textContent = memoryMaxGB; }
+    }
+    const failed = results.filter(r => !r.ok).length;
+    crashStatus.textContent = failed
+      ? `${results.length - failed} of ${results.length} fixes applied.`
+      : 'All fixes applied.';
+    crashState.phase = 'done';
+    crashApplyBtn.textContent = 'Launch again';
+    crashApplyBtn.disabled = false;
+    crashDismissBtn.textContent = 'Close';
+    crashDismissBtn.disabled = false;
+    loadInstalledMods().catch(() => { /* mods page not set up yet */ });
+  } catch (err) {
+    crashState.phase = 'ask';
+    crashStatus.textContent = err.message;
+    crashApplyBtn.textContent = 'Apply fixes';
+    crashApplyBtn.disabled = false;
+    crashDismissBtn.disabled = false;
+  }
 });
 
 // pick up games that were already running (e.g. after a UI reload)
@@ -2372,50 +2789,114 @@ function versionArtFor(groupKey) {
   let h = 0;
   for (const c of groupKey) h = (h * 31 + c.charCodeAt(0)) >>> 0;
   const id = VERSION_ART[h % VERSION_ART.length];
-  if (!sceneCache[id]) sceneCache[id] = window.NEBULA_BACKGROUNDS[id].make();
+  const bg = window.NEBULA_BACKGROUNDS?.[id];
+  if (!bg?.make) return '';
+  if (!sceneCache[id]) sceneCache[id] = bg.make();
   return sceneCache[id];
 }
 
 let popInstalledKeys = new Set();
 
+const RECENT_LAUNCHES_KEY = 'nebula-recent-launches';
+const RECENT_LAUNCHES_MAX = 3;
+
+function loadRecentLaunches() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(RECENT_LAUNCHES_KEY) || '[]');
+    return Array.isArray(raw) ? raw.filter(r => r && r.versionNumber && r.name) : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Remember a successful launch; keep last 3 unique version|loader keys (most recent first). */
+function rememberRecentLaunch(inst) {
+  const loader = (inst.loader || 'vanilla').toLowerCase();
+  const key = `${inst.versionNumber}|${loader}`;
+  const entry = {
+    name: inst.name,
+    versionNumber: inst.versionNumber,
+    loader,
+    group: inst.group || String(inst.versionNumber).replace(/^(\d+\.\d+).*/, '$1.x'),
+    lastAt: Date.now(),
+  };
+  const next = [entry, ...loadRecentLaunches().filter(r => `${r.versionNumber}|${(r.loader || 'vanilla').toLowerCase()}` !== key)]
+    .slice(0, RECENT_LAUNCHES_MAX);
+  localStorage.setItem(RECENT_LAUNCHES_KEY, JSON.stringify(next));
+}
+
+function renderRecentLaunchList(instances, sel) {
+  const el = document.getElementById('pop-recent-list');
+  if (!el) return;
+  const byKey = new Map(instances.map(i => [`${i.name}|${i.versionNumber}|${(i.loader || 'vanilla').toLowerCase()}`, i]));
+  const stored = loadRecentLaunches();
+  const recent = stored
+    .map(r => {
+      const loader = (r.loader || 'vanilla').toLowerCase();
+      const inst = byKey.get(`${r.name}|${r.versionNumber}|${loader}`)
+        || instances.find(i => i.versionNumber === r.versionNumber && (i.loader || 'vanilla').toLowerCase() === loader)
+        || null;
+      return inst ? { inst, lastAt: r.lastAt || 0 } : null;
+    })
+    .filter(Boolean)
+    .reduce((acc, row) => {
+      const k = `${row.inst.versionNumber}|${(row.inst.loader || 'vanilla').toLowerCase()}`;
+      if (acc.seen.has(k)) return acc;
+      acc.seen.add(k);
+      acc.list.push(row);
+      return acc;
+    }, { seen: new Set(), list: [] }).list
+    .slice(0, RECENT_LAUNCHES_MAX);
+
+  el.innerHTML = '';
+  if (!recent.length) {
+    el.innerHTML = '<p class="dim" style="margin:0;">Launch a version to pin it here.</p>';
+    return;
+  }
+  for (const { inst } of recent) {
+    const key = loaderKey(inst);
+    const val = `${inst.name}|${inst.versionNumber}|${inst.loader}`;
+    const item = document.createElement('div');
+    item.className = 'pop-item' + (sel.value === val ? ' active' : '');
+    item.innerHTML = `
+      <div class="pop-badge">${(inst.group || '').replace('.x', '') || inst.versionNumber}</div>
+      <div>${escapeHtml(inst.versionNumber)} <span class="loader-tag">${loaderDotLabel(key)}</span></div>
+      ${sel.value === val ? '<span class="pop-check">●</span>' : ''}
+    `;
+    item.addEventListener('click', () => {
+      sel.value = val;
+      sel.dispatchEvent(new Event('change', { bubbles: true }));
+      sel._refreshCustomSelect?.();
+      versionPopover.classList.add('hidden');
+    });
+    el.appendChild(item);
+  }
+}
+
 async function openVersionPopover() {
   versionPopover.classList.remove('hidden');
-  ensureLoaderSupport(popLoader).then(() => renderVersionArtGrid(document.getElementById('pop-version-search').value));
+  const gen = (openVersionPopover._gen = (openVersionPopover._gen || 0) + 1);
+  try { await ensureBackgrounds(); } catch { /* art tiles fall back to empty */ }
+  if (gen !== openVersionPopover._gen) return;
+  ensureLoaderSupport(popLoader).then(() => {
+    if (gen !== openVersionPopover._gen) return;
+    renderVersionArtGrid(document.getElementById('pop-version-search').value);
+  });
   const sel = document.getElementById('launch-instance-select');
   const instances = await window.nebula.listInstances();
+  if (gen !== openVersionPopover._gen) return;
   popInstalledKeys = new Set(instances.map(i => `${i.versionNumber}|${(i.loader || 'vanilla').toLowerCase()}`));
 
-  const listEl = document.getElementById('pop-instance-list');
-  listEl.innerHTML = instances.length ? '' : '<p class="dim" style="margin:0;">None yet — pick a version below.</p>';
-  for (const [key, group] of groupByLoader(instances)) {
-    const head = document.createElement('div');
-    head.className = `pop-group-label loader-${key}`;
-    head.innerHTML = `<span class="igl-dot"></span>${loaderLabel(key)}`;
-    listEl.appendChild(head);
-
-    for (const inst of group) {
-      const val = `${inst.name}|${inst.versionNumber}|${inst.loader}`;
-      const item = document.createElement('div');
-      item.className = 'pop-item' + (sel.value === val ? ' active' : '');
-      item.innerHTML = `
-        <div class="pop-badge">${inst.group.replace('.x', '')}</div>
-        <div><div>${escapeHtml(inst.name)}</div><div class="pop-meta">${inst.versionNumber} · ${loaderLabel(key)}</div></div>
-        ${sel.value === val ? '<span class="pop-check">●</span>' : ''}
-      `;
-      item.addEventListener('click', () => {
-        sel.value = val;
-        sel.dispatchEvent(new Event('change', { bubbles: true }));
-        sel._refreshCustomSelect?.();
-        versionPopover.classList.add('hidden');
-      });
-      listEl.appendChild(item);
-    }
-  }
+  renderRecentLaunchList(instances, sel);
   renderVersionArtGrid();
 }
 
 function renderVersionArtGrid(filter = '') {
   const groupsEl = document.getElementById('pop-version-groups');
+  if (versionGroupsFailed && !versionGroups.length) {
+    groupsEl.innerHTML = '<p class="dim" style="margin:0;">Couldn\'t load versions. Check your connection and reopen.</p>';
+    return;
+  }
   if (!versionGroups.length) { groupsEl.innerHTML = '<p class="dim" style="margin:0;">Loading versions…</p>'; return; }
   const q = filter.trim().toLowerCase();
   groupsEl.innerHTML = '';
@@ -2771,24 +3252,24 @@ function paletteActions() {
   const acts = [
     { icon: '▶', label: 'Launch game', hint: 'selected instance', run: () => launchInstance() },
     { icon: '■', label: 'Stop game', hint: 'most recent', run: () => latestLaunchId && window.nebula.stopGame(latestLaunchId) },
-    { icon: '＋', label: 'Launch another instance', run: () => launchInstance() },
+    { icon: '+', label: 'Launch another instance', run: () => launchInstance() },
     { icon: '◉', label: 'Open game monitor', run: () => latestLaunchId && window.nebula.openMonitor(latestLaunchId) },
     { icon: '⚡', label: `Performance mode: turn ${theme.perfMode ? 'off' : 'on'}`, run: () => perfChip.click() },
     { icon: '🚀', label: 'Install all performance mods & auto-tune', run: () => { switchView('launchpad'); setTimeout(() => document.getElementById('optimize-btn').click(), 250); } },
-    { icon: '🛠', label: 'Re-detect hardware', run: () => { switchView('launchpad'); setTimeout(() => document.getElementById('autotune-btn').click(), 250); } },
+    { icon: '🔧', label: 'Re-detect hardware', run: () => { switchView('launchpad'); setTimeout(() => document.getElementById('autotune-btn').click(), 250); } },
     { icon: '🖼', label: 'Upload background photo', run: async () => { const p = await window.nebula.pickBackgroundImage(); if (p) { theme.customBgUrl = p.fileUrl; theme.bg = 'custom'; saveTheme(); applyTheme(); } } },
     { icon: '✦', label: `Animations: turn ${theme.animations ? 'off' : 'on'}`, run: () => { theme.animations = !theme.animations; saveTheme(); applyTheme(); } },
-    { icon: '☄', label: `Particles: turn ${theme.particles ? 'off' : 'on'}`, run: () => { theme.particles = !theme.particles; saveTheme(); applyTheme(); } },
-    { icon: '⬢', label: 'Launch Bedrock Edition', run: () => { setEdition('bedrock'); setTimeout(() => document.getElementById('bedrock-launch-btn').click(), 400); } },
-    { icon: '◧', label: `Switch to ${currentEdition === 'java' ? 'Bedrock' : 'Java'} Edition`, run: () => setEdition(currentEdition === 'java' ? 'bedrock' : 'java') },
+    { icon: '☁', label: `Particles: turn ${theme.particles ? 'off' : 'on'}`, run: () => { theme.particles = !theme.particles; saveTheme(); applyTheme(); } },
+    { icon: '⬡', label: 'Launch Bedrock Edition', run: () => { setEdition('bedrock'); setTimeout(() => document.getElementById('bedrock-launch-btn').click(), 400); } },
+    { icon: '▣', label: `Switch to ${currentEdition === 'java' ? 'Bedrock' : 'Java'} Edition`, run: () => setEdition(currentEdition === 'java' ? 'bedrock' : 'java') },
     { icon: '⌂', label: 'Go to Launchpad', run: () => switchView('launchpad') },
     { icon: '▦', label: 'Go to Versions', run: () => switchView('instances') },
     { icon: '★', label: 'Go to Content', run: () => switchView('mods') },
     { icon: '🎨', label: 'Go to Customize', run: () => switchView('customize') },
     { icon: '⚙', label: 'Go to Settings', run: () => switchView('settings') },
   ];
-  for (const [id, bg] of Object.entries(window.NEBULA_BACKGROUNDS)) {
-    acts.push({ icon: '⬢', label: `Background: ${bg.name}`, run: () => { theme.bg = id; saveTheme(); applyTheme(); renderCustomize(); } });
+  for (const [id, bg] of Object.entries(window.NEBULA_BACKGROUNDS || {})) {
+    acts.push({ icon: '⬡', label: `Background: ${bg.name}`, run: () => { theme.bg = id; saveTheme(); applyTheme(); renderCustomize(); } });
   }
   for (const a of ACCENTS) {
     acts.push({ icon: '●', label: `Accent: ${a.name}`, run: () => { theme.accent = a.id; saveTheme(); applyTheme(); renderCustomize(); } });
@@ -2896,7 +3377,10 @@ async function renderPerformance() {
     document.getElementById('spec-gpu').textContent = sysInfo.gpu || (sysInfo.platform === 'win32' ? 'Unknown' : 'Not detected on this OS');
     document.getElementById('spec-gpu').title = sysInfo.gpu || '';
     document.getElementById('spec-ram').textContent = `${sysInfo.totalMemGB} GB total · ${sysInfo.freeMemGB} GB free`;
-    document.getElementById('spec-cores').textContent = `${sysInfo.cores} logical${sysInfo.discrete ? ' · discrete GPU' : ''}`;
+    const physCores = Number((String(sysInfo.cpuModel || '').match(/(\d+)-Core/i) || [])[1]) || 0;
+    document.getElementById('spec-cores').textContent = physCores
+      ? `${physCores} cores · ${sysInfo.cores} threads`
+      : `${sysInfo.cores} threads`;
 
     // (No FPS gauge any more — see index.html. We report the specs we can
     // actually read and let the frame rate speak for itself in-game.)
@@ -2935,6 +3419,7 @@ async function refreshStackStatus() {
   foot0.textContent = 'Installs and tunes each mod for your hardware.';
 
   let installed = new Set();
+  let fileNames = [];
   if (selVal) {
     const [name, versionNumber] = selVal.split('|');
     try {
@@ -2945,7 +3430,8 @@ async function refreshStackStatus() {
       // instead of the slug ("sodium"), nothing matched and freshly
       // installed mods stayed grey no matter how many times you re-tuned.
       for (const m of mods) {
-        for (const key of [m.projectId, m.slug, m.title, m.fileName]) {
+        fileNames.push(String(m.fileName || m.name || '').toLowerCase());
+        for (const key of [m.projectId, m.slug, m.title, m.fileName, m.name]) {
           if (key) installed.add(String(key).toLowerCase().replace(/[\s_-]/g, ''));
         }
       }
@@ -2956,7 +3442,11 @@ async function refreshStackStatus() {
   stackEl.innerHTML = '';
   for (const m of PERF_STACK) {
     const wanted = [norm(m.slug), norm(m.title)].filter(Boolean);
-    const on = wanted.some(w => installed.has(w) || Array.from(installed).some(x => x.includes(w)));
+    const on = wanted.some(w =>
+      installed.has(w)
+      || Array.from(installed).some(x => x.includes(w) || w.includes(x))
+      || fileNames.some(fn => fn.includes(String(m.slug || '').toLowerCase()) || fn.includes(String(m.title || '').toLowerCase().replace(/\s+/g, ''))),
+    );
     if (on) onCount++;
     const item = document.createElement('div');
     item.className = 'stack-chip' + (on ? ' on' : '');
@@ -2989,7 +3479,7 @@ function renderMemVis() {
   const advice = document.getElementById('mem-advice');
   const currentlyFree = sysInfo?.freeMemGB;
   if (!sysInfo) { advice.textContent = 'Too much RAM can cause more lag, not less.'; return; }
-  if (risky) { advice.textContent = `⚠ Too high for ${total} GB. Try ${Math.max(2, total - 4)} GB.`; return; }
+  if (risky) { advice.textContent = `âš  Too high for ${total} GB. Try ${Math.max(2, total - 4)} GB.`; return; }
   if (game > 8) { advice.textContent = 'Above 8 GB usually causes more lag than it fixes.'; return; }
   const freeNote = currentlyFree != null ? ` · ${currentlyFree} GB free now` : '';
   advice.textContent = `${game} GB for the game, ${rest} GB for everything else${freeNote}`;
@@ -3129,7 +3619,7 @@ document.getElementById('install-boost-btn').addEventListener('click', () => {
 });
 
 // =====================================================================
-// EDITION SWITCH — Java ⇄ Bedrock
+// EDITION SWITCH — Java â‡„ Bedrock
 // =====================================================================
 let currentEdition = 'java';
 let bedrockInfo = null;
@@ -3258,8 +3748,11 @@ function updateDiscordPreview() {
   // SolarClient while idle. Badge is SolarClient only when in-game.
   const art = document.getElementById('dp-art-img');
   const badgeImg = document.getElementById('dp-badge-img');
-  if (art) art.src = running ? 'img/minecraft.png' : 'img/nebula.png';
-  if (badgeImg) badgeImg.style.display = running ? 'block' : 'none';
+  if (art) art.src = running ? 'img/minecraft.png' : 'img/nebula.png?v=3';
+  if (badgeImg) {
+    badgeImg.src = 'img/nebula.png?v=3';
+    badgeImg.style.display = running ? 'block' : 'none';
+  }
 }
 
 async function refreshDiscordSettings() {
@@ -3372,6 +3865,13 @@ let skinLibrary = [];
 let selectedSkin = null;
 
 function ensureSkinsViewer() {
+  if (!window.Skin3D) {
+    ensureSkin3D().then(() => {
+      if (window.Skin3D && !skinsViewer) ensureSkinsViewer();
+      if (selectedSkin) selectSkin(selectedSkin);
+    });
+    return null;
+  }
   if (!skinsViewer) {
     skinsViewer = new Skin3D(document.getElementById('skins-canvas'), { yaw: 0.5 });
     document.getElementById('skins-overlay').addEventListener('change', (e) => {
@@ -3402,6 +3902,7 @@ function ensureSkinsViewer() {
 function selectSkin(entry) {
   selectedSkin = entry;
   const v = ensureSkinsViewer();
+  if (!v) return;
   v.setSkin(entry.dataUrl).then(() => {
     // detectSlim runs on load; reflect whatever it found unless the entry
     // has an explicit model saved from a previous apply.
@@ -3433,7 +3934,7 @@ async function refreshSkins() {
     tile.innerHTML = `
       <canvas class="skin-tile-face" width="72" height="72"></canvas>
       <div class="skin-tile-name" title="${escapeHtml(entry.name)}">${escapeHtml(entry.name)}</div>
-      <button class="skin-tile-del" title="Remove from library">🗑</button>
+      <button class="skin-tile-del" title="Remove from library"><svg class="trash-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button>
     `;
     // Draw just the head (with hat layer) as the thumbnail — cheap, and it
     // reads better at this size than a whole body would.
@@ -3612,6 +4113,10 @@ function openSkinEditor(entry) {
   const start = () => {
     editor.el.classList.remove('hidden');
     if (!editor.viewer) {
+      if (!window.Skin3D) {
+        ensureSkin3D().then(() => start());
+        return;
+      }
       editor.viewer = new Skin3D(document.getElementById('se-model'), { yaw: 0.5, zoom: 1.05 });
       editor.viewer.paintMode = true;
       wireModelPainting(editor.viewer);
@@ -4215,7 +4720,7 @@ function renderFriendsView() {
         <div class="fr-name">${escapeHtml(p.name)}${p.unread ? `<span class="fr-unread">${p.unread}</span>` : ''}</div>
         <div class="fr-sub">${escapeHtml(frStatusLabel(p))}</div>
       </div>
-      <button class="fr-more" title="Options">⋯</button>
+      <button class="fr-more" title="Options">â‹¯</button>
     `;
     row.querySelector('.fr-face').onerror = (e) => { e.target.style.visibility = 'hidden'; };
     row.addEventListener('click', (e) => {
@@ -4597,7 +5102,7 @@ async function openGroupPicker(existingGroupId = null) {
         <div class="fr-name">${escapeHtml(p.name)}</div>
         <div class="fr-sub">${escapeHtml(frStatusLabel(p))}</div>
       </div>
-      <button class="gp-pic" title="Use as group picture">★</button>
+      <button class="gp-pic" title="Use as group picture">â˜…</button>
       <span class="gp-check">✓</span>`;
     row.addEventListener('click', (e) => {
       if (e.target.classList.contains('gp-pic')) {
@@ -4690,11 +5195,20 @@ async function frSend() {
 
   document.getElementById('fr-new-group').addEventListener('click', () => openGroupPicker());
 
-  window.nebula.onFriendsChanged((snap) => { friendsState = snap; renderFriendsView(); });
-  window.nebula.onFriendsConnection(() => window.nebula.friendsSnapshot().then(s => { friendsState = s; renderFriendsView(); }));
+  window.nebula.onFriendsChanged((snap) => {
+    friendsState = snap;
+    if (document.getElementById('view-friends')?.classList.contains('active')) renderFriendsView();
+  });
+  window.nebula.onFriendsConnection(() => window.nebula.friendsSnapshot().then(s => {
+    friendsState = s;
+    if (document.getElementById('view-friends')?.classList.contains('active')) renderFriendsView();
+  }));
   window.nebula.onFriendsNotify((n) => showToast(n.title, n.body, n.kind === 'invite' ? 'info' : 'success'));
 
-  window.nebula.friendsSnapshot().then(s => { friendsState = s; renderFriendsView(); });
+  // Friends snapshot is for the Friends tab — keep it off cold start.
+  setTimeout(() => {
+    window.nebula.friendsSnapshot().then(s => { friendsState = s; renderFriendsView(); });
+  }, 1500);
 })();
 
 
@@ -4939,16 +5453,27 @@ async function openServerDialog(existing = null) {
 
   window.nebula.onServersChanged((snap) => { serversState = snap; renderServers(); });
   window.nebula.onServersLog((entry) => appendServerLog(entry));
-  window.nebula.onServersProgress(({ id, message }) => appendServerLog({ id, line: `» ${message}`, level: 'info' }));
-  window.nebula.serversSnapshot().then(s => { serversState = s; renderServers(); });
+  window.nebula.onServersProgress(({ id, message }) => appendServerLog({ id, line: `Â» ${message}`, level: 'info' }));
+  // Snapshot is for the Servers tab — don't compete with first paint.
+  setTimeout(() => {
+    window.nebula.serversSnapshot().then(s => { serversState = s; renderServers(); });
+  }, 1800);
 })();
 
-// initial load
+// initial load — only what the launchpad needs before the window shows.
 refreshInstances();
-loadVersionGroups();
-renderCustomize();
 syncPerfChip();
 updateLaunchState();
+
+// Versions grid + customize thumbs are for other tabs — load after paint.
+const afterPaint = (fn, ms = 0) => {
+  const run = () => setTimeout(fn, ms);
+  if (typeof requestIdleCallback === 'function') requestIdleCallback(run, { timeout: 500 + ms });
+  else requestAnimationFrame(() => requestAnimationFrame(run));
+};
+afterPaint(() => { ensureBackgrounds().then(() => loadVersionGroups()); }, 50);
+// renderCustomize() builds 7 procedural scene thumbs — only when Customize opens
+// (nav already calls it). Don't pay that cost on every cold start.
 
 // ---------- ad slots (Adsterra) ----------
 /*
@@ -5149,59 +5674,421 @@ async function startAds({ columnId, boxIds, layouts }) {
 }
 
 // The right-hand Ads column: two ads stacked, so their heights add up.
-startAds({
-  columnId: 'ad-column',
-  boxIds: ['ad-box-1', 'ad-box-2'],
-  layouts: [
-    [[160, 600], [160, 600]],
-    [[160, 600], [160, 300]],
-    [[160, 300], [160, 300]],
-    [[160, 300]],
-  ],
-});
+// Defer network + iframe work until after the launcher is interactive.
+afterPaint(() => {
+  startAds({
+    columnId: 'ad-column',
+    boxIds: ['ad-box-1', 'ad-box-2'],
+    layouts: [
+      [[160, 600], [160, 600]],
+      [[160, 600], [160, 300]],
+      [[160, 300], [160, 300]],
+      [[160, 300]],
+    ],
+  });
+}, 1200);
 
 // ---------------------------------------------------------------------
-// Auto-update "ready" modal. The main process (autoUpdater.js) sends an
-// update:state event once a new version has finished downloading; we show
-// a themed modal instead of a native Windows dialog. "Restart & update"
-// hands off to quitAndInstall() via the update:restart IPC channel.
+// Auto-update UI — always-visible Updates menu (stable + beta + check).
+// Popup only for STABLE updates (never auto-popup for beta).
 // ---------------------------------------------------------------------
-(function wireUpdateModal() {
+(function wireUpdateSystem() {
   const modal = document.getElementById('update-modal');
-  const versionEl = document.getElementById('update-version');
-  const restartBtn = document.getElementById('update-restart');
-  const laterBtn = document.getElementById('update-later');
-  if (!modal || !restartBtn || !laterBtn || !window.nebula?.onUpdateState) return;
+  const titleEl = document.getElementById('update-title');
+  const subEl = document.getElementById('update-sub');
+  const notesEl = document.getElementById('update-notes');
+  const errEl = document.getElementById('update-error');
+  const fromEl = document.getElementById('update-from');
+  const toEl = document.getElementById('update-to');
+  const channelBadge = document.getElementById('update-channel-badge');
+  const policyBadge = document.getElementById('update-policy-badge');
+  const footEl = document.getElementById('update-foot');
+  const primaryBtn = document.getElementById('update-primary');
+  const secondaryBtn = document.getElementById('update-secondary');
+  const progressWrap = document.getElementById('update-progress-wrap');
+  const progressLabel = document.getElementById('update-progress-label');
+  const progressFill = document.getElementById('update-progress-fill');
+  const progressPct = document.getElementById('update-progress-pct');
+  const progressBytes = document.getElementById('update-progress-bytes');
+  const progressEta = document.getElementById('update-progress-eta');
+  const notesWrap = document.getElementById('update-notes-wrap');
+  const updateChip = document.getElementById('update-chip');
+  const betaChip = document.getElementById('beta-chip');
+  const updatesMenu = document.getElementById('updates-menu');
+  const updatesCheck = document.getElementById('updates-check');
+  const stableMeta = document.getElementById('updates-stable-meta');
+  const stableGo = document.getElementById('updates-stable-go');
+  const betaMeta = document.getElementById('updates-beta-meta');
+  const betaGo = document.getElementById('updates-beta-go');
+  const switchStable = document.getElementById('updates-switch-stable');
+  if (!modal || !primaryBtn || !secondaryBtn || !window.nebula?.onUpdateState) return;
 
-  function show(version) {
-    if (version && versionEl) versionEl.textContent = version;
+  let lastState = null;
+  let panelMode = 'offer'; // offer | ready | downloading
+  let downloadWhich = 'stable';
+  let popupShownFor = null;
+
+  const fmtMB = (b) => `${(Math.max(0, b) / 1048576).toFixed(1)} MB`;
+  function fmtEta(sec) {
+    if (!sec || !Number.isFinite(sec)) return '';
+    if (sec < 60) return `${Math.max(1, Math.round(sec))}s left`;
+    const m = Math.floor(sec / 60);
+    const s = Math.round(sec % 60);
+    return `${m}m ${String(s).padStart(2, '0')}s left`;
+  }
+  function paintProgress(pct, state, { installing = false } = {}) {
+    const n = Math.max(0, Math.min(100, Math.round(Number(pct) || 0)));
+    if (progressWrap) {
+      progressWrap.classList.remove('hidden');
+      progressWrap.classList.toggle('installing', installing);
+    }
+    if (progressFill) progressFill.style.width = `${n}%`;
+    if (installing) {
+      if (progressLabel) progressLabel.textContent = 'Installing update…';
+      if (progressPct) progressPct.textContent = '';
+      if (progressBytes) progressBytes.textContent = 'SolarClient will close and reopen';
+      if (progressEta) progressEta.textContent = '';
+      return;
+    }
+    if (progressLabel) progressLabel.textContent = n >= 99 ? 'Verifying download…' : 'Downloading SolarClient…';
+    if (progressPct) progressPct.textContent = `${n}%`;
+    const s = state || lastState || {};
+    const total = Number(s.dlTotal) || Number(s.target?.size) || 0;
+    const got = Number(s.dlBytes) || (total ? total * n / 100 : 0);
+    if (progressBytes) {
+      const speed = Number(s.dlSpeed) || 0;
+      progressBytes.textContent = total
+        ? `${fmtMB(got)} / ${fmtMB(total)}${speed ? ` · ${fmtMB(speed)}/s` : ''}`
+        : (speed ? `${fmtMB(speed)}/s` : '');
+    }
+    if (progressEta) progressEta.textContent = n >= 99 ? '' : (fmtEta(Number(s.dlEta)) || 'Estimating…');
+  }
+  function notesToList(raw) {
+    const text = String(raw || '').trim();
+    if (!text) return [];
+    let parts = text.split(/\r?\n+/);
+    if (parts.length < 2) parts = text.split(/\s*;\s*|\s+\+\s+/);
+    return parts
+      .map((p) => p.replace(/^\s*(?:[-*•+]|\d+[.)])\s*/, '').trim())
+      .filter(Boolean);
+  }
+
+  function showModal(mandatory) {
+    modal.classList.toggle('mandatory', Boolean(mandatory));
     modal.classList.add('show');
   }
-  function hide() { modal.classList.remove('show'); }
+  function hideModal() {
+    if (lastState?.mandatoryLock) return;
+    modal.classList.remove('show');
+  }
+  function setError(msg) {
+    if (!errEl) return;
+    if (msg) { errEl.textContent = msg; errEl.classList.remove('hidden'); }
+    else { errEl.textContent = ''; errEl.classList.add('hidden'); }
+  }
+  function fillOffer(state, entry) {
+    const local = state.localVersion || '—';
+    const target = entry?.version || '—';
+    if (fromEl) fromEl.textContent = `v${local}`;
+    if (toEl) toEl.textContent = `v${target}`;
+    if (channelBadge) {
+      channelBadge.textContent = entry?.channel || 'stable';
+      channelBadge.classList.toggle('beta', entry?.channel === 'beta');
+    }
+    if (policyBadge) {
+      const pol = entry?.policy || 'optional';
+      policyBadge.textContent = pol;
+      policyBadge.classList.remove('hidden');
+      policyBadge.classList.toggle('mandatory', pol === 'mandatory');
+    }
+    if (notesEl) {
+      const items = notesToList(entry?.notes);
+      notesEl.innerHTML = '';
+      for (const item of items) {
+        const li = document.createElement('li');
+        li.textContent = item;
+        notesEl.appendChild(li);
+      }
+      notesWrap?.classList.toggle('hidden', !items.length);
+    }
+  }
+  function placeMenu() {
+    if (!updatesMenu || !updateChip || updatesMenu.classList.contains('hidden')) return;
+    const r = updateChip.getBoundingClientRect();
+    const pad = 8;
+    const width = Math.max(280, updatesMenu.offsetWidth || 280);
+    let left = r.left;
+    let top = r.bottom + pad;
+    // Keep inside the viewport
+    left = Math.min(left, window.innerWidth - width - 12);
+    left = Math.max(12, left);
+    const maxTop = window.innerHeight - (updatesMenu.offsetHeight || 200) - 12;
+    top = Math.min(top, Math.max(12, maxTop));
+    updatesMenu.style.left = `${Math.round(left)}px`;
+    updatesMenu.style.top = `${Math.round(top)}px`;
+  }
 
-  window.nebula.onUpdateState((state) => {
-    if (state && state.downloaded) show(state.version);
-  });
+  function closeMenu() {
+    updatesMenu?.classList.add('hidden');
+    document.getElementById('updates-menu-wrap')?.classList.remove('open');
+    document.body.classList.remove('updates-menu-open');
+  }
 
-  let updateBarShown = false;
+  function openMenu() {
+    if (!updatesMenu) return;
+    // Portal out of .main.glass — backdrop-filter + overflow:hidden clip fixed kids.
+    if (updatesMenu.parentElement !== document.body) {
+      document.body.appendChild(updatesMenu);
+    }
+    updatesMenu.classList.remove('hidden');
+    document.getElementById('updates-menu-wrap')?.classList.add('open');
+    document.body.classList.add('updates-menu-open');
+    // Next frame so layout has size before measuring
+    requestAnimationFrame(placeMenu);
+    // Never show a stale "up to date" — re-check the feed every time it opens.
+    if (!lastState?.downloading && !lastState?.installing && !lastState?.checking) {
+      if (stableMeta && !lastState?.stableOffer) stableMeta.textContent = 'Checking for updates…';
+      window.nebula.checkForUpdate?.().then((s) => { if (s) renderPanel(s); }).catch(() => {});
+    }
+  }
+
+  function toggleMenu() {
+    if (updatesMenu?.classList.contains('hidden')) openMenu();
+    else closeMenu();
+  }
+
+  function renderMenu(state) {
+    const hasAny = Boolean(state.stableOffer || state.betaOffer || state.downloaded);
+    updateChip?.classList.toggle('has-update', hasAny && !state.downloaded);
+    betaChip?.classList.toggle('hidden', state.localChannel !== 'beta');
+    switchStable?.classList.toggle('hidden', state.localChannel !== 'beta');
+
+    if (stableMeta) {
+      if (state.stableOffer) stableMeta.textContent = `v${state.localVersion} → v${state.stableOffer.version}` + (state.stableOffer.policy === 'mandatory' ? ' (required)' : '');
+      else stableMeta.textContent = `You're on v${state.localVersion} — up to date`;
+    }
+    if (stableGo) {
+      const show = Boolean(state.stableOffer);
+      stableGo.classList.toggle('hidden', !show);
+      stableGo.textContent = state.stableOffer?.policy === 'mandatory' ? 'Update now' : 'Install';
+    }
+    if (betaMeta) {
+      if (state.betaOffer) betaMeta.textContent = `Beta v${state.betaOffer.version} available (optional)`;
+      else betaMeta.textContent = 'No beta available';
+    }
+    if (betaGo) {
+      betaGo.classList.toggle('hidden', !state.betaOffer);
+    }
+  }
+
+  function renderPanel(state) {
+    lastState = state;
+    setError(state.error);
+    renderMenu(state);
+
+    if (state.downloaded && state.target) {
+      panelMode = 'ready';
+      fillOffer(state, state.target);
+      if (titleEl) titleEl.textContent = state.installing ? 'Installing update' : 'Update ready';
+      if (subEl) {
+        subEl.innerHTML = state.installing
+          ? `Closing SolarClient, then installing <b>v${state.target.version}</b>…`
+          : `Update <b>v${state.target.version}</b> downloaded. Installing automatically…`;
+      }
+      if (footEl) footEl.textContent = 'SolarClient will close, replace itself with the new version, then reopen.';
+      paintProgress(99, state, { installing: true });
+      primaryBtn.textContent = state.installing ? 'Installing…' : 'Install & restart';
+      primaryBtn.disabled = true;
+      secondaryBtn.classList.add('hidden');
+      showModal(true);
+      return;
+    }
+
+    if (state.downloading) {
+      panelMode = 'downloading';
+      fillOffer(state, state.target || state.stableOffer || state.betaOffer);
+      if (titleEl) titleEl.textContent = 'Downloading update';
+      if (subEl) subEl.textContent = 'Installs automatically when the download finishes — the launcher will reopen.';
+      if (footEl) footEl.textContent = 'Keep SolarClient open — it installs and reopens by itself.';
+      paintProgress(state.progress || 0, state);
+      primaryBtn.textContent = 'Downloading…';
+      primaryBtn.disabled = true;
+      secondaryBtn.classList.add('hidden');
+      showModal(true);
+      return;
+    }
+
+    if (progressWrap && !state.downloading && !state.installing) {
+      progressWrap.classList.add('hidden');
+    }
+
+    if (state.installing) {
+      panelMode = 'downloading';
+      if (titleEl) titleEl.textContent = 'Installing update';
+      if (subEl) subEl.textContent = 'Finishing install — SolarClient will reopen automatically.';
+      if (footEl) footEl.textContent = 'SolarClient will close, replace itself with the new version, then reopen.';
+      paintProgress(0, state, { installing: true });
+      primaryBtn.textContent = 'Installing…';
+      primaryBtn.disabled = true;
+      secondaryBtn.classList.add('hidden');
+      showModal(true);
+      return;
+    }
+
+    // Auto-popup ONLY for stable updates — never for beta-only.
+    const stable = state.stableOffer;
+    if (stable && state.popupStable) {
+      const key = `stable:${stable.version}`;
+      if (popupShownFor !== key || state.mandatoryLock) {
+        popupShownFor = key;
+        panelMode = 'offer';
+        downloadWhich = 'stable';
+        fillOffer(state, stable);
+        const isMandatory = stable.policy === 'mandatory';
+        if (titleEl) titleEl.textContent = isMandatory ? 'Update required' : 'Update available';
+        if (subEl) {
+          subEl.innerHTML = isMandatory
+            ? `SolarClient <b>v${stable.version}</b> is required. You must update to continue.`
+            : `SolarClient <b>v${stable.version}</b> is available. Update when you want.`;
+        }
+        if (footEl) {
+          footEl.textContent = isMandatory
+            ? 'This update is not optional — the launcher stays locked until it is installed.'
+            : 'You can dismiss this and install later from Updates.';
+        }
+        primaryBtn.textContent = 'Update';
+        primaryBtn.disabled = false;
+        secondaryBtn.textContent = 'Not now';
+        secondaryBtn.disabled = isMandatory;
+        secondaryBtn.classList.toggle('hidden', isMandatory);
+        // Always auto-popup for stable (optional + mandatory). Beta never reaches here.
+        showModal(isMandatory);
+      }
+      return;
+    }
+
+    if (!state.mandatoryLock && !state.downloading && !state.downloaded) {
+      // Don't force-hide if user opened it; only auto-hide when nothing to show.
+      if (!stable) hideModal();
+    }
+  }
+
+  window.nebula.onUpdateState((state) => renderPanel(state || {}));
+
   window.nebula.onUpdateProgress?.((pct) => {
-    if (!updateBarShown) {
-      showDownloadBar('app-update', 'Downloading the new exe');
-      updateBarShown = true;
-    }
-    updateDownloadBar('app-update', pct);
-    if (pct >= 100) {
-      removeDownloadBar('app-update');
+    if (lastState?.installing || lastState?.downloaded) return;
+    paintProgress(pct, lastState);
+  });
+
+  updateChip?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleMenu();
+  });
+  document.addEventListener('click', (e) => {
+    const wrap = document.getElementById('updates-menu-wrap');
+    if (wrap && !wrap.contains(e.target) && updatesMenu && !updatesMenu.contains(e.target)) closeMenu();
+  });
+  window.addEventListener('resize', () => placeMenu());
+  // Launchpad scrolls inside .view — keep the fixed menu under the chip.
+  document.querySelectorAll('.view').forEach((v) => {
+    v.addEventListener('scroll', () => placeMenu(), { passive: true });
+  });
+
+  updatesCheck?.addEventListener('click', async () => {
+    updatesCheck.textContent = 'Checking…';
+    try {
+      const s = await window.nebula.checkForUpdate();
+      renderPanel(s || {});
+      const hasStable = Boolean(s?.stableOffer);
+      const hasBeta = Boolean(s?.betaOffer);
+      if (!hasStable && !hasBeta) {
+        if (stableMeta) stableMeta.textContent = 'No updates — you\'re on the latest';
+        if (betaMeta && !s?.betaLatest) betaMeta.textContent = 'No beta available';
+        updatesCheck.textContent = 'No updates';
+        // Keep the menu open so the result is visible.
+        setTimeout(() => { updatesCheck.textContent = 'Check for updates'; }, 2200);
+      } else {
+        updatesCheck.textContent = 'Check for updates';
+        if (hasStable) {
+          downloadWhich = 'stable';
+          fillOffer(s, s.stableOffer);
+          showModal(s.stableOffer.policy === 'mandatory');
+        }
+      }
+    } catch (e) {
+      if (stableMeta) stableMeta.textContent = e?.message || 'Check failed';
+      updatesCheck.textContent = 'Check for updates';
     }
   });
 
-  restartBtn.addEventListener('click', () => {
-    restartBtn.disabled = true;
-    window.nebula.restartToApplyUpdate();
+  stableGo?.addEventListener('click', async () => {
+    closeMenu();
+    downloadWhich = 'stable';
+    const entry = lastState?.stableOffer;
+    if (entry) {
+      panelMode = 'downloading';
+      fillOffer(lastState, entry);
+      if (titleEl) titleEl.textContent = 'Downloading update';
+      if (subEl) subEl.textContent = 'Starting download…';
+      paintProgress(0, lastState);
+      showModal(true);
+    }
+    window.nebula.downloadUpdate('stable');
   });
-  laterBtn.addEventListener('click', hide);
+
+  betaGo?.addEventListener('click', async () => {
+    closeMenu();
+    downloadWhich = 'beta';
+    const entry = lastState?.betaOffer;
+    if (entry) fillOffer(lastState, entry);
+    if (titleEl) titleEl.textContent = 'Downloading update';
+    if (subEl) subEl.textContent = 'Starting download…';
+    paintProgress(0, lastState);
+    panelMode = 'downloading';
+    showModal(true);
+    window.nebula.downloadUpdate('beta');
+  });
+
+  switchStable?.addEventListener('click', async () => {
+    closeMenu();
+    await window.nebula.switchToStable();
+  });
+
+  betaChip?.addEventListener('click', () => {
+    openMenu();
+  });
+
+  primaryBtn.addEventListener('click', async () => {
+    primaryBtn.disabled = true;
+    try {
+      if (panelMode === 'ready') {
+        await window.nebula.restartToApplyUpdate();
+        return;
+      }
+      // Show the bar immediately — don't wait for the first progress tick.
+      paintProgress(0, lastState);
+      if (subEl) subEl.textContent = 'Starting download…';
+      if (titleEl) titleEl.textContent = 'Downloading update';
+      panelMode = 'downloading';
+      showModal(true);
+      // Fire-and-forget — progress comes via onUpdateProgress / onUpdateState
+      window.nebula.downloadUpdate(downloadWhich || 'stable');
+    } catch (e) {
+      setError(e?.message || String(e));
+      primaryBtn.disabled = false;
+    }
+  });
+
+  secondaryBtn.addEventListener('click', async () => {
+    if (lastState?.mandatoryLock) return;
+    await window.nebula.dismissUpdate?.();
+    // Match the stable:VER key used by the auto-popup gate so we don't reopen.
+    popupShownFor = lastState?.stableOffer ? `stable:${lastState.stableOffer.version}` : popupShownFor;
+    hideModal();
+  });
+
+  window.nebula.getUpdateState?.().then((s) => { if (s) renderPanel(s); }).catch(() => {});
 })();
-
 // --- WHAT'S NEW MODAL LOGIC ---
 async function checkWhatsNew() {
   const modal = document.getElementById('whatsnew-modal');
@@ -5377,11 +6264,15 @@ setTimeout(checkWhatsNew, 1500);
   // Honour an explicit user choice -- if they have turned low graphics on
   // themselves, we are not going to second-guess them in either direction.
   if (theme.lowGraphics) return;
+  // Liquid glass is a first-class launcher material. Do not auto-kill refraction
+  // or force frost — that made the look change without the user asking.
+  // Lightweight graphics stays available in Customize.
+  return;
 
-  const SAMPLE_MS   = 4000;   // how long one verdict takes to reach
-  const JANK_MS     = 32;     // a frame over this missed at least one vsync
-  const JANK_RATIO  = 0.28;   // >28% bad frames in a window = this tier is too rich
-  const GRACE_MS    = 6000;   // ignore startup, first paint is always lumpy
+  const SAMPLE_MS   = 4000;
+  const JANK_MS     = 32;
+  const JANK_RATIO  = 0.28;
+  const GRACE_MS    = 6000;
 
   let frames = 0, janky = 0, windowStart = 0, tier = 0, done = false;
   const TIERS = ['full', 'lite', 'plain'];
@@ -5399,8 +6290,6 @@ setTimeout(checkWhatsNew, 1500);
         'info',
       );
     } else if (tier >= 2) {
-      // Last resort: stop everything ambient. At this point the window is
-      // a flat panel, which is what a struggling GPU actually wants.
       document.body.classList.add('no-anim');
       theme.animations = false;
       theme.particles = false;
@@ -5417,13 +6306,11 @@ setTimeout(checkWhatsNew, 1500);
     requestAnimationFrame(tick);
 
     if (t < GRACE_MS) { lastT = t; return; }
-    if (document.hidden) { lastT = t; return; }   // throttled frames are not jank
+    if (document.hidden) { lastT = t; return; }
     if (!windowStart) { windowStart = t; lastT = t; return; }
 
     const dt = t - lastT;
     lastT = t;
-    // A gap far larger than any real frame means the tab was descheduled
-    // (window minimised, machine slept). That is not a rendering problem.
     if (dt > 500) { frames = 0; janky = 0; windowStart = t; return; }
 
     frames++;
