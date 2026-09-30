@@ -26,9 +26,6 @@ robots.txt            Crawl rules + sitemap pointer
 sitemap.xml           16 indexable URLs
 CNAME                 figgysmp.shop
 
-ad-slot.html          IN-LAUNCHER ad frame - not part of the website
-ads.html              IN-LAUNCHER ad frame - not part of the website
-ads-config.json       Ad slot config consumed by the two files above
 backend.json          Launcher backend config
 ```
 
@@ -69,8 +66,14 @@ Then open <http://localhost:8777>.
 - Maximum two ad units per page, each with a distinct `data-ad-slot`. Pages with
   little static text (`404.html`, `cookies.html`, `privacy.html`, `terms.html`)
   deliberately omit the AdSense script entirely.
-- `ad-slot.html` and `ads.html` serve Adsterra ads **inside the desktop launcher**.
-  They are `noindex`, disallowed in `robots.txt`, excluded from the sitemap, and
-  nothing on the website links to them. They are still hosted on the same domain
-  as AdSense, which carries policy risk - moving them to a subdomain would remove
-  it entirely.
+
+## Staying off phishing blocklists
+
+Heuristic scanners (VirusTotal vendors, browser safe-browsing) flag patterns that
+phishing kits use. Keep these out of the site:
+
+- No JavaScript that fetches the installer and saves it from a `blob:` URL
+  ("HTML smuggling"). The download button is a plain link to the GitHub asset.
+- No pixel-for-pixel copies of Windows / Microsoft security dialogs with their
+  exact wording. The SmartScreen illustration is labelled as an example.
+- No third-party popunder/redirect ad networks on this domain.

@@ -418,12 +418,19 @@ a { color: var(--accent-glow); }
   align-items: center;
 }
 .screen-mock {
+  position: relative;
+  margin: 0;
   background: #005a9e;
   border-radius: 10px;
   padding: 22px;
   color: #fff;
   font-family: 'Segoe UI', system-ui, sans-serif;
   box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+}
+.mock-tag {
+  position: absolute; top: 10px; right: 12px;
+  font-size: 0.66rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  background: rgba(0,0,0,0.28); padding: 3px 8px; border-radius: 999px;
 }
 .mock-header { font-size: 1.25rem; font-weight: 300; margin-bottom: 10px; }
 .mock-body { font-size: 0.84rem; opacity: 0.92; line-height: 1.4; margin-bottom: 16px; }
