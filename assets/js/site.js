@@ -155,6 +155,37 @@
      ────────────────────────────────────────── */
   var RELEASES_REPO = 'sharktoothgaming56-maker/solarclientsite';
 
+  var LEGAL_VERSION = '2026.10.11';
+  var LEGAL_KEY = 'solar.legal.agreed';
+
+  function initLegalAgree() {
+    var box = document.getElementById('legalAgreeBox');
+    var label = document.getElementById('legalAgree');
+    var btn = document.getElementById('primaryDownloadBtn');
+    if (!box || !btn) return;
+    try { box.checked = localStorage.getItem(LEGAL_KEY) === LEGAL_VERSION; } catch (e) { /* storage blocked */ }
+    function sync() {
+      btn.classList.toggle('needs-agree', !box.checked);
+      btn.setAttribute('aria-disabled', box.checked ? 'false' : 'true');
+      if (box.checked) label.classList.remove('legal-agree-warn');
+      try {
+        if (box.checked) localStorage.setItem(LEGAL_KEY, LEGAL_VERSION);
+        else localStorage.removeItem(LEGAL_KEY);
+      } catch (e) { /* storage blocked */ }
+    }
+    box.addEventListener('change', sync);
+    btn.addEventListener('click', function (e) {
+      if (box.checked) return;
+      e.preventDefault();
+      label.classList.remove('legal-agree-warn');
+      void label.offsetWidth;
+      label.classList.add('legal-agree-warn');
+      box.focus();
+      showToast('Please tick the box to agree to the Terms of Service and Privacy Policy before downloading.');
+    });
+    sync();
+  }
+
   function loadLatestRelease() {
     if (!document.getElementById('versionTag') && !document.getElementById('primaryDownloadBtn')) return;
 
@@ -207,7 +238,7 @@
 
       var btn = document.getElementById('primaryDownloadBtn');
       if (btn) {
-        btn.href = exe.browser_download_url;
+        btn.href = exe.browser_download_url;
       }
       var allBtns = document.querySelectorAll('[data-download-btn]');
       for (var bi = 0; bi < allBtns.length; bi++) {
@@ -233,7 +264,8 @@
   function init() {
     initStarfield();
     initFaq();
-    initCopy();
+    initCopy();
+    initLegalAgree();
     loadLatestRelease();
   }
 

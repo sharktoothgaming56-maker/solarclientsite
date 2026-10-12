@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy Policy — SolarClient</title>
-  <meta name="description" content="How the SolarClient website and launcher handle your data: no launcher telemetry, local-only storage, Microsoft OAuth, and how Google AdSense advertising cookies work on this site.">
+  <title>Privacy Policy | SolarClient</title>
+  <meta name="description" content="What information the SolarClient website, launcher, and online features collect, why, how long we keep it, and how to ask us to delete it.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
   <meta name="theme-color" content="#090611">
   <link rel="canonical" href="https://figgysmp.shop/privacy.html">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="SolarClient">
-  <meta property="og:title" content="Privacy Policy — SolarClient">
-  <meta property="og:description" content="How the SolarClient website and launcher handle your data: no launcher telemetry, local-only storage, Microsoft OAuth, and how Google AdSense advertising cookies work on this site.">
+  <meta property="og:title" content="Privacy Policy | SolarClient">
+  <meta property="og:description" content="What information the SolarClient website, launcher, and online features collect, why, how long we keep it, and how to ask us to delete it.">
   <meta property="og:url" content="https://figgysmp.shop/privacy.html">
   <meta property="og:image" content="https://figgysmp.shop/assets/img/logo.svg">
   <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Privacy Policy — SolarClient">
-  <meta name="twitter:description" content="How the SolarClient website and launcher handle your data: no launcher telemetry, local-only storage, Microsoft OAuth, and how Google AdSense advertising cookies work on this site.">
+  <meta name="twitter:title" content="Privacy Policy | SolarClient">
+  <meta name="twitter:description" content="What information the SolarClient website, launcher, and online features collect, why, how long we keep it, and how to ask us to delete it.">
 
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -79,69 +79,117 @@
         <header class="article-header">
           <p class="article-eyebrow">Legal</p>
           <h1 class="article-title">Privacy Policy</h1>
-          <div class="article-meta"><span>Last updated: August 21, 2026</span></div>
+          <div class="article-meta"><span>Last updated: October 11, 2026</span></div>
         </header>
         <div class="prose">
           <div class="callout">
-          <p><strong>Summary:</strong> SolarClient does not collect personal data through this website. The launcher authenticates through Microsoft&rsquo;s official OAuth flow and never sees your password. This site uses Google AdSense, which sets cookies for ad personalization. You can opt out of personalized ads at any time.</p>
+          <p><strong>The short version:</strong> The launcher keeps most of your data on your own computer. When you use online features like friends, chat, communities, and voice chat, our servers handle your Minecraft username, your Minecraft ID, your IP address, and what you send. We never see your Microsoft password. Voice chat is never recorded. We do not sell your information. Ads on our website and in the launcher come from ad networks that collect some data of their own.</p>
           </div>
-          <h2>1. Who We Are</h2>
-          <p>SolarClient is an independently developed Minecraft launcher. This privacy policy explains how the SolarClient website (this site) and the SolarClient desktop application (&ldquo;the launcher&rdquo;) handle information. When we say &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our,&rdquo; we mean the SolarClient development team.</p>
-          <h2>2. Information We Collect</h2>
-          <h3>2.1 Website</h3>
-          <p>This website does not collect personal information directly. We do not have sign-up forms, contact forms, or user accounts on the website. The site is hosted on our secure hosting provider, which may collect standard server logs (IP addresses, browser type, timestamps) as part of its hosting infrastructure. </p>
-          <h3>2.2 Launcher Application</h3>
-          <p>The SolarClient launcher collects the following information locally on your device:</p>
+
+          <h2>1. What this policy covers</h2>
+          <p>This Privacy Policy explains what information SolarClient (&ldquo;SolarClient&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) collects, why we collect it, and what we do with it. It covers our website at figgysmp.shop, the SolarClient launcher on every platform and release channel, and the SolarClient online features. By using SolarClient, you agree to this policy and to our <a href="https://figgysmp.shop/terms.html">Terms of Service</a>.</p>
+
+          <h2>2. Information kept on your computer</h2>
+          <p>Most of what the launcher uses never leaves your computer.</p>
           <ul>
-          <li><strong>Microsoft account session token:</strong> Used to authenticate your Minecraft account through Microsoft&rsquo;s official OAuth 2.0 flow. The token is stored locally on your device and is never transmitted to SolarClient servers. We never see or store your Microsoft password.</li>
-          <li><strong>Launcher preferences:</strong> Settings such as allocated RAM, selected Minecraft version, mod selections, HUD layout, and waypoints are stored locally in the launcher&rsquo;s configuration directory on your computer.</li>
-          <li><strong>Crash logs:</strong> If the launcher crashes, a log file is created locally. We may ask you to share crash logs voluntarily through Discord for debugging purposes, but they are never collected automatically.</li>
+          <li><strong>Sign in.</strong> You sign in on Microsoft&rsquo;s own sign in page. Microsoft then gives the launcher tokens that let it start Minecraft for you. These tokens are saved on your computer and are only sent to Microsoft and Mojang. We never see your Microsoft password, and our servers never receive these tokens.</li>
+          <li><strong>Settings and game files.</strong> Your settings, game installs, mods, themes, and layouts are saved on your computer.</li>
+          <li><strong>Message history.</strong> The launcher saves your direct and group message history on your computer so you can scroll back through it.</li>
+          <li><strong>Logs and crash reports.</strong> These stay on your computer. We never collect them automatically. If you choose to send us one for help, we use it only to fix your problem.</li>
           </ul>
-          <h3>2.3 Information We Do Not Collect</h3>
+          <p>You can remove all of this by uninstalling SolarClient and deleting its data folder.</p>
+
+          <h2>3. Information our servers receive</h2>
+          <p>SolarClient runs its own servers for online features and updates. This is what they handle.</p>
+          <h3>3.1 Your Minecraft identity</h3>
+          <p>When the launcher connects, it proves that you own your Minecraft account using Mojang&rsquo;s official login check. Our server then receives your Minecraft username and your Minecraft ID (called a UUID). We save these, along with the last time you were online, so your friends can find you.</p>
+          <h3>3.2 Your connection</h3>
+          <p>Our server sees your IP address when you connect. We record it in a server log together with your username, to protect the service and to stop abuse. We do not use it to work out where you live, and we do not combine it with other data to build a profile of you.</p>
+          <h3>3.3 Friends and status</h3>
+          <p>We save who you follow and who you block. While you are online, your friends can see your status and, if you choose to share it, what you are playing. You can hide your status in the launcher.</p>
+          <h3>3.4 Messages</h3>
           <ul>
-          <li>We do not collect your name, email address, or physical address.</li>
-          <li>We do not collect gameplay data, chat messages, or server activity.</li>
-          <li>We do not collect system hardware specifications or telemetry.</li>
-          <li>We do not track your usage of the launcher application.</li>
+          <li><strong>Direct messages and group messages</strong> are passed straight to the people they are meant for. If someone is offline, we hold the message until they next connect, and then delete it from our server once it is delivered. Group details, such as the group name and its members, are saved.</li>
+          <li><strong>Community messages</strong> are saved on our server so members can read them later. We keep the most recent 200 messages in each text channel. Older messages are deleted as new ones arrive, and all of a channel&rsquo;s messages are deleted when the channel or the community is deleted. Community names, channel names, and member lists are saved too.</li>
+          <li><strong>Global chat</strong> is kept only in our server&rsquo;s memory, never saved to disk. Only the last 100 messages are kept, and they are erased whenever the server restarts.</li>
           </ul>
-          <h2>3. Third-Party Services</h2>
-          <h3>3.1 Google AdSense</h3>
-          <p>This website displays advertisements through Google AdSense. Google and its advertising partners use cookies and similar technologies to serve ads based on your prior visits to this site and other websites. This may involve the collection of:</p>
+          <h3>3.5 Voice chat</h3>
+          <p>Your voice is sent live through our server to the other people in the same voice channel. We never record it or store it. Members of a community can see who is in its voice channels.</p>
+          <h3>3.6 Moderation records</h3>
+          <p>We save staff roles and chat mutes so that moderation keeps working.</p>
+          <h3>3.7 Updates and player count</h3>
+          <p>To check for updates and to show how many people are online, the launcher contacts our server and GitHub. Like any internet request, these include your IP address and basic technical details.</p>
+
+          <h2>4. Our website</h2>
+          <p>Our website has no sign up and no accounts. It is hosted on GitHub Pages, and GitHub may log your IP address and browser details when you visit. See the <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">GitHub Privacy Statement</a>. The agreement box next to the download button is only saved in your own browser and is never sent to us.</p>
+          <p>Our website shows ads from Google AdSense. Google and its partners use cookies and similar technology to show and measure ads, which can include ads based on your visits to our website and other websites. Visitors in the European Economic Area, the United Kingdom, and Switzerland are asked for consent before personalized ad cookies are set. You can turn off personalized ads at <a href="https://myadcenter.google.com/" target="_blank" rel="noopener">Google My Ad Center</a>, and you can read <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">how Google uses information from sites that use its services</a>. Our <a href="https://figgysmp.shop/cookies.html">Cookie Policy</a> has more detail.</p>
+
+          <h2>5. Ads in the launcher</h2>
+          <p>The launcher shows ads from third party ad networks, including Adsterra. These ads load from the ad network&rsquo;s own servers, which receive your IP address and basic device and browser details, and may use cookies inside the launcher to count views, limit repeats, and prevent fraud. We do not give ad networks your Minecraft username, your messages, or anything else from your account.</p>
+
+          <h2>6. Other services the launcher connects to</h2>
+          <p>To do its job, the launcher connects straight from your computer to the services below. Each one has its own privacy policy.</p>
           <ul>
-          <li>Cookie identifiers</li>
-          <li>IP address (anonymized by Google in the EEA)</li>
-          <li>Browser and device information</li>
-          <li>Pages visited and interaction data on this site</li>
+          <li><strong>Microsoft and Xbox</strong>, to sign you in.</li>
+          <li><strong>Mojang</strong>, to download Minecraft, check your account, and load skins.</li>
+          <li><strong>Modrinth</strong>, to search for and download mods, resource packs, and shaders.</li>
+          <li><strong>Fabric, Quilt, and Forge</strong>, to download mod loaders.</li>
+          <li><strong>Eclipse Adoptium</strong>, to download Java.</li>
+          <li><strong>mc-heads.net and Crafatar</strong>, to show player heads and skins.</li>
+          <li><strong>GitHub</strong>, to download launcher updates.</li>
+          <li><strong>Discord</strong>, only if Discord is running on your computer, to show that you are playing Minecraft on your Discord profile. This talks to the Discord app on your own computer.</li>
           </ul>
-          <p>You can opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google Ads Settings</a> or by visiting <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener">www.aboutads.info/choices</a>. For more information, see <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">How Google Uses Information from Sites That Use Our Services</a>.</p>
-          <h3>3.2 Microsoft OAuth</h3>
-          <p>When you log in through the launcher, you are redirected to Microsoft&rsquo;s official login page. SolarClient receives only an OAuth access token and a Minecraft profile (your in-game username and UUID). We do not receive or store your Microsoft password. Microsoft&rsquo;s privacy policy governs the data Microsoft collects during the login process: <a href="https://privacy.microsoft.com/en-us/privacystatement" target="_blank" rel="noopener">Microsoft Privacy Statement</a>.</p>
-          <h3>3.3 File Hosting</h3>
-          <p>When you download SolarClient, our hosting provider may log your IP address and request metadata to securely deliver the file. We do not track individual downloads.</p>
-          <h3>3.4 Modrinth and CurseForge</h3>
-          <p>The launcher&rsquo;s mod browser fetches mod listings from the Modrinth and CurseForge APIs. These requests are made directly from your device to their servers. Please refer to <a href="https://modrinth.com/legal/privacy" target="_blank" rel="noopener">Modrinth&rsquo;s Privacy Policy</a> and <a href="https://www.overwolf.com/legal/privacy/" target="_blank" rel="noopener">CurseForge/Overwolf&rsquo;s Privacy Policy</a> for information about data they may collect.</p>
-          <h2>4. Cookies</h2>
-          <p>This website uses cookies primarily through Google AdSense for advertising purposes. These are third-party cookies set by Google, not by SolarClient. We do not set any first-party tracking cookies. You can manage cookie preferences through your browser settings or through Google&rsquo;s opt-out mechanisms linked above. Our <a href="/cookies.html">cookie policy</a> sets out in detail what is stored, why, and every way to switch off personalised advertising. Visitors from the EEA, the UK and Switzerland are shown a consent message through Google&rsquo;s certified consent management platform before any personalised advertising cookies are set.</p>
-          <h2>5. Data Storage and Security</h2>
-          <p>All user data (settings, session tokens, waypoints) is stored locally on your device in the launcher&rsquo;s configuration directory. No personal data is transmitted to or stored on SolarClient-operated servers. We do not operate backend servers that store user information.</p>
-          <h2>6. Children&rsquo;s Privacy</h2>
-          <p>SolarClient does not knowingly collect personal information from children under 13 (or the applicable age in your jurisdiction). The website does not have user accounts or registration forms. If you are a parent or guardian and believe your child has provided personal information to us through Discord or another channel, please contact us so we can take appropriate action.</p>
-          <h2>7. Data Sharing</h2>
-          <p>We do not sell, trade, or share personal data with third parties. The only third-party data processing that occurs is through the services listed in Section 3, which operate independently under their own privacy policies.</p>
-          <h2>8. Your Rights</h2>
-          <p>Depending on your jurisdiction, you may have the right to:</p>
+
+          <h2>7. How we use information</h2>
+          <p>We use the information above only to:</p>
           <ul>
-          <li>Access any personal data we hold about you (in practice, we hold none)</li>
-          <li>Request deletion of your data</li>
-          <li>Opt out of personalized advertising (via Google Ads Settings)</li>
-          <li>Control cookies through your browser settings</li>
+          <li>run SolarClient and its features;</li>
+          <li>deliver your messages and voice;</li>
+          <li>keep SolarClient safe, stop spam and abuse, and enforce our Terms of Service;</li>
+          <li>fix problems; and</li>
+          <li>follow the law.</li>
           </ul>
-          <p>Since we do not collect or store personal data on our own servers, most data-related requests should be directed to the relevant third-party service (Google, Microsoft, GitHub).</p>
-          <h2>9. Changes to This Policy</h2>
-          <p>We may update this privacy policy from time to time. Changes will be reflected on this page with an updated &ldquo;Last updated&rdquo; date. We encourage you to review this page periodically. Continued use of the website or launcher after changes constitutes acceptance of the updated policy.</p>
-          <h2>10. Contact</h2>
-          <p>If you have questions about this privacy policy or how your data is handled, the best way to reach us is through our Discord server:</p>
-          <p><a href="https://discord.gg/DyeJ8tAvZY" target="_blank" rel="noopener">Join our Discord Server</a></p>
+          <p><strong>We do not sell your personal information.</strong> We only share it:</p>
+          <ul>
+          <li>with the people you choose to talk to;</li>
+          <li>with the companies that host our servers, only so they can run them;</li>
+          <li>when the law requires it, or when we need to protect someone&rsquo;s safety; and</li>
+          <li>if SolarClient is ever sold or transferred, in which case this policy keeps applying to your information.</li>
+          </ul>
+
+          <h2>8. How long we keep it</h2>
+          <ul>
+          <li><strong>Minecraft username, ID, and last online time:</strong> for as long as you use online features. We may remove accounts that have not been used for a long time.</li>
+          <li><strong>Follows, blocks, and group details:</strong> until you change them or ask us to delete them.</li>
+          <li><strong>Messages held for offline friends:</strong> until they are delivered.</li>
+          <li><strong>Community messages:</strong> the latest 200 in each text channel, until the channel or community is deleted.</li>
+          <li><strong>Global chat:</strong> in memory only, the last 100 messages, gone when the server restarts.</li>
+          <li><strong>Voice:</strong> never stored.</li>
+          <li><strong>Server logs with IP addresses:</strong> only as long as we need them for security, and then deleted.</li>
+          </ul>
+
+          <h2>9. Security</h2>
+          <p>We protect our servers with account checks through Mojang, limits on how much data anyone can send, and other measures. No system is perfectly secure, so we cannot promise that your information will never be accessed without permission. Do not share passwords, personal details, or anything else sensitive in chat or voice.</p>
+
+          <h2>10. Children</h2>
+          <p>SolarClient is not for children under 13. We do not knowingly collect information from children under 13. If you believe a child under 13 is using SolarClient&rsquo;s online features, contact us and we will delete their information. If you are under 18, use SolarClient only with permission from a parent or guardian.</p>
+
+          <h2>11. Your choices and rights</h2>
+          <ul>
+          <li>You can hide your online status, block people, and leave communities at any time. If you own a community, you can delete its channels, its messages, or the whole community.</li>
+          <li>You can ask us for a copy of the information our servers hold about you, or ask us to delete it. Contact us on Discord with your Minecraft username. To protect your account, we may ask you to prove it is yours, for example by sending a message from inside the launcher.</li>
+          <li>Depending on where you live, such as the European Union, the United Kingdom, or California, you may have more rights. These can include the right to correct your information, to object to how we use it, and to complain to your local data protection authority. We will not treat you differently for using these rights.</li>
+          <li>Where European data protection law applies, we rely on these legal grounds: providing the service you asked for (online features), our legitimate interests (security, preventing abuse, and showing ads), and your consent where the law requires it (personalized ad cookies on our website).</li>
+          </ul>
+
+          <h2>12. Where your information is stored</h2>
+          <p>Our servers may be in the United States or in other countries. By using SolarClient, you understand that your information may be handled outside your own country.</p>
+
+          <h2>13. Changes to this policy</h2>
+          <p>We may update this policy. When we do, we will change the date at the top of this page. For important changes, we will also let you know in the launcher or on our website. If you keep using SolarClient after an update, the new policy applies.</p>
+
+          <h2>14. Contact</h2>
+          <p>For privacy questions or requests, contact us on our Discord server: <a href="https://discord.gg/DyeJ8tAvZY" target="_blank" rel="noopener">discord.gg/DyeJ8tAvZY</a>.</p>
           <hr class="divider">
           <hr>
           <p>Related: <a href="/cookies.html">cookie policy</a> &middot; <a href="/privacy.html">privacy policy</a> &middot; <a href="/terms.html">terms of service</a> &middot; <a href="/about.html">about this project</a></p>
