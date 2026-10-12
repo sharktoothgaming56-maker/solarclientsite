@@ -155,33 +155,39 @@
      ────────────────────────────────────────── */
   var RELEASES_REPO = 'sharktoothgaming56-maker/solarclientsite';
 
-  var LEGAL_VERSION = '2026.10.11';
-  var LEGAL_KEY = 'solar.legal.agreed';
+  /* The download button has no href until the agreement box is ticked, so
+     there is nothing to click through, open in a new tab, or copy. */
+  var syncLegalAgree = function () {};
 
   function initLegalAgree() {
     var box = document.getElementById('legalAgreeBox');
     var label = document.getElementById('legalAgree');
     var btn = document.getElementById('primaryDownloadBtn');
     if (!box || !btn) return;
-    try { box.checked = localStorage.getItem(LEGAL_KEY) === LEGAL_VERSION; } catch (e) { /* storage blocked */ }
     function sync() {
-      btn.classList.toggle('needs-agree', !box.checked);
-      btn.setAttribute('aria-disabled', box.checked ? 'false' : 'true');
-      if (box.checked) label.classList.remove('legal-agree-warn');
-      try {
-        if (box.checked) localStorage.setItem(LEGAL_KEY, LEGAL_VERSION);
-        else localStorage.removeItem(LEGAL_KEY);
-      } catch (e) { /* storage blocked */ }
+      var ok = box.checked;
+      btn.classList.toggle('needs-agree', !ok);
+      btn.setAttribute('aria-disabled', ok ? 'false' : 'true');
+      if (ok && btn.getAttribute('data-href')) btn.setAttribute('href', btn.getAttribute('data-href'));
+      else btn.removeAttribute('href');
+      if (ok) label.classList.remove('legal-agree-warn');
     }
+    syncLegalAgree = sync;
+    box.checked = false;
     box.addEventListener('change', sync);
+    /* Browsers restore form state on Back; always start unticked. */
+    window.addEventListener('pageshow', function () { box.checked = false; sync(); });
     btn.addEventListener('click', function (e) {
-      if (box.checked) return;
+      if (box.checked && btn.getAttribute('href')) return;
       e.preventDefault();
       label.classList.remove('legal-agree-warn');
       void label.offsetWidth;
       label.classList.add('legal-agree-warn');
       box.focus();
       showToast('Please tick the box to agree to the Terms of Service and Privacy Policy before downloading.');
+    });
+    btn.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !btn.getAttribute('href')) btn.click();
     });
     sync();
   }
@@ -236,14 +242,11 @@
       }
       if (!exe) return;
 
-      var btn = document.getElementById('primaryDownloadBtn');
-      if (btn) {
-        btn.href = exe.browser_download_url;
-      }
       var allBtns = document.querySelectorAll('[data-download-btn]');
       for (var bi = 0; bi < allBtns.length; bi++) {
-        if (allBtns[bi].tagName === 'A') allBtns[bi].href = exe.browser_download_url;
+        allBtns[bi].setAttribute('data-href', exe.browser_download_url);
       }
+      syncLegalAgree();
 
       var sizeEl = document.getElementById('dlSize');
       if (sizeEl && exe.size) sizeEl.textContent = 'Size: ' + (exe.size / 1048576).toFixed(1) + ' MB';

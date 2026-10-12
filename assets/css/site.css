@@ -208,6 +208,7 @@ a { color: var(--accent-glow); }
 .btn-main.needs-agree {
   filter: grayscale(0.55) brightness(0.8);
   box-shadow: none;
+  cursor: not-allowed;
 }
 .btn-main.needs-agree:hover { transform: none; }
 .legal-agree {
