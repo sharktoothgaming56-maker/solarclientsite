@@ -232,7 +232,10 @@
      static fallback already in the HTML, so the
      page is complete without JavaScript.
      ────────────────────────────────────────── */
-  var RELEASES_REPO = 'sharktoothgaming56-maker/solarclientsite';
+  var RELEASES_REPOS = [
+    'sharktoothgaming56-maker/solarclient-launcher',
+    'sharktoothgaming56-maker/solarclientsite'
+  ];
 
   /* The download button has no href until the agreement box is ticked, so
      there is nothing to click through, open in a new tab, or copy. */
@@ -274,12 +277,19 @@
   function loadLatestRelease() {
     if (!document.getElementById('versionTag') && !document.getElementById('primaryDownloadBtn')) return;
 
-    fetch('https://api.github.com/repos/' + RELEASES_REPO + '/releases/latest', {
-      headers: { 'Accept': 'application/vnd.github+json' }
-    }).then(function (res) {
-      if (!res.ok) throw new Error('release lookup failed');
-      return res.json();
-    }).then(function (data) {
+    function fetchLatest(i) {
+      return fetch('https://api.github.com/repos/' + RELEASES_REPOS[i] + '/releases/latest', {
+        headers: { 'Accept': 'application/vnd.github+json' }
+      }).then(function (res) {
+        if (!res.ok) throw new Error('release lookup failed');
+        return res.json();
+      }).catch(function (err) {
+        if (i + 1 < RELEASES_REPOS.length) return fetchLatest(i + 1);
+        throw err;
+      });
+    }
+
+    fetchLatest(0).then(function (data) {
       var version = (data.tag_name || '').replace(/^v/i, '');
       if (version) {
         var tag = document.getElementById('versionTag');
