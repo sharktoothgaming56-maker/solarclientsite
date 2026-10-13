@@ -17,9 +17,12 @@ cookies.html          Cookie policy
 404.html              Not-found page (noindex, no ad code)
 
 assets/css/site.css   Single shared stylesheet for every page
-assets/js/site.js     Starfield, FAQ accordion, clipboard, live release data
+assets/js/site.js     Scroll motion, product tour, FAQ accordion, clipboard, live release data
 assets/js/changelog.js Changelog page: renders GitHub releases
-assets/img/logo.svg   Logo (also copied to /favicon.svg)
+assets/img/solar-client-logo.png  Wordmark from the launcher title bar (nav on every page)
+assets/img/icon-*.png Planet app icon (favicon 32, apple-touch 180, schema logo 512)
+assets/img/screens/   Real launcher screenshots used on the homepage
+assets/img/og-launcher.jpg  1200x630 social preview
 
 ads.txt               AdSense authorised sellers file
 robots.txt            Crawl rules + sitemap pointer
