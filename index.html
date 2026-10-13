@@ -4,27 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SolarClient — Free High-FPS Minecraft Launcher for Windows</title>
-  <meta name="description" content="SolarClient is a free, lightweight Minecraft: Java Edition launcher for Windows with a curated performance mod stack, automatic Java setup, tuned JVM flags, a one-click mod and shader browser, HUD editor and waypoints.">
+  <meta name="description" content="SolarClient is a free Minecraft: Java Edition launcher for Windows. It detects your hardware, installs a version-matched stack of open-source performance mods, manages Java, tunes the JVM, and has Modrinth, friends and chat built in.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
-  <meta name="theme-color" content="#090611">
+  <meta name="theme-color" content="#07060b">
   <link rel="canonical" href="https://figgysmp.shop/">
 
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="SolarClient">
   <meta property="og:title" content="SolarClient — Free High-FPS Minecraft Launcher for Windows">
-  <meta property="og:description" content="SolarClient is a free, lightweight Minecraft: Java Edition launcher for Windows with a curated performance mod stack, automatic Java setup, tuned JVM flags, a one-click mod and shader browser, HUD editor and waypoints.">
+  <meta property="og:description" content="A free Minecraft: Java Edition launcher that detects your hardware, installs version-matched performance mods, manages Java and tunes the JVM for you.">
   <meta property="og:url" content="https://figgysmp.shop/">
-  <meta property="og:image" content="https://figgysmp.shop/assets/img/logo.svg">
+  <meta property="og:image" content="https://figgysmp.shop/assets/img/og-launcher.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The SolarClient launcher home screen">
   <meta property="og:locale" content="en_US">
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="SolarClient — Free High-FPS Minecraft Launcher for Windows">
-  <meta name="twitter:description" content="SolarClient is a free, lightweight Minecraft: Java Edition launcher for Windows with a curated performance mod stack, automatic Java setup, tuned JVM flags, a one-click mod and shader browser, HUD editor and waypoints.">
+  <meta name="twitter:description" content="A free Minecraft: Java Edition launcher that detects your hardware, installs version-matched performance mods, manages Java and tunes the JVM for you.">
+  <meta name="twitter:image" content="https://figgysmp.shop/assets/img/og-launcher.jpg">
 
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script>document.documentElement.classList.add('js');</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/site.css?v=20261012">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="/assets/img/screens/launchpad.webp" type="image/webp" fetchpriority="high">
+  <link rel="stylesheet" href="/assets/css/site.css?v=20261012b">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7931973085541540" crossorigin="anonymous"></script>
   <script type="application/ld+json">
 {
@@ -67,7 +73,8 @@
   "downloadUrl": "https://github.com/sharktoothgaming56-maker/solarclientsite/releases/latest",
   "softwareRequirements": "Windows 10 or 11 (64-bit), OpenGL 4.5 compatible graphics, a Microsoft account that owns Minecraft: Java Edition",
   "description": "SolarClient is a free Minecraft: Java Edition launcher for Windows that bundles a curated stack of open-source performance mods, manages Java runtimes automatically, and tunes JVM garbage collection to your allocated memory.",
-  "image": "https://figgysmp.shop/assets/img/logo.svg",
+  "image": "https://figgysmp.shop/assets/img/og-launcher.jpg",
+  "screenshot": "https://figgysmp.shop/assets/img/og-launcher.jpg",
   "author": {
     "@id": "https://figgysmp.shop/#organization"
   },
@@ -107,135 +114,317 @@
     </header>
 
     <main id="main">
-      <section class="hero-section" id="download">
-        <p class="version-tag" id="versionTag">Free &middot; Windows 10 &amp; 11</p>
-        <h1 class="hero-title">
-          The Minecraft Launcher Built for <span class="highlight">Pure FPS</span>
-        </h1>
-        <p class="hero-desc">
-          SolarClient is a free, lightweight Minecraft: Java Edition launcher built for performance. It bundles a curated stack of open-source optimisation mods, manages Java for you, tunes the JVM to your hardware, and installs shaders and resource packs in one click &mdash; so you spend less time configuring and more time playing.
-        </p>
-        <div class="download-zone">
-          <a class="btn-main needs-agree" id="primaryDownloadBtn" data-download-btn data-href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases/latest" role="link" tabindex="0" aria-disabled="true" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            Download for Windows
-          </a>
-          <label class="legal-agree" id="legalAgree" for="legalAgreeBox">
-            <input type="checkbox" id="legalAgreeBox" autocomplete="off">
-            <span>I have read and agree to the <a href="/terms.html" target="_blank" rel="noopener">Terms of Service</a> and the <a href="/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</span>
-          </label>
-          <p class="meta-details">
-            <span>Windows 10 / 11 64-bit</span>
-            <span aria-hidden="true">&middot;</span>
-            <span id="dlSize">Size: ~93 MB</span>
-            <span aria-hidden="true">&middot;</span>
-            <span>Installer (.exe)</span>
-          </p>
-        </div>
-
-        <div class="trust-strip">
-          <div class="trust-left">
-            <span class="trust-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                <polyline points="9 12 11 14 15 10"></polyline>
-              </svg>
-            </span>
-            <span>
-              <span class="trust-text-title">Verify the file before you run it</span>
-              <span class="trust-text-sub">The SHA-256 below is read from the current GitHub release, so it always matches the file you are downloading.</span>
-            </span>
+      <section class="hero" id="download">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="version-tag" id="versionTag">Free &middot; Windows 10 &amp; 11</p>
+            <h1 class="hero-title">
+              <span class="line">Minecraft, tuned</span>
+              <span class="line">to <span class="highlight">your machine.</span></span>
+            </h1>
+            <p class="hero-desc">
+              SolarClient reads your CPU, GPU and memory, installs a version-matched stack of open-source performance mods, sets up the right Java and sizes the JVM for your hardware. Then you press Launch.
+            </p>
+            <div class="download-zone">
+              <div class="cta-row">
+                <a class="btn-main needs-agree" id="primaryDownloadBtn" data-download-btn data-href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases/latest" role="link" tabindex="0" aria-disabled="true" rel="noopener">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  Download for Windows
+                </a>
+                <a class="btn-ghost" href="#features">
+                  Take the tour
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                </a>
+              </div>
+              <label class="legal-agree" id="legalAgree" for="legalAgreeBox">
+                <input type="checkbox" id="legalAgreeBox" autocomplete="off">
+                <span>I have read and agree to the <a href="/terms.html" target="_blank" rel="noopener">Terms of Service</a> and the <a href="/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</span>
+              </label>
+              <p class="meta-details">
+                <span>Windows 10 / 11 &middot; 64-bit</span>
+                <span aria-hidden="true">/</span>
+                <span>Installer (.exe)</span>
+                <span aria-hidden="true">/</span>
+                <span>Free</span>
+              </p>
+            </div>
           </div>
-          <a class="btn-scan vt-link" href="https://www.virustotal.com/gui/home/search" rel="noopener nofollow" target="_blank">Look up on VirusTotal &rarr;</a>
+
+          <aside class="release-card" aria-label="Current release">
+            <div class="release-head">
+              <span class="release-label">Current release</span>
+              <span class="release-ver" data-latest-version>latest</span>
+            </div>
+            <dl class="release-rows">
+              <dt>Published</dt><dd><time data-release-date>On GitHub Releases</time></dd>
+              <dt>Size</dt><dd id="dlSize">~93 MB</dd>
+              <dt>Platform</dt><dd>Windows 10 / 11 x64</dd>
+              <dt>Source</dt><dd><a href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases" rel="noopener" target="_blank">GitHub Releases</a></dd>
+            </dl>
+            <div class="hash-bar">
+              <code class="hash-code" id="hashCode">Loading the current release hash from GitHub&hellip;</code>
+              <button class="btn-hash-copy" type="button" data-copy-target="hashCode" data-copy-label="Copied SHA-256 to clipboard">Copy</button>
+            </div>
+            <div class="trust-strip">
+              <div class="trust-left">
+                <span class="trust-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    <polyline points="9 12 11 14 15 10"></polyline>
+                  </svg>
+                </span>
+                <span>
+                  <span class="trust-text-title">SHA-256, read live</span>
+                  <span class="trust-text-sub">Pulled from the release itself, so it always matches the file you get.</span>
+                </span>
+              </div>
+              <a class="btn-scan vt-link" href="https://www.virustotal.com/gui/home/search" rel="noopener nofollow" target="_blank">VirusTotal &rarr;</a>
+            </div>
+          </aside>
         </div>
 
-        <div class="hash-bar">
-          <code class="hash-code" id="hashCode">Loading the current release hash from GitHub&hellip;</code>
-          <button class="btn-hash-copy" type="button" data-copy-target="hashCode" data-copy-label="Copied SHA-256 to clipboard">Copy SHA-256</button>
+        <div class="hero-shot" data-tilt>
+          <div class="frame">
+            <img src="/assets/img/screens/launchpad.webp" width="2160" height="1350" alt="The SolarClient launchpad: a 1.21.11 Fabric instance ready to launch, with detected hardware, a memory slider and one-click performance mods." fetchpriority="high" decoding="async">
+          </div>
+          <div class="shot-chip c1" aria-hidden="true">
+            <span class="chip-ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
+            </span>
+            <span><small>Rig detected</small>CPU, GPU &amp; RAM read on launch</span>
+          </div>
+          <div class="shot-chip c2" aria-hidden="true">
+            <span class="chip-ic ok">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            </span>
+            <span><small>Performance mods</small>8 installed in one click</span>
+          </div>
+          <div class="shot-chip c3" aria-hidden="true">
+            <span class="chip-ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+            </span>
+            <span><small>JVM</small>G1GC sized to your memory</span>
+          </div>
         </div>
       </section>
 
-      <section class="section" id="features">
-        <h2 class="section-title">Built for Performance and Gameplay</h2>
-        <p class="section-subtitle">Every part of SolarClient is aimed at one thing: getting the smoothest Minecraft you can out of the hardware you already have, whether that is a budget laptop or a high-end desktop.</p>
-        <div class="feature-grid">
-
-          <article class="card">
-            <div class="card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+      <section class="stack-strip" aria-label="Performance mods SolarClient installs">
+        <p class="eyebrow">The open-source stack it installs for you</p>
+        <div class="marquee">
+          <div class="marquee-track">
+            <div class="marquee-group">
+              <span class="mod-pill"><i></i>Sodium</span>
+              <span class="mod-pill"><i></i>Lithium</span>
+              <span class="mod-pill"><i></i>FerriteCore</span>
+              <span class="mod-pill"><i></i>Entity Culling</span>
+              <span class="mod-pill"><i></i>ImmediatelyFast</span>
+              <span class="mod-pill"><i></i>Krypton</span>
+              <span class="mod-pill"><i></i>Dynamic FPS</span>
+              <span class="mod-pill"><i></i>Fabric API</span>
             </div>
-            <h3 class="card-title">A Curated Performance Stack</h3>
-            <p class="card-desc">Pre-configured with Sodium, Lithium, FerriteCore, EntityCulling, ImmediatelyFast and ModernFix, version-matched to your Minecraft release. Most players see a large frame rate improvement on first launch without changing a single setting &mdash; how large depends on your hardware, and our <a href="/guides/minecraft-fps-boost.html">FPS guide</a> explains why.</p>
+            <div class="marquee-group" aria-hidden="true">
+              <span class="mod-pill"><i></i>Sodium</span>
+              <span class="mod-pill"><i></i>Lithium</span>
+              <span class="mod-pill"><i></i>FerriteCore</span>
+              <span class="mod-pill"><i></i>Entity Culling</span>
+              <span class="mod-pill"><i></i>ImmediatelyFast</span>
+              <span class="mod-pill"><i></i>Krypton</span>
+              <span class="mod-pill"><i></i>Dynamic FPS</span>
+              <span class="mod-pill"><i></i>Fabric API</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats" aria-label="SolarClient in numbers">
+        <div class="stat" data-reveal style="--i:0">
+          <span class="stat-num" data-count="24">24</span>
+          <p class="stat-label">parallel connections for assets, sounds and libraries</p>
+        </div>
+        <div class="stat" data-reveal style="--i:1">
+          <span class="stat-num" data-count="8">8</span>
+          <p class="stat-label">open-source performance mods, matched to your version</p>
+        </div>
+        <div class="stat" data-reveal style="--i:2">
+          <span class="stat-num" data-count="0">0</span>
+          <p class="stat-label">Java installs to manage &mdash; the right runtime is fetched for you</p>
+        </div>
+        <div class="stat" data-reveal style="--i:3">
+          <span class="stat-num">$0</span>
+          <p class="stat-label">to download and use. A few ads keep it that way</p>
+        </div>
+      </section>
+
+      <section class="sec tour" id="features">
+        <div class="sec-head" data-reveal>
+          <p class="eyebrow">Product tour</p>
+          <h2 class="sec-title">One window. <span class="dim">Everything you used to alt-tab for.</span></h2>
+          <p class="sec-sub">Every screenshot on this page is the real launcher. Scroll through what it does.</p>
+        </div>
+
+        <div class="tour-grid">
+          <ol class="tour-steps">
+            <li class="tour-step is-active" data-step="0">
+              <span class="tour-num" aria-hidden="true">01</span>
+              <p class="tour-kicker">Launchpad</p>
+              <h3>Knows your rig before the first launch.</h3>
+              <p>SolarClient reads your CPU, GPU and RAM, rates the machine and suggests how much memory Minecraft should get. One button installs the performance mods for your loader and tunes them to your hardware.</p>
+              <ul class="tour-points">
+                <li>Hardware tier and memory recommendation</li>
+                <li>&ldquo;Install all &amp; auto-tune&rdquo; for Fabric instances</li>
+                <li>Levels that grow with playtime, Coal to Netherite</li>
+              </ul>
+              <div class="frame tour-inline"><img src="/assets/img/screens/launchpad.webp" width="2160" height="1350" alt="" loading="lazy" decoding="async"></div>
+            </li>
+            <li class="tour-step" data-step="1">
+              <span class="tour-num" aria-hidden="true">02</span>
+              <p class="tour-kicker">Content</p>
+              <h3>Find a mod, press Install, play.</h3>
+              <p>Search Modrinth for mods, modpacks and resource packs without opening a browser. Results are filtered to the instance you are installing into, so you only see what runs on that version and loader.</p>
+              <ul class="tour-points">
+                <li>Import and export modpacks</li>
+                <li>Sync mods over from another instance</li>
+                <li>Drop in your own .jar or resource pack</li>
+              </ul>
+              <div class="frame tour-inline"><img src="/assets/img/screens/mods.webp" width="2160" height="1350" alt="" loading="lazy" decoding="async"></div>
+            </li>
+            <li class="tour-step" data-step="2">
+              <span class="tour-num" aria-hidden="true">03</span>
+              <p class="tour-kicker">Versions</p>
+              <h3>Every release, kept apart.</h3>
+              <p>From the newest 26.x releases back through 1.21, 1.20 and older. Each instance has its own mods, memory and Java runtime, so a PvP setup and a 200-mod pack never step on each other.</p>
+              <ul class="tour-points">
+                <li>Vanilla and Fabric instances</li>
+                <li>Separate mods, RAM and Java per instance</li>
+                <li>Game files download over 24 connections</li>
+              </ul>
+              <div class="frame tour-inline"><img src="/assets/img/screens/versions.webp" width="2160" height="1350" alt="" loading="lazy" decoding="async"></div>
+            </li>
+            <li class="tour-step" data-step="3">
+              <span class="tour-num" aria-hidden="true">04</span>
+              <p class="tour-kicker">Friends</p>
+              <h3>Your friends list lives in the launcher.</h3>
+              <p>See who is online and which instance they are playing, message them, start a group chat and invite people to your server &mdash; no second app open.</p>
+              <ul class="tour-points">
+                <li>Live presence: online, in game, which instance</li>
+                <li>DMs and group chats with replies and edits</li>
+                <li>Blocking and reporting built in</li>
+              </ul>
+              <div class="frame tour-inline"><img src="/assets/img/screens/friends.webp" width="2160" height="1350" alt="" loading="lazy" decoding="async"></div>
+            </li>
+            <li class="tour-step" data-step="4">
+              <span class="tour-num" aria-hidden="true">05</span>
+              <p class="tour-kicker">Customize</p>
+              <h3>Make it look like yours.</h3>
+              <p>Pick a scene &mdash; Cherry Grove, Frozen Peaks, The End, Deep Ocean and more &mdash; or use your own photo. The whole launcher re-themes around it.</p>
+              <ul class="tour-points">
+                <li>Built-in Minecraft scenes plus your own photo</li>
+                <li>A separate wallpaper for the Game Monitor</li>
+                <li>Everything saves automatically</li>
+              </ul>
+              <div class="frame tour-inline"><img src="/assets/img/screens/launchpad-cherry.webp" width="2160" height="1350" alt="" loading="lazy" decoding="async"></div>
+            </li>
+          </ol>
+
+          <div class="tour-stage" aria-hidden="true">
+            <div class="frame">
+              <div class="tour-screens">
+                <img class="is-active" src="/assets/img/screens/launchpad.webp" width="2160" height="1350" alt="" decoding="async">
+                <img src="/assets/img/screens/mods.webp" width="2160" height="1350" alt="" loading="lazy" decoding="async">
+                <img src="/assets/img/screens/versions.webp" width="2160" height="1350" alt="" loading="lazy" decoding="async">
+                <img src="/assets/img/screens/friends.webp" width="2160" height="1350" alt="" loading="lazy" decoding="async">
+                <img src="/assets/img/screens/launchpad-cherry.webp" width="2160" height="1350" alt="" loading="lazy" decoding="async">
+              </div>
+            </div>
+            <div class="tour-caption">
+              <span class="tour-label">01 &mdash; Launchpad</span>
+              <span class="tour-dots"><span class="is-active"></span><span></span><span></span><span></span><span></span></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec" id="under-the-hood">
+        <div class="sec-head" data-reveal>
+          <p class="eyebrow">Under the hood</p>
+          <h2 class="sec-title">The parts you never have to think about.</h2>
+          <p class="sec-sub">What happens between pressing Launch and loading into the world.</p>
+        </div>
+        <div class="bento">
+          <article class="b-card wide" data-reveal style="--i:0">
+            <div class="b-viz">
+              <svg class="ft-graph" viewBox="0 0 600 150" role="img" aria-label="Illustration: frame times with default JVM flags spike during garbage collection; with tuned flags they stay flat.">
+                <line class="grid" x1="0" y1="30" x2="600" y2="30"></line>
+                <line class="grid" x1="0" y1="75" x2="600" y2="75"></line>
+                <line class="grid" x1="0" y1="120" x2="600" y2="120"></line>
+                <path class="spiky" d="M0 112 L40 110 L60 112 L72 40 L84 111 L130 109 L170 112 L184 62 L196 110 L250 112 L290 108 L302 22 L316 111 L370 110 L410 112 L424 70 L436 109 L490 111 L520 108 L532 48 L546 110 L600 111"></path>
+                <path class="smooth" d="M0 104 C60 102 90 106 150 103 S240 101 300 104 S400 106 450 102 S560 103 600 104"></path>
+              </svg>
+              <div class="ft-legend"><span>Default flags</span><span class="on">SolarClient G1GC</span><span>Illustrative frame times</span></div>
+            </div>
+            <h3>Garbage collection tuned to your memory</h3>
+            <p>Custom G1GC flags, scaled to the memory you allocate, cut the collection pauses that show up as stutter in PvP, chunk loading and big modpacks. No JVM arguments to research or paste &mdash; the <a href="/guides/allocate-ram-minecraft.html">RAM guide</a> explains what they do.</p>
           </article>
 
-          <article class="card">
-            <div class="card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+          <article class="b-card" data-reveal style="--i:1">
+            <div class="b-viz">
+              <div class="dl-bars" aria-hidden="true">
+                <span class="dl-bar" style="--i:0"></span><span class="dl-bar" style="--i:5"></span><span class="dl-bar" style="--i:2"></span><span class="dl-bar" style="--i:7"></span><span class="dl-bar" style="--i:1"></span><span class="dl-bar" style="--i:6"></span><span class="dl-bar" style="--i:3"></span><span class="dl-bar" style="--i:8"></span>
+                <span class="dl-bar" style="--i:4"></span><span class="dl-bar" style="--i:9"></span><span class="dl-bar" style="--i:2"></span><span class="dl-bar" style="--i:6"></span><span class="dl-bar" style="--i:0"></span><span class="dl-bar" style="--i:7"></span><span class="dl-bar" style="--i:3"></span><span class="dl-bar" style="--i:5"></span>
+                <span class="dl-bar" style="--i:8"></span><span class="dl-bar" style="--i:1"></span><span class="dl-bar" style="--i:9"></span><span class="dl-bar" style="--i:4"></span><span class="dl-bar" style="--i:6"></span><span class="dl-bar" style="--i:2"></span><span class="dl-bar" style="--i:7"></span><span class="dl-bar" style="--i:3"></span>
+              </div>
+              <div class="dl-meta"><span>assets / libraries / sounds</span><span>24 &times;</span></div>
             </div>
-            <h3 class="card-title">Garbage Collector Tuning</h3>
-            <p class="card-desc">Custom G1GC flags, scaled to the memory you allocate, that cut the pauses causing stutter during PvP, chunk loading and heavy modpack sessions. No JVM arguments to research or paste. The <a href="/guides/allocate-ram-minecraft.html">RAM guide</a> covers what the flags do.</p>
+            <h3>24 downloads at once</h3>
+            <p>Assets, sounds and libraries come down in parallel, so a fresh install usually finishes in well under a minute on broadband.</p>
           </article>
 
-          <article class="card">
-            <div class="card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <article class="b-card" data-reveal style="--i:0">
+            <div class="b-viz chip-row" aria-hidden="true">
+              <span class="mono-chip">Temurin 8</span>
+              <span class="mono-chip">Temurin 17</span>
+              <span class="mono-chip on">Temurin 21</span>
+              <span class="mono-chip">auto</span>
             </div>
-            <h3 class="card-title">One-Click Mod &amp; Shader Browser</h3>
-            <p class="card-desc">Search and install mods, shaders and resource packs from Modrinth and CurseForge without leaving the launcher. Everything is matched against your game version, loader and existing mods to catch conflicts before they crash you.</p>
+            <h3>Java, handled</h3>
+            <p>It downloads the exact Eclipse Temurin runtime each version needs, keeps them side by side and removes ones nothing uses. See the <a href="/guides/minecraft-java-version-guide.html">Java version chart</a>.</p>
           </article>
 
-          <article class="card">
-            <div class="card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+          <article class="b-card" data-reveal style="--i:1">
+            <div class="b-ic" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
             </div>
-            <h3 class="card-title">Automatic Java Setup</h3>
-            <p class="card-desc">Never install or configure Java again. SolarClient downloads the exact Eclipse Temurin runtime each Minecraft version needs, keeps several side by side, and removes ones nothing uses. See the <a href="/guides/minecraft-java-version-guide.html">Java version chart</a> for what it is doing behind the scenes.</p>
+            <h3>Official Microsoft sign-in</h3>
+            <p>The same Microsoft and Xbox OAuth flow the vanilla launcher uses. You type your password on Microsoft&rsquo;s page; it never reaches the launcher or our servers.</p>
           </article>
 
-          <article class="card">
-            <div class="card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <article class="b-card" data-reveal style="--i:2">
+            <div class="b-ic" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
             </div>
-            <h3 class="card-title">Official Microsoft Authentication</h3>
-            <p class="card-desc">Log in through Microsoft and Xbox OAuth &mdash; the same flow Mojang&rsquo;s own launcher uses. Your password is never typed into the launcher and never reaches our servers. You type it on Microsoft&rsquo;s own sign in page.</p>
+            <h3>A curated performance stack</h3>
+            <p>Sodium, Lithium, FerriteCore and friends, version-matched to your release. How much faster depends on your hardware &mdash; the <a href="/guides/minecraft-fps-boost.html">FPS guide</a> explains why.</p>
           </article>
 
-          <article class="card">
-            <div class="card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline></svg>
+          <article class="b-card half" data-reveal style="--i:0">
+            <div class="b-ic" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
             </div>
-            <h3 class="card-title">Parallel Asset Downloads</h3>
-            <p class="card-desc">Game assets, sounds and libraries download over 24 simultaneous connections. A first-time install that would otherwise take several minutes typically finishes in well under one on a broadband connection.</p>
+            <h3>Built-in HUD editor</h3>
+            <p>Drag an FPS counter, coordinates, keystrokes, CPS and armour status anywhere on screen. Save several layouts and switch per game mode or profile.</p>
           </article>
 
-          <article class="card">
-            <div class="card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+          <article class="b-card half" data-reveal style="--i:1">
+            <div class="b-ic" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
             </div>
-            <h3 class="card-title">Built-in HUD Editor</h3>
-            <p class="card-desc">Drag and drop an FPS counter, coordinates, keystrokes, CPS, armour status and more anywhere on screen. Save several layouts and switch between them per game mode or per profile.</p>
+            <h3>Waypoints across dimensions</h3>
+            <p>Set, share and navigate to waypoints with in-game distance markers. They persist between sessions, so a forgotten coordinate never costs you a base again.</p>
           </article>
-
-          <article class="card">
-            <div class="card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-            </div>
-            <h3 class="card-title">Waypoint System</h3>
-            <p class="card-desc">Set, share and navigate to waypoints across dimensions, with in-game distance markers. Waypoints persist between sessions, so you stop losing bases to a forgotten coordinate.</p>
-          </article>
-
-          <article class="card">
-            <div class="card-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
-            </div>
-            <h3 class="card-title">Profiles That Stay Separate</h3>
-            <p class="card-desc">Keep a lightweight PvP setup, a shader-heavy survival world and a 200-mod kitchen-sink pack in parallel, each with its own mods, memory allocation, Java runtime and HUD layout.</p>
-          </article>
-
         </div>
       </section>
 
@@ -250,11 +439,13 @@
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
       </aside>
 
-
-      <section class="section" id="requirements">
-        <h2 class="section-title">System Requirements</h2>
-        <p class="section-subtitle">SolarClient is designed to run well on modest hardware. Because of the bundled optimisation mods, Minecraft frequently runs better through SolarClient than through the vanilla launcher on the same machine.</p>
-        <div class="req-table-wrap">
+      <section class="sec" id="requirements">
+        <div class="sec-head" data-reveal>
+          <p class="eyebrow">System requirements</p>
+          <h2 class="sec-title">Runs on the PC you already have.</h2>
+          <p class="sec-sub">Because of the bundled optimisation mods, Minecraft frequently runs better through SolarClient than through the vanilla launcher on the same machine.</p>
+        </div>
+        <div class="req-table-wrap" data-reveal>
           <table class="req-table">
             <thead>
               <tr><th scope="col">Component</th><th scope="col">Minimum</th><th scope="col">Recommended</th></tr>
@@ -273,32 +464,38 @@
         </div>
       </section>
 
-      <section class="section" id="how-it-works">
-        <h2 class="section-title">How SolarClient Works</h2>
-        <p class="section-subtitle">From download to gameplay in three steps. No terminal commands, no manual file management, no Java headaches.</p>
+      <section class="sec" id="how-it-works">
+        <div class="sec-head" data-reveal>
+          <p class="eyebrow">How it works</p>
+          <h2 class="sec-title">From download to in&#8209;game in three steps.</h2>
+          <p class="sec-sub">No terminal commands, no manual file management, no Java headaches.</p>
+        </div>
         <div class="how-grid">
-          <div class="how-step">
+          <div class="how-step" data-reveal style="--i:0">
             <div class="how-step-num" aria-hidden="true">1</div>
             <h3>Download and install</h3>
-            <p>Run the installer from this page. SolarClient installs into its own directory, fetches the correct Java runtime for the Minecraft version you choose, and pre-configures the optimisation mods. The whole process takes a couple of minutes on a typical connection.</p>
+            <p>Run the installer from this page. SolarClient installs into its own directory, fetches the correct Java runtime for the version you choose and pre-configures the optimisation mods. A couple of minutes on a typical connection.</p>
           </div>
-          <div class="how-step">
+          <div class="how-step" data-reveal style="--i:1">
             <div class="how-step-num" aria-hidden="true">2</div>
-            <h3>Log in with Microsoft</h3>
-            <p>Authenticate through Microsoft&rsquo;s official OAuth flow &mdash; the same one the vanilla launcher uses. SolarClient never sees or stores your password. Your session token is kept locally and refreshed securely when it expires.</p>
+            <h3>Sign in with Microsoft</h3>
+            <p>Authenticate through Microsoft&rsquo;s official OAuth flow &mdash; the same one the vanilla launcher uses. Your session token stays on your PC and is refreshed securely when it expires.</p>
           </div>
-          <div class="how-step">
+          <div class="how-step" data-reveal style="--i:2">
             <div class="how-step-num" aria-hidden="true">3</div>
             <h3>Pick a version and play</h3>
-            <p>Choose your Minecraft version. SolarClient applies the tuned JVM flags, loads the performance mods, and launches. Add more mods, shaders or resource packs any time from the built-in browser without restarting.</p>
+            <p>Choose a version. SolarClient applies the tuned JVM flags, loads the performance mods and launches. Add mods, shaders or resource packs any time from the built-in browser.</p>
           </div>
         </div>
       </section>
 
-      <section class="section" id="install">
-        <h2 class="section-title">First-Time Setup on Windows</h2>
-        <p class="section-subtitle">Because this build is not code-signed, Windows SmartScreen will flag it the first time you run it. That is standard for independent software without a signing certificate and does not indicate a problem with the file &mdash; but you can verify the SHA-256 above before continuing.</p>
-        <div class="install-box">
+      <section class="sec" id="install">
+        <div class="sec-head" data-reveal>
+          <p class="eyebrow">First launch on Windows</p>
+          <h2 class="sec-title">About the blue Windows warning.</h2>
+          <p class="sec-sub">This build is not code-signed, so Windows SmartScreen flags it the first time you run it. That is standard for independent software without a signing certificate and does not indicate a problem with the file &mdash; but you can check the SHA-256 at the top of this page before continuing.</p>
+        </div>
+        <div class="install-box" data-reveal>
           <figure class="screen-mock" aria-hidden="true">
             <span class="mock-tag">Example</span>
             <p class="mock-header">Unrecognised app notice</p>
@@ -313,58 +510,60 @@
               <div class="step-num" aria-hidden="true">1</div>
               <div>
                 <p class="step-heading">Verify the hash (recommended)</p>
-                <p class="step-info">In PowerShell, run <code>Get-FileHash .\SolarClient-Setup-*.exe</code> and compare the result to the SHA-256 shown above. If they match, the file is exactly what was published on GitHub.</p>
+                <p class="step-info">In PowerShell, run <code>Get-FileHash .\SolarClient-Setup-*.exe</code> and compare it to the SHA-256 above. If they match, the file is exactly what was published on GitHub.</p>
               </div>
             </div>
             <div class="step-unit">
               <div class="step-num" aria-hidden="true">2</div>
               <div>
                 <p class="step-heading">Click &ldquo;More info&rdquo;, then &ldquo;Run anyway&rdquo;</p>
-                <p class="step-info">SmartScreen shows this for every unsigned application. Once you click through, Windows remembers your choice and will not ask again for this file.</p>
+                <p class="step-info">SmartScreen shows this for every unsigned application. Once you click through, Windows remembers your choice for this file.</p>
               </div>
             </div>
             <div class="step-unit">
               <div class="step-num" aria-hidden="true">3</div>
               <div>
                 <p class="step-heading">Follow the installer</p>
-                <p class="step-info">Choose an install directory or keep the default, let it finish, and launch SolarClient from the desktop shortcut or Start menu.</p>
+                <p class="step-info">Keep the default folder or choose your own, let it finish, and open SolarClient from the desktop shortcut or Start menu.</p>
               </div>
             </div>
             <div class="step-unit">
               <div class="step-num" aria-hidden="true">4</div>
               <div>
-                <p class="step-heading">Log in and play</p>
-                <p class="step-info">Sign in with your Microsoft account, pick a Minecraft version, and hit Play. Java, mods and JVM flags are handled on first launch.</p>
+                <p class="step-heading">Sign in and play</p>
+                <p class="step-info">Sign in with Microsoft, pick a version and press Launch. Java, mods and JVM flags are handled on first launch.</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="section" id="guides">
-        <h2 class="section-title">Minecraft Performance Guides</h2>
-        <p class="section-subtitle">We write about why Minecraft performs the way it does, and what actually changes it. Every technique in these guides works without our launcher &mdash; the mods are open source and the JVM flags are public.</p>
+      <section class="sec" id="guides">
+        <div class="sec-head" data-reveal>
+          <p class="eyebrow">Guides</p>
+          <h2 class="sec-title">Why Minecraft runs the way it does.</h2>
+          <p class="sec-sub">Every technique in these guides works without our launcher &mdash; the mods are open source and the JVM flags are public. <a href="/guides/">Browse all guides &rarr;</a></p>
+        </div>
         <div class="guide-grid">
-          <a class="guide-card" href="/guides/minecraft-fps-boost.html">
-            <span class="guide-card-kicker">Performance guide</span>
+          <a class="guide-card" href="/guides/minecraft-fps-boost.html" data-reveal style="--i:0">
+            <span class="guide-card-kicker">Performance</span>
             <h3>How to Increase Minecraft FPS</h3>
             <p>The complete checklist, in order of impact &mdash; starting with the one-minute GPU fix that resolves most laptop performance complaints.</p>
-            <span class="guide-card-more">Read the guide &rarr;</span>
+            <span class="guide-card-more">Read the guide <span aria-hidden="true">&rarr;</span></span>
           </a>
-          <a class="guide-card" href="/guides/allocate-ram-minecraft.html">
+          <a class="guide-card" href="/guides/allocate-ram-minecraft.html" data-reveal style="--i:1">
             <span class="guide-card-kicker">Java &amp; memory</span>
             <h3>How Much RAM Should You Allocate?</h3>
             <p>Why &ldquo;give it 16&nbsp;GB&rdquo; is the most repeated bad advice in Minecraft, and what the numbers should actually be.</p>
-            <span class="guide-card-more">Read the guide &rarr;</span>
+            <span class="guide-card-more">Read the guide <span aria-hidden="true">&rarr;</span></span>
           </a>
-          <a class="guide-card" href="/guides/fix-minecraft-lag-spikes.html">
+          <a class="guide-card" href="/guides/fix-minecraft-lag-spikes.html" data-reveal style="--i:2">
             <span class="guide-card-kicker">Troubleshooting</span>
             <h3>Fixing Stutter and Lag Spikes</h3>
             <p>Each cause of stutter leaves a distinct signature on the frame time graph. Read it first, then fix the right thing.</p>
-            <span class="guide-card-more">Read the guide &rarr;</span>
+            <span class="guide-card-more">Read the guide <span aria-hidden="true">&rarr;</span></span>
           </a>
         </div>
-        <p class="section-subtitle" style="margin-top:32px"><a href="/guides/">Browse all guides &rarr;</a></p>
       </section>
 
       <aside class="ad-slot" aria-label="Advertisement">
@@ -378,21 +577,26 @@
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
       </aside>
 
-
-      <section class="section" id="about">
-        <h2 class="section-title">What Is SolarClient?</h2>
-        <div class="about-text">
+      <section class="sec" id="about">
+        <div class="sec-head" data-reveal>
+          <p class="eyebrow">About</p>
+          <h2 class="sec-title">What is SolarClient?</h2>
+        </div>
+        <div class="about-text" data-reveal>
           <p>SolarClient is a custom Minecraft launcher built as an alternative to Lunar Client, Feather and similar performance clients. The goal is straightforward: give players the performance tools and quality-of-life features they want, without the bloat, telemetry or locked-down ecosystems that come with the bigger clients.</p>
-          <p>Rather than wrapping someone else&rsquo;s work in a new interface, SolarClient assembles a <strong>curated stack of open-source performance mods</strong> &mdash; Sodium, Lithium, FerriteCore and others &mdash; and combines them with custom JVM tuning, a parallel asset downloader, and a mod browser that pulls from Modrinth and CurseForge. The launcher shell, the HUD editor and the waypoint system are built in-house.</p>
+          <p>Rather than wrapping someone else&rsquo;s work in a new interface, SolarClient assembles a <strong>curated stack of open-source performance mods</strong> &mdash; Sodium, Lithium, FerriteCore and others &mdash; and combines them with custom JVM tuning, a parallel asset downloader and a built-in Modrinth browser. The launcher shell, the HUD editor and the waypoint system are built in-house.</p>
           <p>Everything is published through GitHub Releases, and the download button, SHA-256 hash and VirusTotal link on this page read from that release automatically &mdash; so they update themselves and this page never goes stale.</p>
           <p><strong>Why is it free?</strong> SolarClient is a passion project by a small team of Minecraft players who wanted a better launcher for themselves. This website runs Google AdSense to cover hosting and development; the launcher shows a few ads of its own and sends no usage analytics. <a href="/about.html">More about the project, how it is funded, and what we will not do &rarr;</a></p>
         </div>
       </section>
 
-      <section class="section" id="faq">
-        <h2 class="section-title">Common Questions</h2>
-        <p class="section-subtitle">The four we get asked most. The <a href="/faq.html">full FAQ</a> covers accounts, mods, server rules, platforms and the project itself.</p>
-        <div class="faq-wrapper">
+      <section class="sec" id="faq">
+        <div class="sec-head" data-reveal>
+          <p class="eyebrow">FAQ</p>
+          <h2 class="sec-title">Common questions.</h2>
+          <p class="sec-sub">The four we get asked most. The <a href="/faq.html">full FAQ</a> covers accounts, mods, server rules, platforms and the project itself.</p>
+        </div>
+        <div class="faq-wrapper" data-reveal>
 
           <div class="faq-block">
             <button class="faq-trigger" type="button" aria-expanded="false">Is SolarClient safe?<span class="faq-arrow" aria-hidden="true">&#9660;</span></button>
@@ -425,15 +629,21 @@
         </div>
       </section>
 
-      <section class="section" id="contact">
-        <h2 class="section-title">Get in Touch</h2>
-        <p class="section-subtitle">Found a bug, have a feature request, or spotted an error in one of our guides? Discord is the fastest route &mdash; the people who write the code are the ones reading it.</p>
-        <div class="contact-wrap">
-          <div class="contact-links">
-            <a class="contact-link" href="https://discord.gg/h6XVyf2Pqd" rel="noopener" target="_blank">Join our Discord server</a>
-            <a class="contact-link" href="/support.html">Support &amp; troubleshooting</a>
-            <a class="contact-link" href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases" rel="noopener" target="_blank">Release history on GitHub</a>
-          </div>
+      <section class="final-cta" id="contact" data-reveal>
+        <p class="eyebrow">Free for Windows 10 &amp; 11</p>
+        <h2 class="sec-title">Your next session, without the setup.</h2>
+        <p class="sec-sub">Download it, sign in with Microsoft, press Launch. Found a bug or want a feature? The people who write the code read the Discord.</p>
+        <div class="cta-row">
+          <a class="btn-main" href="#download" data-goto-download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Get SolarClient
+          </a>
+          <a class="btn-ghost" href="https://discord.gg/h6XVyf2Pqd" rel="noopener" target="_blank">Join the Discord</a>
+        </div>
+        <div class="contact-links">
+          <a class="contact-link" href="https://discord.gg/h6XVyf2Pqd" rel="noopener" target="_blank">Discord server</a>
+          <a class="contact-link" href="/support.html">Support &amp; troubleshooting</a>
+          <a class="contact-link" href="https://github.com/sharktoothgaming56-maker/solarclientsite/releases" rel="noopener" target="_blank">Release history</a>
         </div>
       </section>
     </main>
@@ -488,6 +698,6 @@
   </div>
 
   <div class="toast-msg" id="toast" role="status" aria-live="polite"></div>
-  <script src="/assets/js/site.js?v=20261012" defer></script>
+  <script src="/assets/js/site.js?v=20261012b" defer></script>
 </body>
 </html>

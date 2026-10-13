@@ -1,99 +1,178 @@
 /* SolarClient — shared site script
-   Starfield background, FAQ accordion, clipboard helpers, and live release data. */
+   Scroll motion, FAQ accordion, clipboard helpers, and live release data. */
 (function () {
   'use strict';
 
+  document.documentElement.classList.add('js');
+
+  var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
   /* ──────────────────────────────────────────
-     Starfield canvas (decorative, skipped when
-     the visitor prefers reduced motion)
+     Scroll-linked state: nav background and
+     the hero screenshot flattening as it rises
      ────────────────────────────────────────── */
-  function initStarfield() {
-    var canvas = document.getElementById('skyCanvas');
-    if (!canvas) return;
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  function initScrollEffects() {
+    var nav = document.querySelector('.header-nav');
+    var tilt = document.querySelector('[data-tilt]');
+    if (tilt && reduceMotion) tilt.style.setProperty('--tilt', '0');
+    var ticking = false;
 
-    var ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    function update() {
+      ticking = false;
+      if (nav) nav.classList.toggle('is-scrolled', window.scrollY > 8);
+      if (tilt && !reduceMotion) {
+        var vh = window.innerHeight;
+        var top = tilt.getBoundingClientRect().top;
+        var t = (top - vh * 0.12) / (vh * 0.55);
+        t = Math.max(0, Math.min(1, t));
+        tilt.style.setProperty('--tilt', t.toFixed(3));
+      }
+    }
+    function onScroll() {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  }
 
-    var stars = [];
-    var shootingStars = [];
+  /* ──────────────────────────────────────────
+     Reveal on scroll. Elements are only hidden
+     once this runs, and anything already on
+     screen is shown immediately.
+     ────────────────────────────────────────── */
+  function initReveal() {
+    /* Sub-pages get the same treatment for their cards without markup changes. */
+    var auto = document.querySelectorAll('.feature-grid > .card, .guide-grid > .guide-card, .how-grid > .how-step, .faq-wrapper, .req-table-wrap, .about-text, .changelog-entry, .callout, .key-takeaways');
+    for (var a = 0; a < auto.length; a++) {
+      var el = auto[a];
+      if (el.hasAttribute('data-reveal') || el.closest('[data-reveal]')) continue;
+      if (el.getBoundingClientRect().top < window.innerHeight) continue;
+      el.setAttribute('data-reveal', '');
+      var idx = Array.prototype.indexOf.call(el.parentNode.children, el);
+      el.style.setProperty('--i', String(idx % 3));
+    }
 
-    function initStars() {
-      stars = [];
-      var count = Math.floor((canvas.width * canvas.height) / 7000);
-      for (var i = 0; i < count; i++) {
-        stars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          size: Math.random() * 1.5 + 0.3,
-          alpha: Math.random() * 0.7 + 0.3,
-          speed: Math.random() * 0.15 + 0.05
-        });
+    var items = document.querySelectorAll('[data-reveal]');
+    if (!items.length) return;
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      for (var i = 0; i < items.length; i++) items[i].classList.add('is-in');
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      for (var e = 0; e < entries.length; e++) {
+        if (!entries[e].isIntersecting) continue;
+        entries[e].target.classList.add('is-in');
+        io.unobserve(entries[e].target);
+      }
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    for (var j = 0; j < items.length; j++) io.observe(items[j]);
+  }
+
+  /* ──────────────────────────────────────────
+     Product tour: the step nearest the middle of
+     the viewport drives the sticky screenshot
+     ────────────────────────────────────────── */
+  function initTour() {
+    var steps = document.querySelectorAll('.tour-step');
+    var shots = document.querySelectorAll('.tour-screens img');
+    var dots = document.querySelectorAll('.tour-dots span');
+    var label = document.querySelector('.tour-label');
+    if (!steps.length || !shots.length || !('IntersectionObserver' in window)) return;
+    var current = -1;
+
+    /* Stage screenshots are lazy so phones (no sticky stage) skip them; on
+       desktop, fetch them all once the page has loaded so swaps are instant. */
+    var stage = document.querySelector('.tour-stage');
+    function warm() {
+      if (!stage || !stage.offsetParent) return;
+      for (var w = 0; w < shots.length; w++) shots[w].loading = 'eager';
+    }
+    if (document.readyState === 'complete') warm();
+    else window.addEventListener('load', warm);
+
+    function activate(n) {
+      if (n === current) return;
+      current = n;
+      for (var i = 0; i < steps.length; i++) steps[i].classList.toggle('is-active', i === n);
+      for (var s = 0; s < shots.length; s++) shots[s].classList.toggle('is-active', s === n);
+      for (var d = 0; d < dots.length; d++) dots[d].classList.toggle('is-active', d === n);
+      if (label) {
+        var kicker = steps[n].querySelector('.tour-kicker');
+        label.textContent = ('0' + (n + 1)).slice(-2) + ' \u2014 ' + (kicker ? kicker.textContent : '');
       }
     }
 
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      initStars();
-    }
-
-    function spawnShootingStar() {
-      if (shootingStars.length < 3 && Math.random() < 0.02) {
-        shootingStars.push({
-          x: Math.random() * canvas.width * 0.8,
-          y: Math.random() * (canvas.height * 0.4),
-          len: Math.random() * 90 + 80,
-          speed: Math.random() * 8 + 7,
-          angle: (Math.PI / 4) + (Math.random() * 0.2 - 0.1),
-          alpha: 1,
-          decay: Math.random() * 0.015 + 0.015
-        });
+    var io = new IntersectionObserver(function (entries) {
+      for (var e = 0; e < entries.length; e++) {
+        if (entries[e].isIntersecting) activate(Number(entries[e].target.getAttribute('data-step')) || 0);
       }
-    }
+    }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+    for (var k = 0; k < steps.length; k++) io.observe(steps[k]);
+    activate(0);
+  }
 
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#ffffff';
-      for (var i = 0; i < stars.length; i++) {
-        var s = stars[i];
-        ctx.globalAlpha = s.alpha;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-        ctx.fill();
-        s.y -= s.speed;
-        if (s.y < 0) { s.y = canvas.height; s.x = Math.random() * canvas.width; }
+  /* ──────────────────────────────────────────
+     Count-up numbers
+     ────────────────────────────────────────── */
+  function initCounters() {
+    var nums = document.querySelectorAll('[data-count]');
+    if (!nums.length || reduceMotion || !('IntersectionObserver' in window)) return;
+    function run(el) {
+      var target = Number(el.getAttribute('data-count')) || 0;
+      if (!target) return;
+      var start = null;
+      var dur = 1400;
+      function frame(ts) {
+        if (start === null) start = ts;
+        var p = Math.min(1, (ts - start) / dur);
+        var eased = 1 - Math.pow(2, -10 * p);
+        el.textContent = String(Math.round(target * (p === 1 ? 1 : eased)));
+        if (p < 1) requestAnimationFrame(frame);
       }
-      ctx.globalAlpha = 1;
-
-      spawnShootingStar();
-      for (var j = shootingStars.length - 1; j >= 0; j--) {
-        var ss = shootingStars[j];
-        var tailX = ss.x - Math.cos(ss.angle) * ss.len;
-        var tailY = ss.y - Math.sin(ss.angle) * ss.len;
-        var grad = ctx.createLinearGradient(tailX, tailY, ss.x, ss.y);
-        grad.addColorStop(0, 'rgba(168, 85, 247, 0)');
-        grad.addColorStop(0.6, 'rgba(192, 132, 252, 0.5)');
-        grad.addColorStop(1, 'rgba(255, 255, 255, ' + ss.alpha + ')');
-        ctx.strokeStyle = grad;
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.moveTo(tailX, tailY);
-        ctx.lineTo(ss.x, ss.y);
-        ctx.stroke();
-        ss.x += Math.cos(ss.angle) * ss.speed;
-        ss.y += Math.sin(ss.angle) * ss.speed;
-        ss.alpha -= ss.decay;
-        if (ss.alpha <= 0 || ss.x > canvas.width || ss.y > canvas.height) {
-          shootingStars.splice(j, 1);
-        }
-      }
-      requestAnimationFrame(draw);
+      el.textContent = '0';
+      requestAnimationFrame(frame);
     }
+    var io = new IntersectionObserver(function (entries) {
+      for (var e = 0; e < entries.length; e++) {
+        if (!entries[e].isIntersecting) continue;
+        run(entries[e].target);
+        io.unobserve(entries[e].target);
+      }
+    }, { threshold: 0.6 });
+    for (var i = 0; i < nums.length; i++) io.observe(nums[i]);
+  }
 
-    window.addEventListener('resize', resize);
-    resize();
-    draw();
+  /* ──────────────────────────────────────────
+     Pointer-following light on bento cards
+     ────────────────────────────────────────── */
+  function initSpotlight() {
+    var cards = document.querySelectorAll('.b-card');
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].addEventListener('pointermove', function (e) {
+        var r = this.getBoundingClientRect();
+        this.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        this.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      });
+    }
+  }
+
+  /* "Get SolarClient" at the bottom scrolls up and points at the agreement box. */
+  function initGotoDownload() {
+    var links = document.querySelectorAll('[data-goto-download]');
+    var label = document.getElementById('legalAgree');
+    var box = document.getElementById('legalAgreeBox');
+    if (!links.length || !label) return;
+    for (var i = 0; i < links.length; i++) {
+      links[i].addEventListener('click', function () {
+        setTimeout(function () {
+          label.classList.remove('legal-agree-pulse');
+          void label.offsetWidth;
+          label.classList.add('legal-agree-pulse');
+          if (box && !box.checked) box.focus({ preventScroll: true });
+        }, reduceMotion ? 0 : 650);
+      });
+    }
   }
 
   /* ──────────────────────────────────────────
@@ -249,7 +328,7 @@
       syncLegalAgree();
 
       var sizeEl = document.getElementById('dlSize');
-      if (sizeEl && exe.size) sizeEl.textContent = 'Size: ' + (exe.size / 1048576).toFixed(1) + ' MB';
+      if (sizeEl && exe.size) sizeEl.textContent = (exe.size / 1048576).toFixed(1) + ' MB';
 
       var digest = (exe.digest || '').replace(/^sha256:/i, '');
       if (digest) {
@@ -265,10 +344,15 @@
   }
 
   function init() {
-    initStarfield();
+    initScrollEffects();
+    initReveal();
+    initTour();
+    initCounters();
+    initSpotlight();
     initFaq();
     initCopy();
     initLegalAgree();
+    initGotoDownload();
     loadLatestRelease();
   }
 
