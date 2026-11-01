@@ -1787,3 +1787,110 @@ footer a:hover { color: var(--text); }
   .marquee-track { animation: none; }
   .ft-graph path { stroke-dashoffset: 0; }
 }
+
+/* ── Ad consent gate ── */
+html.consent-locked {
+  overflow: hidden;
+}
+#consent-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(5, 4, 10, 0.78);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.consent-gate-card {
+  width: min(520px, 100%);
+  background: rgba(18, 15, 28, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  padding: 28px 26px 24px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
+  color: var(--text);
+}
+.consent-gate-kicker {
+  margin: 0 0 8px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.consent-gate-card h2 {
+  margin: 0 0 12px;
+  font-size: 1.35rem;
+  line-height: 1.25;
+}
+.consent-gate-card p {
+  margin: 0 0 12px;
+  color: var(--text-2);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+.consent-gate-links a,
+.consent-gate-card a {
+  color: #c4b5fd;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.consent-gate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0 10px;
+}
+.consent-accept,
+.consent-reject {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 18px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.consent-accept {
+  background: #8b5cf6;
+  color: #fff;
+}
+.consent-accept:hover { filter: brightness(1.08); }
+.consent-reject {
+  background: transparent;
+  color: var(--text-2);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+.consent-reject:hover { color: var(--text); }
+.consent-gate-note {
+  margin: 0 !important;
+  font-size: 0.78rem !important;
+  color: var(--text-3) !important;
+}
+
+/* ── Desktop side ad rails ── */
+.ad-rail {
+  display: none;
+}
+@media (min-width: 1280px) {
+  html.ads-consented .ad-rail {
+    display: block;
+    position: fixed;
+    top: 96px;
+    width: 160px;
+    z-index: 20;
+    text-align: center;
+  }
+  html.ads-consented .ad-rail-left { left: max(12px, calc(50vw - 620px - 180px)); }
+  html.ads-consented .ad-rail-right { right: max(12px, calc(50vw - 620px - 180px)); }
+  html.ads-consented .ad-rail .adsbygoogle {
+    display: block;
+    min-height: 600px;
+    width: 160px;
+  }
+}
+@media (max-width: 1279px) {
+  .ad-rail { display: none !important; }
+}

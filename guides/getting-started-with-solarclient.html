@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started with SolarClient: Install, Sign In, and First Launch — SolarClient</title>
+  <meta name="description" content="A complete first-run walkthrough for SolarClient on Windows: download, SmartScreen, Microsoft sign-in, picking a version, allocating RAM, and what the launcher installs for you.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <meta name="theme-color" content="#07060b">
+  <meta name="google-adsense-account" content="ca-pub-7931973085541540">
+  <link rel="canonical" href="https://figgysmp.shop/guides/getting-started-with-solarclient.html">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="SolarClient">
+  <meta property="og:title" content="Getting Started with SolarClient: Install, Sign In, and First Launch">
+  <meta property="og:description" content="A complete first-run walkthrough for SolarClient on Windows: download, SmartScreen, Microsoft sign-in, picking a version, allocating RAM, and what the launcher installs for you.">
+  <meta property="og:url" content="https://figgysmp.shop/guides/getting-started-with-solarclient.html">
+  <meta property="og:image" content="https://figgysmp.shop/assets/img/og-launcher.jpg">
+  <meta property="og:locale" content="en_US">
+  <meta property="article:published_time" content="2026-11-01">
+  <meta property="article:modified_time" content="2026-11-01">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Getting Started with SolarClient">
+  <meta name="twitter:description" content="A complete first-run walkthrough for SolarClient on Windows.">
+
+  <link rel="icon" href="/assets/img/icon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/assets/img/icon-180.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css?v=20261101">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Getting Started with SolarClient: Install, Sign In, and First Launch",
+  "description": "A complete first-run walkthrough for SolarClient on Windows: download, SmartScreen, Microsoft sign-in, picking a version, allocating RAM, and what the launcher installs for you.",
+  "articleSection": "Getting started",
+  "url": "https://figgysmp.shop/guides/getting-started-with-solarclient.html",
+  "datePublished": "2026-11-01",
+  "dateModified": "2026-11-01",
+  "inLanguage": "en",
+  "author": { "@id": "https://figgysmp.shop/#organization" },
+  "publisher": { "@id": "https://figgysmp.shop/#organization" }
+}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <canvas id="skyCanvas" aria-hidden="true"></canvas>
+  <div class="ambient-glow-purple" aria-hidden="true"></div>
+  <div class="ambient-glow-bottom" aria-hidden="true"></div>
+
+  <div class="container">
+    <header class="header-nav">
+      <a href="/" class="brand">
+        <img src="/assets/img/solar-client-logo.png" alt="SolarClient" class="brand-wordmark" width="942" height="257">
+      </a>
+      <nav class="nav-actions" aria-label="Main">
+        <a href="/#download" class="nav-link">Download</a>
+        <a href="/#features" class="nav-link">Features</a>
+        <a href="/guides/" class="nav-link" aria-current="page">Guides</a>
+        <a href="/faq.html" class="nav-link">FAQ</a>
+        <a href="/changelog.html" class="nav-link">Changelog</a>
+        <a href="/about.html" class="nav-link">About</a>
+        <a href="/support.html" class="nav-link">Support</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><a href="/guides/">Guides</a></li>
+          <li><span aria-current="page">Getting started</span></li>
+        </ol>
+      </nav>
+
+      <article class="article">
+        <header class="article-header">
+          <p class="article-eyebrow">Getting started</p>
+          <h1 class="article-title">Getting Started with SolarClient</h1>
+          <p class="article-standfirst">Everything you need for a clean first launch on Windows: download the installer, get past SmartScreen, sign in with Microsoft, pick a version, and understand what the launcher installs for you.</p>
+          <div class="article-meta">
+            <span>Published <time datetime="2026-11-01">November 1, 2026</time></span>
+            <span aria-hidden="true">&middot;</span>
+            <span>Windows 10 / 11</span>
+            <span aria-hidden="true">&middot;</span>
+            <span>~8 min read</span>
+          </div>
+        </header>
+
+        <div class="prose">
+          <section class="key-takeaways">
+            <h2>Before you start</h2>
+            <ul>
+              <li>You need a <strong>Microsoft account that owns Minecraft: Java Edition</strong>.</li>
+              <li>SolarClient runs on <strong>Windows 10 or 11 (64-bit)</strong> only.</li>
+              <li>You do <strong>not</strong> need to install Java yourself.</li>
+              <li>The first run shows a Windows SmartScreen warning because the build is not code-signed. That is expected for an independent project.</li>
+              <li>You can verify the installer with the SHA-256 hash shown on the <a href="/#download">download section</a> of the home page.</li>
+            </ul>
+          </section>
+
+          <h2 id="download">1. Download the installer</h2>
+          <p>Open <a href="/">figgysmp.shop</a> and use the Download button on the home page. The file name looks like <code>SolarClient-Setup-&lt;version&gt;.exe</code>. Prefer the link on this site or the GitHub Latest release &mdash; do not grab random mirrors.</p>
+          <p>Before you run it, compare the SHA-256 on the download card with the hash of the file you saved. If they differ, delete the file and download again. Matching hashes are the simplest way to confirm you have the file we published.</p>
+
+          <h2 id="smartscreen">2. Windows SmartScreen</h2>
+          <p>Because SolarClient is not code-signed with a paid certificate, Windows Defender SmartScreen often shows &ldquo;Windows protected your PC.&rdquo; Click <strong>More info</strong>, then <strong>Run anyway</strong>. That dialog is about reputation of unsigned software, not a VirusTotal finding. If you want a second opinion, submit the exact installer to VirusTotal yourself and compare the hash to the one on our site.</p>
+
+          <h2 id="signin">3. Sign in with Microsoft</h2>
+          <p>Launch SolarClient and start Microsoft sign-in. A browser window opens on Microsoft&rsquo;s own login page &mdash; the same OAuth flow the vanilla launcher uses. Type your password there, not into the launcher. When Microsoft finishes, it returns a session token to SolarClient on your PC. That token is refreshed locally when it expires; it is not sent to our advertising partners.</p>
+          <p>If sign-in fails, check that the account owns Java Edition, that you are not blocking the redirect in a strict browser, and that the system clock is roughly correct (OAuth tokens are time-sensitive).</p>
+
+          <h2 id="version">4. Pick a Minecraft version</h2>
+          <p>On the versions screen, choose the release you want to play. SolarClient downloads the game files from Mojang, selects a matching Java runtime, and attaches its curated Fabric performance stack for that version when one is available. If a version has no SolarClient mod build yet, the launcher still runs the game; it simply skips the SolarClient mod jar until one exists.</p>
+          <p>For most people starting today, the newest release branch is fine. Older versions matter for servers that have not updated. Our <a href="/guides/minecraft-java-version-guide.html">Java version guide</a> explains which Java runtime each era of Minecraft expects if you ever need to debug by hand.</p>
+
+          <aside class="ad-slot" aria-label="Advertisement">
+            <div class="ad-slot-label">Advertisement</div>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-7931973085541540"
+                 data-ad-slot="5583456558"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+          </aside>
+
+          <h2 id="ram">5. Allocate a sensible amount of RAM</h2>
+          <p>More memory is not always better. Minecraft&rsquo;s garbage collector pauses grow with a huge heap, which is why allocating 12&ndash;16&nbsp;GB on an 16&nbsp;GB machine often feels worse than 4&ndash;6&nbsp;GB. A practical starting point:</p>
+          <ul>
+            <li><strong>8&nbsp;GB system RAM:</strong> allocate about 3&ndash;4&nbsp;GB</li>
+            <li><strong>16&nbsp;GB system RAM:</strong> allocate about 4&ndash;6&nbsp;GB</li>
+            <li><strong>32&nbsp;GB+ system RAM:</strong> allocate about 6&ndash;8&nbsp;GB unless a huge modpack needs more</li>
+          </ul>
+          <p>Leave headroom for Windows, your browser, Discord, and the GPU driver. The full reasoning is in <a href="/guides/allocate-ram-minecraft.html">How Much RAM Should You Allocate?</a></p>
+
+          <h2 id="stack">6. What the launcher installs for you</h2>
+          <p>On a typical modern release, SolarClient attaches open-source performance mods such as Sodium, Lithium, and FerriteCore, version-matched so you are not mixing jars from different Minecraft builds. It also applies JVM flags scaled to the memory you chose. None of that replaces learning how the mods work &mdash; our <a href="/guides/minecraft-performance-mods.html">performance mods reference</a> and <a href="/guides/minecraft-fps-boost.html">FPS guide</a> go deeper if you want to tune further.</p>
+          <p>You can still add mods, shaders, and resource packs from the built-in Modrinth browser. Prefer Fabric mods that declare support for your exact game version.</p>
+
+          <h2 id="friends">7. Friends, chat, and online features</h2>
+          <p>Optional online features &mdash; friends list, live chat, communities, voice &mdash; connect through SolarClient&rsquo;s backend. They require the launcher to be online and a signed-in Minecraft account. They are not required to play singleplayer or join a normal multiplayer server. What those features store is listed in the <a href="/privacy.html">privacy policy</a>.</p>
+
+          <h2 id="updates">8. Updates</h2>
+          <p>Stable builds update through the launcher&rsquo;s update channel. Beta builds are optional and can change quickly. When something breaks after an update, check the <a href="/changelog.html">changelog</a> and Discord support channels before reinstalling from scratch.</p>
+
+          <h2 id="next">What to read next</h2>
+          <ul>
+            <li><a href="/guides/minecraft-fps-boost.html">How to Increase Minecraft FPS</a></li>
+            <li><a href="/guides/fix-minecraft-lag-spikes.html">Fixing Stutter and Lag Spikes</a></li>
+            <li><a href="/guides/sodium-vs-optifine.html">Sodium vs OptiFine</a></li>
+            <li><a href="/faq.html">FAQ</a></li>
+          </ul>
+        </div>
+      </article>
+
+      <aside class="ad-slot" aria-label="Advertisement">
+        <div class="ad-slot-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7931973085541540"
+             data-ad-slot="4916563529"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+      </aside>
+    </main>
+
+    <footer>
+      <div class="footer-cols">
+        <div>
+          <div class="footer-col-title">Product</div>
+          <ul>
+            <li><a href="/#download">Download</a></li>
+            <li><a href="/#features">Features</a></li>
+            <li><a href="/changelog.html">Changelog</a></li>
+            <li><a href="/faq.html">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Guides</div>
+          <ul>
+            <li><a href="/guides/">All guides</a></li>
+            <li><a href="/guides/minecraft-fps-boost.html">FPS boost</a></li>
+            <li><a href="/guides/getting-started-with-solarclient.html">Getting started</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Project</div>
+          <ul>
+            <li><a href="/about.html">About</a></li>
+            <li><a href="/support.html">Support</a></li>
+            <li><a href="/privacy.html">Privacy</a></li>
+            <li><a href="/cookies.html">Cookies</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-cookie-note">This website is funded by advertising. Google AdSense and its partners set cookies to measure and personalise the ads you see here. Read our <a href="/cookies.html">cookie policy</a> and <a href="/privacy.html">privacy policy</a>.</p>
+    </footer>
+  </div>
+
+  <script src="/assets/js/consent-ads.js?v=20261101" defer></script>
+  <script src="/assets/js/site.js?v=20261101" defer></script>
+</body>
+</html>
